@@ -1,0 +1,101 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        //Main tasks for development
+        //"watch-api" starts the dotnet application allowing for hot reload
+        // NOTE: No longer needed as vs code's debugger will automatically build the project 
+        // before launching and dotner watch is not compatible with the debugger
+        // {
+        //     "label": "watch-api",
+        //     "command": "dotnet",
+        //     "type": "shell",
+        //     "args": [
+        //         "watch",
+        //         "run",
+        //         "--project",
+        //         "${workspaceFolder}/api/CoachApi.csproj"
+        //     ],
+        //     "problemMatcher": "$msCompile"
+        // },
+
+        //Update the API dependencies
+        {
+            "label": "update-api",
+            "type": "shell",
+            "command": "dotnet restore",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            }
+        },
+        
+        //Update the client-side dependencies
+        {
+            "label": "update-client",
+            "type": "shell",
+            "command": "npm install",
+            "options": {
+                "cwd": "${workspaceFolder}/client2"
+            }
+        },
+        //"start-client" starts the Angular development server
+        {
+            "label": "start-client",
+            "type": "shell",
+            "command": "npm start",
+            "options": {
+                "cwd": "${workspaceFolder}/client2"
+            },
+            "isBackground": true,
+
+            //Ensures that the pre launch tasks can proceed after the angular dev server has started
+            "problemMatcher": {
+                "owner": "angular",
+                "pattern": [
+                {
+                    "regexp": ".",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                }
+                ],
+                    "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",
+                    "endsPattern": "Local:\\s+http://localhost:4200/"
+                }
+            }
+        },
+        //Starts both tasks in parallel, used as the preLaunchTask for debugging.
+        {
+            "label": "run-all",
+            "dependsOn": ["update-api", "update-client", "start-client"],
+            "dependsOrder": "sequence"
+        },
+
+        //Build and publish tasks used for manual builds or production deployments, not needed for debugging
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "build",
+                "${workspaceFolder}/api/CoachApi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/api/CoachApi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+    ]
+}

@@ -1,0 +1,35 @@
+<div class="flex flex-col items-center justify-center h-full w-full gap-8">
+  <div class="bg-base-light p-8 rounded-xl shadow w-80">
+    <h1 class="text-5xl font-mono font-bold mb-4 text-light">Log In</h1>
+
+    <p class="font-mono font-bold text-warning mb-3">{{ error }}</p>
+
+    <input
+      [(ngModel)]="identifier"
+      type="email"
+      placeholder="Username or Email"
+      class="w-full p-2 border-light border-2 rounded mb-3 text-light"
+    />
+
+    <input
+      [(ngModel)]="password"
+      type="password"
+      placeholder="Password"
+      class="w-full p-2 border-light border-2 rounded mb-4 text-light"
+    />
+
+    <button
+      (click)="login()"
+      class="w-full bg-brand bg-base text-white p-2 rounded hover:opacity-60 transition"
+    >
+      <p class="font-mono font-bold">Submit</p>
+    </button>
+  </div>
+
+  <div class="bg-base-light p-8 rounded-xl shadow w-80">
+    <p class="font-mono text-light ">
+      Don't have an account?
+      <button (click)="router.navigate(['/register'])" class="text-brand text-glow-blue font-bold hover:underline cursor-pointer">Go to Register</button>
+    </p>
+  </div>
+</div>

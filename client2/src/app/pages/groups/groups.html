@@ -1,0 +1,47 @@
+<div class="flex flex-row h-full w-full justify-between">
+  <p-tabs value="0" class="w-full max-w-350">
+      <p-tablist class="bg-base-light">
+          <p-tab value="0" class="text-lg">Current Groups</p-tab>
+          <p-tab value="1" class="text-lg">Find Groups</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+          <p-tabpanel value="0">
+            <div class="flex flex-col gap-5 max-h-180 overflow-y-scroll">
+              @for (group of currentGroups; track group) {
+                <app-group-widget [group]="group" [isCurrentGroup]="true"></app-group-widget>
+              }
+            </div>
+          </p-tabpanel>
+          <p-tabpanel value="1">
+            <div class="flex flex-col gap-5 max-h-180 overflow-y-scroll">
+              @for (group of findGroups; track group) {
+                <app-group-widget [group]="group"></app-group-widget>
+              }
+            </div>
+          </p-tabpanel>
+      </p-tabpanels>
+  </p-tabs>
+
+  <div class="flex flex-col h-full">
+      <button
+        (click)="router.navigate(['groups/create'])"
+        class="w-40 bg-brand bg-base-light border-glow-blue border-2 text-white p-2 rounded hover:opacity-60 transition"
+      >
+        <p class="font-mono font-bold">+ Create Group</p>
+      </button>
+
+      <div class="flex flex-col mt-auto mb-auto">
+        <input
+          [(ngModel)]="joinCode"
+          type="name"
+          placeholder="Enter Code"
+          class="w-40 p-2 border-light border-2 rounded mb-3 text-light"
+        />
+        <button
+          class="w-40 bg-brand bg-base-light border-glow-blue border-2 text-white p-2 rounded hover:opacity-60 transition"
+        >
+          <p class="font-mono font-bold">Join Group</p>
+        </button>
+      </div>
+  </div>
+</div>

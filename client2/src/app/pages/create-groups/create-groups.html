@@ -1,0 +1,40 @@
+<div class="flex flex-col items-center justify-center h-full w-full gap-8">
+  <div class="bg-base-light p-8 rounded-xl shadow w-full max-w-200">
+    <h1 class="text-5xl font-mono font-bold mb-4 text-light">Create Group</h1>
+
+    <p class="font-mono font-bold text-warning mb-3">{{ error }}</p>
+
+    <input
+      [(ngModel)]="group.name"
+      type="name"
+      placeholder="Group Name"
+      class="w-full p-2 border-light border-2 rounded mb-3 text-light"
+    />
+
+    <input
+      [(ngModel)]="group.description"
+      type="description"
+      placeholder="Enter Description"
+      class="w-full p-2 border-light border-2 rounded mb-3 text-light"
+    />
+
+    <div class="flex flex-row mb-3 gap-5">
+      <p class="font-mono font-bold">Public</p>
+      <p-toggleswitch [(ngModel)]="group.isPublic"/>
+    </div>
+
+    <input type="color" [(ngModel)]="group.color" name="color" /> <p>Selected: {{ group.color }}</p>
+
+    <div class="flex flex-row mb-3 gap-5">
+      <p class="font-mono font-bold">Request To Join</p>
+      <p-toggleswitch [(ngModel)]="group.isRequestToJoin"/>
+    </div>
+
+    <button
+      (click)="create()"
+      class="w-full bg-brand bg-base text-white p-2 rounded hover:opacity-60 transition"
+    >
+      <p class="font-mono font-bold">Submit</p>
+    </button>
+  </div>
+</div>

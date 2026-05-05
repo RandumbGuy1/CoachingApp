@@ -1,0 +1,60 @@
+
+<div class="fixed left-0 top-0 flex flex-col items-end h-screen bg-base-light w-65">
+  @if (auth.isLoggedIn()) {
+    @let user = auth.getCurrentUser();
+    @if (user) {
+      <app-avatar [user]="user" class="w-full"></app-avatar>
+    }
+  }
+  @else {
+    <img [src]="homeImgUrl" class="mt-3 mb-3">
+  }
+
+  @for (element of mainElements; track element) {
+    @if ((auth.isLoggedIn() || element.showWhileLoggedOut) && canShowCoachElement(element)) {
+      <button
+        class="flex h-15 pr-8 hover:bg-base hover:scale-105 transition justify-end items-center gap-4 w-full"
+        [title]="element.tooltip"
+        (click)="element.callback ? element.callback() : router.navigate([element.url])"
+      >
+
+        <span
+          class="icon-mask w-[25px] h-[25px]"
+          [class.text-light]="!element.color"
+          [class.text-selected]="element.color === 'selected'"
+          [class.text-warning]="element.color === 'warning'"
+          [style.maskImage]="'url(' + element.icon + ')'"
+          [style.webkitMaskImage]="'url(' + element.icon + ')'"
+        ></span>
+        <p
+          class="font-mono font-semibold text-xl"
+          [class.text-light]="!element.color"
+          [class.text-selected]="element.color === 'selected'"
+          [class.text-warning]="element.color === 'warning'"
+        >
+          {{ element.title }}
+        </p>
+      </button>
+    }
+  }
+
+  <div class="flex flex-row flex-wrap bg-base w-full h-45 mt-auto border-5 rounded-lg border-base-light justify-start items-start">
+    @for (element of bottomElements; track element) {
+      @if (auth.isLoggedIn() || element.showWhileLoggedOut) {
+        <button
+          class="relative flex hover:scale-110 transition p-5"
+          (click)="element.callback ? element.callback() : router.navigate([element.url])"
+        >
+          <img [src]="element.icon" class="w-[20px] h-[20px]">
+
+          <!-- Notification badge -->
+          @if (element.notificationCount && element.notificationCount > 0) {
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {{ element.notificationCount }}
+            </span>
+          }
+        </button>
+      }
+    }
+  </div>
+</div>

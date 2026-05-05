@@ -1,0 +1,97 @@
+# ---------------------------------------------------------
+# Angular / Node
+# ---------------------------------------------------------
+dist/
+tmp/
+out-tsc/
+node_modules/
+.angular/
+
+# Coverage
+coverage/
+
+# Misc
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+
+# ---------------------------------------------------------
+# IDEs and Editors
+# ---------------------------------------------------------
+
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# ---------------------------------------------------------
+# ASP.NET Core / .NET
+# ---------------------------------------------------------
+
+# Build artifacts
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache
+.vs/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Environment variables / secrets
+*.env
+appsettings.Development.json
+appsettings.Local.json
+
+# EF Core
+*.dbmdl
+
+# IIS Express
+iisexpress/
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+
+# Rider / Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Temporary files
+*.tmp
+*.temp
+
+# Publish output
+publish/
+
+# ---------------------------------------------------------
+# System files
+# ---------------------------------------------------------
+
+.DS_Store
+Thumbs.db
