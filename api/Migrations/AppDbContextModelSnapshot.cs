@@ -22,41 +22,29 @@ namespace CoachApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CoachApi.Entities.Client", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CoachingGroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "CoachingGroupId");
-
-                    b.HasIndex("CoachingGroupId");
-
-                    b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("CoachApi.Entities.Coach", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CoachingGroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "CoachingGroupId");
-
-                    b.HasIndex("CoachingGroupId");
-
-                    b.ToTable("Coaches");
-                });
-
             modelBuilder.Entity("CoachApi.Entities.CoachingGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequestToJoin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -65,6 +53,24 @@ namespace CoachApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CoachingGroups");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.GroupMembership", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CoachingGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "CoachingGroupId");
+
+                    b.HasIndex("CoachingGroupId");
+
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("CoachApi.Entities.RefreshToken", b =>
@@ -115,7 +121,7 @@ namespace CoachApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
+                    b.Property<int>("Tier")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -129,94 +135,58 @@ namespace CoachApi.Migrations
 
             modelBuilder.Entity("CoachApi.Entities.UserProfile", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Bio")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePictureURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("ReceiveEmailNotifications")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("Region")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Theme")
                         .HasColumnType("int");
 
                     b.Property<string>("Timezone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasKey("UserId");
 
                     b.ToTable("UserProfile");
                 });
 
-            modelBuilder.Entity("CoachApi.Entities.UserStats", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FormType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("JsonData")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserStats");
-                });
-
-            modelBuilder.Entity("CoachApi.Entities.Client", b =>
+            modelBuilder.Entity("CoachApi.Entities.GroupMembership", b =>
                 {
                     b.HasOne("CoachApi.Entities.CoachingGroup", "Group")
-                        .WithMany("Clients")
+                        .WithMany("Members")
                         .HasForeignKey("CoachingGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoachApi.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CoachApi.Entities.Coach", b =>
-                {
-                    b.HasOne("CoachApi.Entities.CoachingGroup", "Group")
-                        .WithMany("Coaches")
-                        .HasForeignKey("CoachingGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoachApi.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Memberships")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -240,19 +210,8 @@ namespace CoachApi.Migrations
             modelBuilder.Entity("CoachApi.Entities.UserProfile", b =>
                 {
                     b.HasOne("CoachApi.Entities.User", "User")
-                        .WithOne("UserProfile")
+                        .WithOne("Profile")
                         .HasForeignKey("CoachApi.Entities.UserProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CoachApi.Entities.UserStats", b =>
-                {
-                    b.HasOne("CoachApi.Entities.User", "User")
-                        .WithMany("UserStats")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -261,19 +220,17 @@ namespace CoachApi.Migrations
 
             modelBuilder.Entity("CoachApi.Entities.CoachingGroup", b =>
                 {
-                    b.Navigation("Clients");
-
-                    b.Navigation("Coaches");
+                    b.Navigation("Members");
                 });
 
             modelBuilder.Entity("CoachApi.Entities.User", b =>
                 {
-                    b.Navigation("RefreshTokens");
+                    b.Navigation("Memberships");
 
-                    b.Navigation("UserProfile")
+                    b.Navigation("Profile")
                         .IsRequired();
 
-                    b.Navigation("UserStats");
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

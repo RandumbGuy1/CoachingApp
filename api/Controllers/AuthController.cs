@@ -23,15 +23,15 @@ namespace CoachApi.Controllers
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var user = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Identifier || u.Username == request.Identifier);
-            if (user == null) return Unauthorized("Invalid credentials");
+            if (user == null) return Unauthorized("Username or email not found");
 
             var hasher = new PasswordHasher<User>();
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
 
             if (result == PasswordVerificationResult.Failed)
-                return Unauthorized("Invalid credentials");
+                return Unauthorized("Password does not match the provided username/email");
 
-            var accessToken = GenerateJwtToken(user.Email, user.Id.ToString(), user.Username, user.Role.ToString());
+            var accessToken = GenerateJwtToken(user.Email, user.Id.ToString(), user.Username, user.Tier.ToString());
             var refreshToken = GenerateRefreshToken(user);
 
             _db.RefreshTokens.Add(refreshToken);
@@ -67,30 +67,34 @@ namespace CoachApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            if (await _db.Users.AnyAsync(u => u.Email == request.Email))
-                return BadRequest("Email already in use");
-            
-            if (await _db.Users.AnyAsync(u => u.Username == request.Username)) 
-                return BadRequest("Username already taken");
+            if (await _db.Users.AnyAsync(u => u.Email == request.Email)) return BadRequest("Email already in use");
+            if (await _db.Users.AnyAsync(u => u.Username == request.Username)) return BadRequest("Username already taken");
 
             var hasher = new PasswordHasher<User>();
-            if (!Enum.TryParse<UserRole>(request.Role, ignoreCase: true, out var role))
-                return BadRequest("Invalid role specified");
+            if (!Enum.TryParse<UserTier>(request.Tier, ignoreCase: true, out var tier))
+                return BadRequest("Invalid tier specified");
 
+            var userId = Guid.NewGuid();
             var user = new User
             {
-                Id = Guid.NewGuid(),
+                Id = userId,
                 Email = request.Email,
                 Username = request.Username,
-                Role = role,
+                Tier = tier,
+                Profile = new UserProfile
+                {
+                    UserId = userId,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName
+                },
+                PasswordHash = "" // Will be set after hashing
             };
 
             user.PasswordHash = hasher.HashPassword(user, request.Password);
 
             _db.Users.Add(user);
-            await _db.SaveChangesAsync();
 
-            var accessToken = GenerateJwtToken(user.Email, user.Id.ToString(), user.Username, user.Role.ToString()); 
+            var accessToken = GenerateJwtToken(user.Email, user.Id.ToString(), user.Username, user.Tier.ToString()); 
             var refreshToken = GenerateRefreshToken(user);
 
             _db.RefreshTokens.Add(refreshToken);
@@ -106,28 +110,26 @@ namespace CoachApi.Controllers
                 .Include(rt => rt.User)
                 .SingleOrDefaultAsync(rt => rt.Token == request.RefreshToken);
 
-            if (existingToken == null)
-                return Unauthorized("Invalid refresh token");
+            if (existingToken == null) return Unauthorized("Invalid refresh token");
 
             if (existingToken.IsRevoked)
             {
                 await RevokeAllUserTokensAsync(existingToken);
-                return Unauthorized("Token reuse detected. All sessions revoked.");
+                return Unauthorized("Token reuse detected. All sessions revoked");
             }
 
             if (existingToken.ReplacedByToken != null)
             {
                 await RevokeAllUserTokensAsync(existingToken);
-                return Unauthorized("Token has been replaced. All sessions revoked.");
+                return Unauthorized("Token has been replaced. All sessions revoked");
             }
 
-            if (existingToken.IsExpired)
-                return Unauthorized("Refresh token has expired");
+            if (existingToken.IsExpired) return Unauthorized("Refresh token has expired");
 
             var user = existingToken.User;
             if (user == null) return Unauthorized();
 
-            var newAccessToken = GenerateJwtToken(user.Email, user.Id.ToString(), user.Username, user.Role.ToString());
+            var newAccessToken = GenerateJwtToken(user.Email, user.Id.ToString(), user.Username, user.Tier.ToString());
             var newRefreshToken = await RotateRefreshTokenAsync(existingToken);
 
             await RemoveOldTokensAsync(user.Id);

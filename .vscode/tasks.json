@@ -69,7 +69,7 @@
         {
             "label": "run-all",
             "dependsOn": ["update-api", "update-client", "start-client"],
-            "dependsOrder": "sequence"
+            "dependsOrder": "parallel"
         },
 
         //Build and publish tasks used for manual builds or production deployments, not needed for debugging

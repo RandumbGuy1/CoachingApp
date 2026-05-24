@@ -17,16 +17,9 @@ export class GroupsService {
     );
   }
 
-  getPublicGroups() {
-    return this.http.post<CoachingGroup[]>(this.API_URL + '/public', null).pipe(
-      tap((res: CoachingGroup[]) => {
-        return res;
-      })
-    );
-  }
-
-  getCurrentGroups() {
-    return this.http.post<CoachingGroup[]>(this.API_URL + '/current', null).pipe(
+  getGroups(filter?: string) {
+    const url = filter ? `${this.API_URL}/${filter}` : `${this.API_URL}`;
+    return this.http.post<CoachingGroup[]>(url, null).pipe(
       tap((res: CoachingGroup[]) => {
         return res;
       })

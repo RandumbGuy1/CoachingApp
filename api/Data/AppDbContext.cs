@@ -9,15 +9,14 @@ namespace CoachApi.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<CoachingGroup> CoachingGroups => Set<CoachingGroup>();
-        public DbSet<Coach> Coaches => Set<Coach>();
-        public DbSet<Client> Clients => Set<Client>();
+        public DbSet<GroupMembership> Memberships => Set<GroupMembership>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new CoachConfiguration());
-            modelBuilder.ApplyConfiguration(new ClientConfiguration());
+            modelBuilder.ApplyConfiguration(new ProfileConfiguration());
+            modelBuilder.ApplyConfiguration(new MembershipConfiguration());
         }
     }
 }

@@ -35,10 +35,11 @@ namespace CoachApi.Controllers
             await _db.SaveChangesAsync();
 
             //Doing this is enough to link the coach to the group
-            _db.Coaches.Add(new Coach
+            _db.Memberships.Add(new GroupMembership
             {
                 UserId = userId,
-                CoachingGroupId = group.Id
+                CoachingGroupId = group.Id,
+                Role = GroupRole.Owner
             });
 
             await _db.SaveChangesAsync();
@@ -51,16 +52,16 @@ namespace CoachApi.Controllers
         {
             var userId = User.GetUserId();
 
-            var exists = await _db.Clients
+            var existsInGroup = await _db.Memberships
                 .AnyAsync(x => x.UserId == userId && x.CoachingGroupId == groupId);
 
-            if (exists)
-                return BadRequest("Already in this group");
+            if (existsInGroup) return BadRequest("Already in this group");
 
-            _db.Clients.Add(new Client
+            _db.Memberships.Add(new GroupMembership
             {
                 UserId = userId,
-                CoachingGroupId = groupId
+                CoachingGroupId = groupId,
+                Role = GroupRole.Client
             });
 
             await _db.SaveChangesAsync();
@@ -68,22 +69,23 @@ namespace CoachApi.Controllers
             return Ok();
         }
 
-        [HttpPost("{groupId}/clients/{userId}")]
+        [HttpPost("{groupId}/add/{userId}")]
         [Authorize(Roles = "Coach")]
         public async Task<IActionResult> AddClient(Guid groupId, Guid userId)
         {
+            //Make sure that the coach is part of the group before allowing them to add clients to it
             var coachId = User.GetUserId();
+            var isCoachInGroup = await _db.Memberships
+                .Select(x => x.UserId == coachId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner))
+                .AnyAsync();
 
-            var isCoachInGroup = await _db.Coaches
-                .AnyAsync(x => x.UserId == coachId && x.CoachingGroupId == groupId);
+            if (!isCoachInGroup) return Forbid();
 
-            if (!isCoachInGroup)
-                return Forbid();
-
-            _db.Clients.Add(new Client
+            _db.Memberships.Add(new GroupMembership
             {
                 UserId = userId,
-                CoachingGroupId = groupId
+                CoachingGroupId = groupId,
+                Role = GroupRole.Client
             });
 
             await _db.SaveChangesAsync();
@@ -91,23 +93,60 @@ namespace CoachApi.Controllers
             return Ok();
         }
 
-        [HttpPost("{groupId}/coaches/{userId}")]
+        [HttpPost("{groupId}/promote/{userId}")]
         [Authorize(Roles = "Coach")]
-        public async Task<IActionResult> AddCoach(Guid groupId, Guid userId)
+        public async Task<IActionResult> PromoteUser(Guid groupId, Guid userId)
         {
             var coachId = User.GetUserId();
 
-            var isCoachInGroup = await _db.Coaches
-                .AnyAsync(x => x.UserId == coachId && x.CoachingGroupId == groupId);
+            //Make sure that the coach is part of the group before allowing them to promote clients
+            var isCoachInGroup = await _db.Memberships
+                .AnyAsync(x => x.UserId == coachId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner));
 
             if (!isCoachInGroup)
                 return Forbid();
 
-            _db.Clients.Add(new Client
-            {
-                UserId = userId,
-                CoachingGroupId = groupId
-            });
+            var membership = await _db.Memberships.FirstOrDefaultAsync(x => x.UserId == userId && x.CoachingGroupId == groupId);
+            if (membership == null)
+                return NotFound();
+            
+            if (membership.Role == GroupRole.Coach || membership.Role == GroupRole.Owner)
+                return BadRequest("User is already a coach or owner");
+
+            if (membership.UserId == coachId)
+                return BadRequest("Cannot change your own role");
+
+            membership.Role = GroupRole.Coach;
+
+            await _db.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("{groupId}/transfer/{userId}")]
+        [Authorize(Roles = "Coach")]
+        public async Task<IActionResult> TransferOwnership(Guid groupId, Guid userId)
+        {
+            var ownerId = User.GetUserId();
+
+            //Make sure that the user is owner of the group before allowing them to transfer ownership
+            var ownerMembership = await _db.Memberships
+                .FirstOrDefaultAsync(x => x.UserId == ownerId && x.CoachingGroupId == groupId && x.Role == GroupRole.Owner);
+            if (ownerMembership == null)
+                return Forbid();
+
+            var membership = await _db.Memberships.FirstOrDefaultAsync(x => x.UserId == userId && x.CoachingGroupId == groupId);
+            if (membership == null)
+                return NotFound();
+            
+            if (membership.Role == GroupRole.Client)
+                return BadRequest("User must be a coach to be promoted to owner");
+
+            if (membership.UserId == ownerId)
+                return BadRequest("Cannot transfer ownership to yourself");
+
+            membership.Role = GroupRole.Owner;
+            ownerMembership.Role = GroupRole.Coach;
 
             await _db.SaveChangesAsync();
 
@@ -115,8 +154,8 @@ namespace CoachApi.Controllers
         }
 
         [HttpPost]
-        [HttpPost("public")]
-        public async Task<IActionResult> GetPublicGroups()
+        [HttpPost("{filter?}")]
+        public async Task<IActionResult> GetGroups(string? filter)
         {
             // var groups = await _db.CoachingGroups
             //     .Where(g => g.IsPublic)
@@ -200,103 +239,6 @@ namespace CoachApi.Controllers
                 {
                     Id = Guid.NewGuid(), 
                     Name = "Group 8",
-                    Code = "888888",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#2A9D8F",
-                    IsPublic = true,
-                    IsRequestToJoin = false
-                },
-            };
-                
-            return Ok(groups);
-        }
-
-        [HttpPost]
-        [HttpPost("current")]
-        public async Task<IActionResult> GetCurrentGroups()
-        {
-            // var groups = await _db.CoachingGroups
-            //     .Where(g => g.IsPublic)
-            //     .Include(g => g.Coaches) 
-            //     .Include(g => g.Clients)
-            //     .ToListAsync();
-
-            var groups = new CoachingGroup[]
-            {
-                new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 11",
-                    Code = "111111",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#4FA3D1",
-                    IsPublic = true,
-                    IsRequestToJoin = false
-                },
-                new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 12",
-                    Code = "222222",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#E76F51",
-                    IsPublic = true,
-                    IsRequestToJoin = true
-                },
-                new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 13",
-                    Code = "333333",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#9B5DE5",
-                    IsPublic = false,
-                    IsRequestToJoin = false
-                },
-                new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 14",
-                    Code = "444444",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#2A9D8F",
-                    IsPublic = true,
-                    IsRequestToJoin = false
-                },
-                    new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 15",
-                    Code = "555555",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#4FA3D1",
-                    IsPublic = true,
-                    IsRequestToJoin = false
-                },
-                new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 16",
-                    Code = "666666",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#E76F51",
-                    IsPublic = true,
-                    IsRequestToJoin = true
-                },
-                new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 17",
-                    Code = "777777",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    Color = "#9B5DE5",
-                    IsPublic = false,
-                    IsRequestToJoin = false
-                },
-                new CoachingGroup
-                {
-                    Id = Guid.NewGuid(), 
-                    Name = "Group 18",
                     Code = "888888",
                     Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                     Color = "#2A9D8F",

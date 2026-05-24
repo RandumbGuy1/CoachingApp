@@ -6,11 +6,20 @@ namespace CoachApi.Entities
         public Guid UserId { get; set; }
         public User User { get; set; } = default!;
 
+        //Basic Profile
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
         public string ProfilePictureURL { get; set; } = default!;
         public string Bio { get; set; } = default!;
+
+        //Personal info
         public Gender? Gender { get; set; } = default!;
         public string? Timezone { get; set; } = default!;
         public Region? Region { get; set; } = default!;
+
+        //Preferences
+        public AppTheme Theme { get; set; } = AppTheme.Dark;
+        public bool ReceiveEmailNotifications { get; set; } = true;
     }
 
     public enum Gender
@@ -18,8 +27,13 @@ namespace CoachApi.Entities
         Male,
         Female,
         NonBinary,
-        PreferNotToSay,
-        Other
+        Other,
+    }
+
+    public enum AppTheme
+    {
+        Light,
+        Dark,
     }
 
     public enum Region

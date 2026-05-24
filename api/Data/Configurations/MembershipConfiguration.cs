@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoachApi.Data.Configurations
 {
-    public class CoachConfiguration : IEntityTypeConfiguration<Coach>
+    public class MembershipConfiguration : IEntityTypeConfiguration<GroupMembership>
     {
-        public void Configure(EntityTypeBuilder<Coach> builder)
+        public void Configure(EntityTypeBuilder<GroupMembership> builder)
         {
             builder.HasKey(x => new { x.UserId, x.CoachingGroupId });
 
             builder.HasOne(x => x.User)
-                .WithMany()
+                .WithMany(u => u.Memberships)
                 .HasForeignKey(x => x.UserId);
 
             builder.HasOne(x => x.Group)
-                .WithMany(g => g.Coaches)
+                .WithMany(g => g.Members)
                 .HasForeignKey(x => x.CoachingGroupId);
         }
     }

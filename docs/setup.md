@@ -7,42 +7,44 @@ Then restart your terminal or VS Code.
 
 Open a new Terminal Window
 
-1. Install .NET -> https://dotnet.microsoft.com/en-us/download
+1. Clone repository from Git into directory -> https://git-scm.com/install/
+```bash
+    git --version
+    git clone https://github.com/RandumbGuy1/CoachingApp.git
+```
+
+2. Install VS Code or IDE of choice -> https://code.visualstudio.com/download
+
+## Open up root project folder in VS Code
+
+3. Install .NET -> https://dotnet.microsoft.com/en-us/download
 ```bash
     dotnet --version
 ```
-2. Install Node.js -> https://nodejs.org
+
+4. Install Node.js -> https://nodejs.org
 ```bash
     node --version
     npm --version
 ```
 
-3. Install Angular CLI
+5. Install Angular CLI
 ```bash
     npm install -g @angular/cli@latest
     ng version
 ```
 
-4. Install Docker -> https://www.docker.com/products/docker-desktop/
+6. Install Docker -> https://www.docker.com/products/docker-desktop/
 ```bash
     docker --version
     docker compose version
 ```
 
-5. Clone repository from Git into directory -> https://git-scm.com/install/
-```bash
-    git --version
-    git clone <your-repo-url>
-```
-
-6. Install VS Code or IDE of choice -> https://code.visualstudio.com/download
-
-## Open up project in VS Code
-
-7. Install EF Core Tools
+7. Install EF Core Tools & run initial build
 ```bash
     dotnet tool install --global dotnet-ef
     dotnet ef --version
+    dotnet build
 ```
 
 8. Create a .env file from the following template
@@ -53,13 +55,22 @@ Open a new Terminal Window
 Make sure to set the following values:
 - SA_PASSWORD: Password used by SQL Server container (must match connection string)
 
-//TODO: Figure out why secrets isn't working, maybe find an alternative
+## Go into the /api folder
+```bash
+    cd api
+```
+
 11. Initialize User Secrets and Setup the connection string
 - User secrets are used to keep sensitive data (like database passwords) out of source control.
 - NOTE: Replace <YourPassword> with the SA_PASSWORD you wrote in .env
 ```bash
     dotnet user-secrets init
-    dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=localhost,1433;User ID=SA;Password=<YourPassword>;Trust Server Certificate=True;MultipleActiveResultSets=True;'
+    dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=localhost,1433;Initial Catalog=CoachDb;User ID=SA;Password=<YourPassword>;Trust Server Certificate=True;MultipleActiveResultSets=True;'
+```
+
+- Also make sure to create an atleast 32 character long jwt key
+```bash
+    dotnet user-secrets set "Jwt:Key" "<YourPassword>"
 ```
 
 ## Daily Development
@@ -71,6 +82,12 @@ This should be run to ensure the container is running
 ```bash
     docker compose up -d
 ```
+
+- If you get:
+```bash
+    unable to get image 'mcr.microsoft.com/mssql/server:2025-latest': failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+```
+- Make sure Docker Desktop is running.
 
 - Hit "F5" and go to http://localhost:4200/
 
