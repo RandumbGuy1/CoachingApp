@@ -40,7 +40,7 @@ namespace CoachApi.Controllers
             return Ok(new AuthResponse() { AccessToken = accessToken, RefreshToken = refreshToken.Token });
         }
 
-        private string GenerateJwtToken(string email, string userId, string username, string role)
+        private string GenerateJwtToken(string email, string userId, string username, string tier)
         {
             #pragma warning disable CS8604 // Possible null reference argument.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -55,7 +55,7 @@ namespace CoachApi.Controllers
                     new Claim(ClaimTypes.Email, email),
                     new Claim(ClaimTypes.NameIdentifier, userId),
                     new Claim("username", username),
-                    new Claim(ClaimTypes.Role, role)
+                    new Claim(ClaimTypes.Role, tier)
                 ],
                 expires: DateTime.UtcNow.AddMinutes(15),
                 signingCredentials: creds
@@ -85,7 +85,9 @@ namespace CoachApi.Controllers
                 {
                     UserId = userId,
                     FirstName = request.FirstName,
-                    LastName = request.LastName
+                    LastName = request.LastName,
+                    Bio = "",
+                    ProfilePictureURL = ""
                 },
                 PasswordHash = "" // Will be set after hashing
             };

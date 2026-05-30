@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from "../avatar/avatar";
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { User, UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -10,29 +11,30 @@ import { AuthService } from '../../auth/auth.service';
   imports: [CommonModule, AvatarComponent],
 })
 export class NavigationBarComponent implements OnInit {
+  @Input() collapsed = false;
+  user: User | null = null;
+
   clients: NavigationElement = {
     title: "Clients",
-    icon: "assets/images/nav-icons/clients.svg",
+    icon: "assets/images/icons/navigation/clients.svg",
     tooltip: "View and manage clients",
     url: '/clients',
     color: 'selected',
-    showWhileLoggedOut: true,
-    isCoachOnly: true,
+    showWhileLoggedOut: false,
   };
 
   forms: NavigationElement = {
     title: "Forms",
-    icon: "assets/images/nav-icons/forms.svg",
+    icon: "assets/images/icons/navigation/forms.svg",
     tooltip: "View and manage forms",
     url: '/forms',
     color: 'selected',
-    showWhileLoggedOut: true,
-    isCoachOnly: true,
+    showWhileLoggedOut: false,
   };
 
   settings: NavigationElement = {
     title: "Settings",
-    icon: "assets/images/nav-icons/settings.svg",
+    icon: "assets/images/icons/navigation/settings.svg",
     tooltip: "Edit application settings",
     url: '/settings',
     showWhileLoggedOut: true,
@@ -40,7 +42,7 @@ export class NavigationBarComponent implements OnInit {
 
   info: NavigationElement = {
     title: "Info",
-    icon: "assets/images/nav-icons/info.svg",
+    icon: "assets/images/icons/navigation/info.svg",
     tooltip: "View application info",
     url: '/info',
     showWhileLoggedOut: true,
@@ -48,7 +50,7 @@ export class NavigationBarComponent implements OnInit {
 
   inbox: NavigationElement = {
     title: "Inbox",
-    icon: "assets/images/nav-icons/inbox.svg",
+    icon: "assets/images/icons/navigation/inbox.svg",
     tooltip: "View messages and notifications",
     url: '/inbox',
     notificationCount: 1,
@@ -56,14 +58,14 @@ export class NavigationBarComponent implements OnInit {
 
   groups: NavigationElement = {
     title: "Groups",
-    icon: "assets/images/nav-icons/groups.svg",
+    icon: "assets/images/icons/navigation/groups.svg",
     tooltip: "View groups",
     url: '/groups',
   };
 
   logout: NavigationElement = {
     title: "Logout",
-    icon: "assets/images/nav-icons/logout.svg",
+    icon: "assets/images/icons/navigation/logout.svg",
     tooltip: "Log out of the application",
     url: '',
     callback: () => this.auth.logout(),
@@ -72,42 +74,42 @@ export class NavigationBarComponent implements OnInit {
 
   dashboard: NavigationElement = {
     title: "Dashboard",
-    icon: "assets/images/nav-icons/dashboard.svg",
+    icon: "assets/images/icons/navigation/dashboard.svg",
     tooltip: "Go to dashboard",
     url: '',
   };
 
   goals: NavigationElement = {
     title: "Goals",
-    icon: "assets/images/nav-icons/goals.svg",
+    icon: "assets/images/icons/navigation/goals.svg",
     tooltip: "Edit and view fitness goals",
     url: '/goals',
   };
 
   programs: NavigationElement = {
     title: "Programs",
-    icon: "assets/images/nav-icons/programs.svg",
+    icon: "assets/images/icons/navigation/programs.svg",
     tooltip: "Edit and view lifting programs",
     url: '/programs',
   };
 
   workout: NavigationElement = {
     title: "Workout",
-    icon: "assets/images/nav-icons/workout.svg",
+    icon: "assets/images/icons/navigation/workout.svg",
     tooltip: "Start a workout",
     url: '/workout',
   };
 
   history: NavigationElement = {
     title: "History",
-    icon: "assets/images/nav-icons/history.svg",
+    icon: "assets/images/icons/navigation/history.svg",
     tooltip: "View previous workout and form data",
     url: '/history',
   };
 
   glossary: NavigationElement = {
     title: "Glossary",
-    icon: "assets/images/nav-icons/glossary.svg",
+    icon: "assets/images/icons/navigation/glossary.svg",
     tooltip: "View database of all excercises",
     url: '/glossary',
   };
@@ -133,14 +135,13 @@ export class NavigationBarComponent implements OnInit {
     this.groups,
   ];
 
-  constructor(public router: Router, public auth: AuthService) {}
+  constructor(public router: Router, public userService: UserService, public auth: AuthService) {}
 
-  ngOnInit(): void {}
-
-  canShowCoachElement(element: NavigationElement): boolean {
-    const role = this.auth.getCurrentUser()?.role;
-    if (!element.isCoachOnly) return true;
-    return role === 'Coach';
+  ngOnInit(): void {
+    this.userService.getCurrentUser()?.subscribe({
+      next: (user) => this.user = user,
+      error: () => this.user = null,
+    });
   }
 }
 

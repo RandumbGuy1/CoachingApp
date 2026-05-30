@@ -7,8 +7,13 @@ namespace CoachApi.Data
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<User> Users => Set<User>();
+        public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<CoachingGroup> CoachingGroups => Set<CoachingGroup>();
+        public DbSet<FormResponse> FormResponses => Set<FormResponse>();
+        public DbSet<UserStat> UserStats => Set<UserStat>();
+        public DbSet<WorkoutLog> WorkoutLogs => Set<WorkoutLog>();
+        public DbSet<WorkoutSet> WorkoutSets => Set<WorkoutSet>();
         public DbSet<GroupMembership> Memberships => Set<GroupMembership>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

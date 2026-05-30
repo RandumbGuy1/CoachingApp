@@ -1,0 +1,216 @@
+@import "tailwindcss";
+@import 'tailwindcss-primeui';
+
+@theme {
+    --color-warning: #e8cc4f;
+    --color-error: #e84f4f;
+
+    /* Light blue colors */
+    --color-light-50: #f2f3fb;
+    --color-light-100: #e7e9f8;
+    --color-light-200: #d8dcf2;
+    --color-light-300: #c9cdec;
+    --color-light-400: #b9bfe5;
+    --color-light-500: #adb4dd;
+    --color-light-600: #9fa6d4;
+    --color-light-700: #9198c9;
+    --color-light-800: #838bbc;
+    --color-light-900: #7a81af;
+    --color-light-950: #737aa2;
+
+    /* Light green colors */
+    --color-light-green-50: #f2fbf6;
+    --color-light-green-100: #e0f6ea;
+    --color-light-green-200: #bcedd4;
+    --color-light-green-300: #ade0c5;
+    --color-light-green-400: #a1d1b8;
+    --color-light-green-500: #96c3ab;
+    --color-light-green-600: #8bb49f;
+    --color-light-green-700: #80a692;
+    --color-light-green-800: #759986;
+    --color-light-green-900: #6a8b7a;
+    --color-light-green-950: #668675;
+
+    /* Light orange colors */
+    --color-light-orange-50: #fbf5f2;
+    --color-light-orange-100: #f7ece5;
+    --color-light-orange-200: #f3dfd4;
+    --color-light-orange-300: #edcebd;
+    --color-light-orange-400: #e9bea3;
+    --color-light-orange-500: #e5ad87;
+    --color-light-orange-600: #da9f73;
+    --color-light-orange-700: #c9926a;
+    --color-light-orange-800: #b98660;
+    --color-light-orange-900: #a87a57;
+    --color-light-orange-950: #9f7352;
+
+    /* Base colors */
+    --color-base-50: #696d94;
+    --color-base-100: #62658d;
+    --color-base-200: #555980;
+    --color-base-300: #484b6d;
+    --color-base-400: #3b3e5a;
+    --color-base-500: #31334b;
+    --color-base-600: #25263a;
+    --color-base-700: #191a2a;
+    --color-base-800: #0e0f1a;
+    --color-base-900: #06070e;
+    --color-base-950: #030307;
+
+    /* blue Glow colors */
+    --color-glow-blue-50: #7da4ff;
+    --color-glow-blue-100: #729aff;
+    --color-glow-blue-200: #5c8cff;
+    --color-glow-blue-300: #4b7fff;
+    --color-glow-blue-400: #316fff;
+    --color-glow-blue-500: #005eff;
+    --color-glow-blue-600: #1451e9;
+    --color-glow-blue-700: #1e45d8;
+    --color-glow-blue-800: #263abc;
+    --color-glow-blue-900: #0a1e6c;
+    --color-glow-blue-950: #021246;
+
+    /* purple Glow colors */
+    --color-glow-purple-50: #be90ff;
+    --color-glow-purple-100: #b486ff;
+    --color-glow-purple-200: #a576ff;
+    --color-glow-purple-300: #9669ff;
+    --color-glow-purple-400: #8459ff;
+    --color-glow-purple-500: #6e49ff;
+    --color-glow-purple-600: #543cf8;
+    --color-glow-purple-700: #3535ee;
+    --color-glow-purple-800: #263abc;
+    --color-glow-purple-900: #0d0d86;
+    --color-glow-purple-950: #110259;
+
+    /* green Glow colors */
+    --color-glow-green-50: #00f7bb;
+    --color-glow-green-100: #00eea9;
+    --color-glow-green-200: #00dc8f;
+    --color-glow-green-300: #00ca74;
+    --color-glow-green-400: #02b857;
+    --color-glow-green-500: #00a65e;
+    --color-glow-green-600: #00945f;
+    --color-glow-green-700: #00825b;
+    --color-glow-green-800: #007154;
+    --color-glow-green-900: #00614c;
+    --color-glow-green-950: #005849;
+
+    /* orange Glow colors */
+    --color-glow-orange-50: #ff8a03;
+    --color-glow-orange-100: #ff850d;
+    --color-glow-orange-200: #f87a00;
+    --color-glow-orange-300: #f57200;
+    --color-glow-orange-400: #f26a00;
+    --color-glow-orange-500: #eb6000;
+    --color-glow-orange-600: #e85600;
+    --color-glow-orange-700: #e14b00;
+    --color-glow-orange-800: #dc4317;
+    --color-glow-orange-900: #732200;
+    --color-glow-orange-950: #411200;
+
+    --font-mono: "Roboto Mono", monospace;
+}
+
+/* Utility classes for text glow effects */
+@utility glow-light {
+    text-shadow:
+        0 0 5px var(--color-light-950),
+        0 0 10px var(--color-light-950),
+        0 0 20px var(--color-light-950);
+}
+
+@utility glow-light-icon {
+  filter:
+    drop-shadow(0 0 5px var(--color-light-950))
+    drop-shadow(0 0 10px var(--color-light-950))
+    drop-shadow(0 0 20px var(--color-light-950));
+}
+
+@utility glow-blue {
+    text-shadow:
+        0 0 5px var(--color-glow-blue-700),
+        0 0 10px var(--color-glow-blue-700),
+        0 0 20px var(--color-glow-blue-700);
+}
+
+@utility glow-blue-icon {
+  filter:
+    drop-shadow(0 0 5px var(--color-glow-blue-700))
+    drop-shadow(0 0 10px var(--color-glow-blue-700))
+    drop-shadow(0 0 20px var(--color-glow-blue-700));
+}
+
+@utility glow-orange {
+    text-shadow:
+        0 0 5px var(--color-glow-orange-600),
+        0 0 10px var(--color-glow-orange-600),
+        0 0 20px var(--color-glow-orange-600);
+}
+
+@utility glow-orange-icon {
+  filter:
+    drop-shadow(0 0 5px var(--color-glow-orange-600))
+    drop-shadow(0 0 10px var(--color-glow-orange-600))
+    drop-shadow(0 0 20px var(--color-glow-orange-600));
+}
+
+@utility text-glow-light {
+    @apply text-light-300 glow-light;
+}
+
+@utility text-glow-light-hover {
+    @apply text-light-300 hover:text-light-50 hover:glow-light transition;
+}
+
+@utility text-glow-blue {
+    @apply text-glow-blue-100 glow-blue;
+}
+
+@utility text-glow-blue-hover {
+    @apply text-glow-blue-100 hover:text-light-50 hover:glow-blue transition;
+}
+
+@utility text-glow-orange {
+    @apply text-glow-orange-100 glow-orange;
+}
+
+@utility text-glow-orange-hover {
+    @apply text-glow-orange-100 hover:text-light-50 hover:glow-orange transition;
+}
+
+@utility scrollbar-base {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-base-600) transparent;
+}
+
+@utility scrollbar-base-webkit {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-base-600);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-base-500);
+  }
+}
+
+
+/* @layer base {
+    .p-tablist {
+        border-radius: 20px 20px 0 0;
+    }
+
+    .p-tabpanels {
+        border-radius: 0 0 20px 20px;
+    }
+} */

@@ -6,7 +6,6 @@ namespace CoachApi.Entities
         public User User { get; set; } = default!;
         public Guid CoachingGroupId { get; set; }
         public CoachingGroup Group { get; set; } = default!;
-        
         public required GroupRole Role { get; set; } = GroupRole.Client;
     }
 

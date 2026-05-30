@@ -1,35 +1,43 @@
 <div class="flex flex-col items-center justify-center h-full w-full gap-8">
-  <div class="bg-base-light p-8 rounded-xl shadow w-80">
-    <h1 class="text-5xl font-mono font-bold mb-4 text-light">Log In</h1>
+  <div class="bg-base-900 p-8 rounded-xl shadow w-120 border-light-300 border-1">
 
-    <p class="font-mono font-bold text-warning mb-3">{{ error }}</p>
+    <div class="flex flex-row justify-center mb-5">
+      <div class="flex flex-col gap-4 items-center">
+        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue text-center">Login</h1>
+        <p class="font-mono font-bold text-warning">{{ error }}</p>
+      </div>
+    </div>
 
-    <input
-      [(ngModel)]="identifier"
-      type="email"
-      placeholder="Username or Email"
-      class="w-full p-2 border-light border-2 rounded mb-3 text-light"
-    />
+    <div class="flex flex-row justify-center">
+      <div class="flex flex-col gap-3">
+        <input
+          [(ngModel)]="identifier"
+          type="identifier"
+          placeholder="Username or Email"
+          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+          id="identifier"
+        />
 
-    <input
-      [(ngModel)]="password"
-      type="password"
-      placeholder="Password"
-      class="w-full p-2 border-light border-2 rounded mb-4 text-light"
-    />
+        <input
+          [(ngModel)]="password"
+          type="password"
+          placeholder="Password"
+          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+          id="password"
+        />
+      </div>
+    </div>
 
     <button
       (click)="login()"
-      class="w-full bg-brand bg-base text-white p-2 rounded hover:opacity-60 transition"
+      class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
     >
       <p class="font-mono font-bold">Submit</p>
     </button>
   </div>
 
-  <div class="bg-base-light p-8 rounded-xl shadow w-80">
-    <p class="font-mono text-light ">
-      Don't have an account?
-      <button (click)="router.navigate(['/register'])" class="text-brand text-glow-blue font-bold hover:underline cursor-pointer">Go to Register</button>
-    </p>
+  <div class="bg-base-900 p-8 rounded-xl shadow w-80 border-light-300 border-1 flex flex-col items-center justify-center gap-4">
+    <p class="font-mono text-light">Don't have an account?</p>
+    <button (click)="router.navigate(['/register'])" class="font-bold text-glow-blue-hover transition">Register Here</button>
   </div>
 </div>

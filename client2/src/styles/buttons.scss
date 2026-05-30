@@ -1,0 +1,30 @@
+// .btn-primary {
+//     @apply w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition;
+// }
+
+// .link-btn {
+//     @apply font-bold text-glow-blue-hover transition;
+// }
+
+.button-hover-light {
+  &:hover {
+
+    /* Text only */
+    p {
+        @apply text-light-50 glow-blue transition-all;
+
+        &.text-warning {
+            @apply text-light-orange-50 glow-orange transition-all;
+        }
+    }
+
+    /* Mask icon */
+    .icon-wrapper {
+        @apply text-light-50 glow-blue-icon transition-all;
+
+        &.text-warning {
+            @apply text-light-orange-50 glow-orange-icon transition-all;
+        }
+    }
+  }
+}

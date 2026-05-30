@@ -1,0 +1,1 @@
+Use keys with hashed user data to make sure people can upgrade their roles

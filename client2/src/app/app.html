@@ -1,10 +1,21 @@
-<div class="flex flex-row h-full w-full">
-  <div class="w-65">
-    <app-navigation-bar></app-navigation-bar>
-  </div>
+<div class="flex h-screen w-screen overflow-hidden">
+  <!-- Sidebar -->
+  <app-navigation-bar [collapsed]="collapsed"></app-navigation-bar>
 
-  <div class="flex-1 p-6 min-w-0">
+  <!-- Main Content -->
+  <div class="flex-1 overflow-auto">
     <router-outlet></router-outlet>
   </div>
+
+  <!-- Floating Collapse Button -->
+  <button
+    class="absolute bottom-4 transition-all duration-300 bg-base-700 text-white p-3 rounded-full shadow-lg hover:bg-gray-700"
+    [class.left-25]="collapsed"
+    [class.left-70]="!collapsed"
+    (click)="collapsed = !collapsed"
+  >
+    <img [src]="collapsed ? openIconUrl : closedIconUrl" class="w-[20px] h-[20px]">
+  </button>
 </div>
+
 

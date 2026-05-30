@@ -15,7 +15,7 @@ namespace CoachApi.Controllers
         private readonly AppDbContext _db = context;
 
         [HttpPost]
-        [Authorize(Roles = "Coach")]
+        [Authorize(Roles = "Pro,Enterprise")]
         public async Task<IActionResult> CreateGroup(CreateGroupRequest request)
         {
             var userId = User.GetUserId();
@@ -47,7 +47,7 @@ namespace CoachApi.Controllers
         }
 
         [HttpPost("{groupId}/join")]
-        [Authorize(Roles = "Client")]
+        [Authorize(Roles = "Free,Pro,Enterprise")]
         public async Task<IActionResult> JoinGroup(Guid groupId)
         {
             var userId = User.GetUserId();
@@ -70,7 +70,7 @@ namespace CoachApi.Controllers
         }
 
         [HttpPost("{groupId}/add/{userId}")]
-        [Authorize(Roles = "Coach")]
+        [Authorize(Roles = "Pro,Enterprise")]
         public async Task<IActionResult> AddClient(Guid groupId, Guid userId)
         {
             //Make sure that the coach is part of the group before allowing them to add clients to it
@@ -94,7 +94,7 @@ namespace CoachApi.Controllers
         }
 
         [HttpPost("{groupId}/promote/{userId}")]
-        [Authorize(Roles = "Coach")]
+        [Authorize(Roles = "Pro,Enterprise")]
         public async Task<IActionResult> PromoteUser(Guid groupId, Guid userId)
         {
             var coachId = User.GetUserId();
@@ -124,7 +124,7 @@ namespace CoachApi.Controllers
         }
 
         [HttpPost("{groupId}/transfer/{userId}")]
-        [Authorize(Roles = "Coach")]
+        [Authorize(Roles = "Pro,Enterprise")]
         public async Task<IActionResult> TransferOwnership(Guid groupId, Guid userId)
         {
             var ownerId = User.GetUserId();
@@ -153,8 +153,8 @@ namespace CoachApi.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [HttpPost("{filter?}")]
+        [HttpGet("get/{filter?}")]
+        [Authorize(Roles = "Free,Pro,Enterprise")]
         public async Task<IActionResult> GetGroups(string? filter)
         {
             // var groups = await _db.CoachingGroups

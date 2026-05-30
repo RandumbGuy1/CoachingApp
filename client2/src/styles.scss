@@ -1,0 +1,11 @@
+@use "./tailwind-theme.css" as *;
+@use "./styles/glow.scss" as *;
+@use "./styles/icons.scss" as *;
+@use "./styles/buttons.scss" as *;
+@use "./styles/input.scss" as *;
+
+body {
+  background-color: var(--color-base-950);
+  color: var(--color-light-50);
+  font-family: var(--font-mono);
+}

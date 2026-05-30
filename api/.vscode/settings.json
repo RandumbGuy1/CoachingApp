@@ -1,5 +1,7 @@
 {
     "dataworkspace.excludedProjects": [
         "CoachingDatabaser/CoachingDatabaser.sqlproj"
-    ]
+    ],
+    "scss.lint.unknownAtRules": "ignore",
+    "css.lint.unknownAtRules": "ignore"
 }

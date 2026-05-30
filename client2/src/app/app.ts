@@ -9,5 +9,9 @@ import { NavigationBarComponent } from './components/navigation/navigation-bar.c
   styleUrl: './app.css'
 })
 export class App {
+  collapsed: boolean = false;
   protected readonly title = signal('client2');
+
+  openIconUrl: string = 'assets/images/icons/chevron-right.svg'
+  closedIconUrl: string = 'assets/images/icons/chevron-left.svg'
 }

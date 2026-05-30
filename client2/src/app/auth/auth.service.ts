@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { tap } from 'rxjs';
+import { UserTier } from '../services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,8 +22,8 @@ export class AuthService {
     );
   }
 
-  register(username: string, email: string, password: string, role: string) {
-    return this.http.post(this.API_URL + '/register', { username, email, password, role }).pipe(
+  register(firstname: string, lastname: string, username: string, email: string, password: string, tier: string) {
+    return this.http.post(this.API_URL + '/register', { firstname, lastname, username, email, password, tier }).pipe(
       tap((res: any) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
@@ -55,31 +56,39 @@ export class AuthService {
     }
 
     return this.http.post<any>(this.API_URL + '/refresh', { refreshToken: refreshToken }).pipe(
-      tap(res => {
+      tap((res: any) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
       })
     );
   }
 
-  getCurrentUser(): User | null {
+  getCurrentIdentity(): Identity | null {
     const token = this.getAccessToken();
     if (!token) return null;
 
-    const decoded: any = jwtDecode(token);
+    try {
+      const decoded: any = jwtDecode(token);
+      const identity = {
+        id: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+        username: decoded['username'],
+        email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+        tier: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+      } as Identity;
 
-    return {
-      id: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
-      username: decoded['username'],
-      email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-      role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-    };
+      return identity;
+
+    } catch (e) {
+      console.error('Failed to decode token', e);
+      return null;
+    }
   }
 }
 
-export interface User {
+export interface Identity {
   id: string;
   username: string;
   email: string;
-  role: string;
+  tier: UserTier;
 }
+

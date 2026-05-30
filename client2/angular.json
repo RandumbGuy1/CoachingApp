@@ -27,7 +27,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/tailwind-theme.css",
+              "src/styles.scss"
             ]
           },
           "configurations": {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { CoachingGroup, GroupsService } from '../../services/groups-service';
+import { CoachingGroup, GroupsService } from '../../services/groups.service';
 import { Router } from '@angular/router';
 import { GroupWidget } from '../../components/group-widget/group-widget';
 

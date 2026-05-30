@@ -6,20 +6,21 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, ToggleSwitch],
+  imports: [FormsModule],
   templateUrl: './register.html',
 })
 export class RegisterPage {
-  username = '';
-  email = '';
-  password = '';
-  error = '';
-  checked: boolean = false;
+  username: string = '';
+  firstname: string = '';
+  lastname: string = '';
+  email: string = '';
+  password: string = '';
+  error: string = '';
 
   constructor(public router: Router, private auth: AuthService) {}
 
   register() {
-    this.auth.register(this.username, this.email, this.password, this.checked ? 'coach' : 'client').subscribe({
+    this.auth.register(this.firstname, this.lastname, this.username, this.email, this.password, 'free').subscribe({
       next: () => this.router.navigate(['/']),
       error: () => { this.error = 'Registration failed. Please check your credentials.'; },
     });

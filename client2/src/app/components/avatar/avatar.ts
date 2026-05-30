@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../../auth/auth.service';
+import { User } from '../../services/user.service';
 
 @Component({
   selector: 'app-avatar',
@@ -10,6 +10,7 @@ import { User } from '../../auth/auth.service';
 export class AvatarComponent {
   @Input() user: User = null!;
   @Input() profilePicture: string = "assets/images/avatar.svg";
+  @Input() collapsed: boolean = false;
 
   constructor(public router: Router) {}
 }

@@ -9,8 +9,8 @@ namespace CoachApi.Entities
         //Basic Profile
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
-        public string ProfilePictureURL { get; set; } = default!;
-        public string Bio { get; set; } = default!;
+        public string ProfilePictureURL { get; set; } = "";
+        public string Bio { get; set; } = "";
 
         //Personal info
         public Gender? Gender { get; set; } = default!;

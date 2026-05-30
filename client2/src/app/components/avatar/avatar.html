@@ -1,13 +1,19 @@
 <div class="flex flex-row gap-10">
   <button
-    class="flex h-35 pr-8 hover:bg-base transition justify-end items-center gap-4 w-full overflow-hidden"
+    class="flex h-35 hover:bg-base-700 transition-all items-center gap-4 w-full overflow-hidden"
+    [class.justify-end]="!collapsed"
+    [class.justify-center]="collapsed"
+    [class.pr-8]="!collapsed"
     [title]="user.username"
     (click)="router.navigate(['/profile'])"
   >
     <img [src]="profilePicture" class="w-[50px] h-[50px]">
-    <div class="flex flex-col">
-      <p class="font-mono font-bold text-light text-3xl truncate max-w-40">{{ user.username }}</p>
-      <p class="font-mono font-bold text-glow-blue text-xl truncate max-w-40">{{ user.role }}</p>
-    </div>
+
+    @if (!collapsed) {
+      <div class="flex flex-col">
+        <p class="font-mono font-bold text-glow-blue-50 text-3xl max-w-40">{{ user.username }}</p>
+        <p class="font-mono font-bold text-light-700 text-xl max-w-40">{{ user.tier }}</p>
+      </div>
+    }
   </button>
 </div>

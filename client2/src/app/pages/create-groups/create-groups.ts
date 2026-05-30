@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { CreateGroupRequest, GroupsService } from './../../services/groups-service';
+import { CreateGroupRequest, GroupsService } from '../../services/groups.service';
 import { Component } from '@angular/core';
 
 @Component({
