@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoachApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260524165107_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260530185747_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,33 @@ namespace CoachApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CoachingGroups");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.FormResponse", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("JsonData")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FormResponses");
                 });
 
             modelBuilder.Entity("CoachApi.Entities.GroupMembership", b =>
@@ -177,7 +204,96 @@ namespace CoachApi.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserProfile");
+                    b.ToTable("UserProfiles");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.UserStat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserStats");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.WorkoutLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PerformedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WorkoutLogs");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.WorkoutSet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Exercise")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RIR")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RPE")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Reps")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<Guid>("WorkoutLogId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkoutLogId");
+
+                    b.ToTable("WorkoutSets");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.FormResponse", b =>
+                {
+                    b.HasOne("CoachApi.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CoachApi.Entities.GroupMembership", b =>
@@ -221,6 +337,39 @@ namespace CoachApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CoachApi.Entities.UserStat", b =>
+                {
+                    b.HasOne("CoachApi.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.WorkoutLog", b =>
+                {
+                    b.HasOne("CoachApi.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.WorkoutSet", b =>
+                {
+                    b.HasOne("CoachApi.Entities.WorkoutLog", "WorkoutLog")
+                        .WithMany("Sets")
+                        .HasForeignKey("WorkoutLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkoutLog");
+                });
+
             modelBuilder.Entity("CoachApi.Entities.CoachingGroup", b =>
                 {
                     b.Navigation("Members");
@@ -234,6 +383,11 @@ namespace CoachApi.Migrations
                         .IsRequired();
 
                     b.Navigation("RefreshTokens");
+                });
+
+            modelBuilder.Entity("CoachApi.Entities.WorkoutLog", b =>
+                {
+                    b.Navigation("Sets");
                 });
 #pragma warning restore 612, 618
         }

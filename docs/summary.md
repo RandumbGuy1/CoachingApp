@@ -19,10 +19,10 @@ Clients will be able to join groups and send their coaches any necessary trainin
 - Create/Save Warmup Routines
 
 - Run and Log workouts in real time
-    - Enter reps/weight each set
-    - Stopwatch 
-    - Superset Support
-    - Drop set Support
+  - Enter reps/weight each set
+  - Stopwatch 
+  - Superset Support
+  - Drop set Support
 - Create notes on individual workouts
 
 - Auto set goals to aim for during the workout based on previous data

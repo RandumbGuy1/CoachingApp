@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CoachApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,6 +41,27 @@ namespace CoachApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FormResponses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JsonData = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubmittedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FormResponses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FormResponses_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,7 +114,7 @@ namespace CoachApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProfile",
+                name: "UserProfiles",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -110,14 +131,82 @@ namespace CoachApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProfile", x => x.UserId);
+                    table.PrimaryKey("PK_UserProfiles", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_UserProfile_Users_UserId",
+                        name: "FK_UserProfiles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "UserStats",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStats_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkoutLogs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PerformedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkoutLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkoutLogs_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkoutSets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorkoutLogId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Exercise = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reps = table.Column<int>(type: "int", nullable: false),
+                    Weight = table.Column<float>(type: "real", nullable: false),
+                    RPE = table.Column<int>(type: "int", nullable: false),
+                    RIR = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkoutSets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkoutSets_WorkoutLogs_WorkoutLogId",
+                        column: x => x.WorkoutLogId,
+                        principalTable: "WorkoutLogs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FormResponses_UserId",
+                table: "FormResponses",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Memberships_CoachingGroupId",
@@ -128,11 +217,29 @@ namespace CoachApi.Migrations
                 name: "IX_RefreshTokens_UserId",
                 table: "RefreshTokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStats_UserId",
+                table: "UserStats",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkoutLogs_UserId",
+                table: "WorkoutLogs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkoutSets_WorkoutLogId",
+                table: "WorkoutSets",
+                column: "WorkoutLogId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "FormResponses");
+
             migrationBuilder.DropTable(
                 name: "Memberships");
 
@@ -140,10 +247,19 @@ namespace CoachApi.Migrations
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "UserProfile");
+                name: "UserProfiles");
+
+            migrationBuilder.DropTable(
+                name: "UserStats");
+
+            migrationBuilder.DropTable(
+                name: "WorkoutSets");
 
             migrationBuilder.DropTable(
                 name: "CoachingGroups");
+
+            migrationBuilder.DropTable(
+                name: "WorkoutLogs");
 
             migrationBuilder.DropTable(
                 name: "Users");
