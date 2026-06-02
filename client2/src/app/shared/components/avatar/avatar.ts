@@ -1,0 +1,16 @@
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { User } from '../../../core/models/user.model';
+
+@Component({
+  selector: 'app-avatar',
+  imports: [],
+  templateUrl: './avatar.html',
+})
+export class AvatarComponent {
+  @Input() user: User = null!;
+  @Input() profilePicture: string = "assets/images/avatar.svg";
+  @Input() collapsed: boolean = false;
+
+  constructor(public router: Router) {}
+}

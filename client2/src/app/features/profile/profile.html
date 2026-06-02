@@ -1,0 +1,94 @@
+<div class="flex flex-col items-center justify-center h-full w-full gap-8">
+  <div class="bg-base-900 p-8 rounded-xl shadow w-150 border-light-300 border-1">
+
+    <div class="flex flex-row justify-center mb-5">
+      <div class="flex flex-col gap-4 items-center">
+        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue">{{ request.firstName }}'s Profile</h1>
+        <p class="font-mono font-bold text-warning">{{ error }}</p>
+      </div>
+    </div>
+
+    <div class="flex flex-row justify-between">
+      <div class="flex flex-col gap-3">
+        <h1 class="text-2xl font-mono font-normal text-glow-light">Personal</h1>
+        <label for="avatar">Profile Picture</label>
+        <input
+          id="avatar"
+          type="file"
+          (change)="onFileSelected($event)"
+        />
+        <p class="font-mono font-bold">{{ request.avatarUrl }}</p>
+
+        <input
+          [(ngModel)]="request.firstName"
+          type="name"
+          placeholder="First Name"
+          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+          id="firstname"
+        />
+
+        <input
+          [(ngModel)]="request.lastName"
+          type="name"
+          placeholder="Last Name"
+          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+          id="lastname"
+        />
+      </div>
+      <div class="flex flex-col gap-3">
+        <h1 class="text-2xl font-mono font-normal text-glow-light">Account</h1>
+        <input
+          [(ngModel)]="request.username"
+          type="name"
+          placeholder="Username"
+          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+          id="username"
+        />
+
+        <label for="bio">Bio</label>
+        <textarea
+          id="bio"
+          rows="5"
+          [(ngModel)]="request.bio"
+          placeholder="Tell us about yourself..."
+        ></textarea>
+
+        <label for="gender">Gender</label>
+        <select id="gender" [(ngModel)]="request.gender">
+          <option [ngValue]="null">Select gender</option>
+          <option *ngFor="let gender of Object.values(Gender)" [ngValue]="gender">
+            {{ gender }}
+          </option>
+        </select>
+
+        <label for="region">Region</label>
+        <select id="region" [(ngModel)]="request.region">
+          <option [ngValue]="null">Select region</option>
+          <option *ngFor="let region of Object.values(Region)" [ngValue]="region">
+            {{ region }}
+          </option>
+        </select>
+
+        <label for="theme">Theme</label>
+        <select id="theme" [(ngModel)]="request.theme">
+          <option [ngValue]="null">Select theme</option>
+          <option *ngFor="let theme of Object.values(AppTheme)" [ngValue]="theme">
+            {{ theme }}
+          </option>
+        </select>
+
+        <div class="flex flex-row mb-3 gap-5">
+          <p class="font-mono font-bold">Recieve Notifications</p>
+          <p-toggleswitch [(ngModel)]="request.receiveEmailNotifications"/>
+        </div>
+
+      </div>
+    </div>
+    <button
+      (click)="saveprofile()"
+      class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
+    >
+      <p class="font-mono font-bold">Submit</p>
+    </button>
+  </div>
+</div>

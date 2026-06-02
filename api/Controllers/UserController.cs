@@ -1,22 +1,15 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using CoachApi.Models;
-using CoachApi.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
 using CoachApi.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 using CoachApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using CoachApi.Models;
 
 namespace CoachApi.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserController(IConfiguration config, AppDbContext context) : ControllerBase
+    public class UserController(AppDbContext context) : ControllerBase
     {
         private readonly AppDbContext _db = context;
 
@@ -49,6 +42,64 @@ namespace CoachApi.Controllers
             if (profile == null)
                 return NotFound();
 
+            return Ok(profile);
+        }
+
+        [Authorize(Roles = "Free,Pro,Enterprise")]
+        [HttpPost("me/profile/save")]
+        public async Task<IActionResult> SaveUserProfile([FromBody] SaveProfileRequest request)
+        {
+            var userId = User.GetUserId();
+
+            var profile = await _db.UserProfiles.FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (profile == null)
+                return NotFound();
+
+            // Update the profile properties
+            if (!string.IsNullOrEmpty(request.AvatarUrl))
+                profile.AvatarUrl = request.AvatarUrl;
+
+            if (!string.IsNullOrEmpty(request.FirstName))
+                profile.FirstName = request.FirstName;
+
+            if (!string.IsNullOrEmpty(request.LastName))
+                profile.LastName = request.LastName;
+
+            if (!string.IsNullOrEmpty(request.Bio))
+                profile.Bio = request.Bio;
+
+            if (request.Gender != null)
+                profile.Gender = request.Gender.Value;
+
+            if (request.Region != null)
+                profile.Region = request.Region.Value;
+
+            if (request.Theme != null)
+                profile.Theme = request.Theme.Value;
+
+            if (request.ReceiveEmailNotifications != null)
+                profile.ReceiveEmailNotifications = request.ReceiveEmailNotifications.Value;
+
+            await _db.SaveChangesAsync();
+
+            return Ok(profile);
+        }
+
+        [Authorize(Roles = "Free,Pro,Enterprise")]
+        [HttpPost("me/profile/avatar")]
+        public async Task<IActionResult> UploadAvatar(IFormFile avatar)
+        {
+            var userId = User.GetUserId();
+            var profile = await _db.UserProfiles.FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (profile == null)
+                return NotFound();
+
+            // Save the avatar file and update the profile
+            // ... (implementation for saving avatar file)
+
+            await _db.SaveChangesAsync();
             return Ok(profile);
         }
     }

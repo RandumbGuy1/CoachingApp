@@ -1,3 +1,5 @@
+using CoachApi.Entities;
+
 namespace CoachApi.Models 
 { 
     public class RegisterRequest
@@ -7,6 +9,8 @@ namespace CoachApi.Models
         public required string Username { get; set; }
         public required string Email { get; set; }
         public required string Password { get; set; }
-        public required string Tier { get; set; }
+        public required UserTier Tier { get; set; }
+        public required Gender Gender { get; set; }
+        public required Region Region { get; set; }
     }
 }

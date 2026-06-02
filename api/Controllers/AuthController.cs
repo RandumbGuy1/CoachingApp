@@ -71,23 +71,22 @@ namespace CoachApi.Controllers
             if (await _db.Users.AnyAsync(u => u.Username == request.Username)) return BadRequest("Username already taken");
 
             var hasher = new PasswordHasher<User>();
-            if (!Enum.TryParse<UserTier>(request.Tier, ignoreCase: true, out var tier))
-                return BadRequest("Invalid tier specified");
-
             var userId = Guid.NewGuid();
             var user = new User
             {
                 Id = userId,
                 Email = request.Email,
                 Username = request.Username,
-                Tier = tier,
+                Tier = request.Tier,
                 Profile = new UserProfile
                 {
                     UserId = userId,
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     Bio = "",
-                    ProfilePictureURL = ""
+                    AvatarUrl = "",
+                    Gender = request.Gender,
+                    Region = request.Region
                 },
                 PasswordHash = "" // Will be set after hashing
             };

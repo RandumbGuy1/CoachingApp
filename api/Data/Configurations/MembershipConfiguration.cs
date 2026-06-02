@@ -8,6 +8,10 @@ namespace CoachApi.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<GroupMembership> builder)
         {
+            builder.Property(x => x.Role)
+                .HasConversion<string>()
+                .IsRequired();
+
             builder.HasKey(x => new { x.UserId, x.CoachingGroupId });
 
             builder.HasOne(x => x.User)

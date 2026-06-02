@@ -20,6 +20,11 @@ namespace CoachApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            //User tier enum
+            modelBuilder.Entity<User>()
+                .Property(u => u.Tier)
+                .HasConversion<string>();
+
             modelBuilder.ApplyConfiguration(new ProfileConfiguration());
             modelBuilder.ApplyConfiguration(new MembershipConfiguration());
         }

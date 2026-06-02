@@ -14,6 +14,14 @@ namespace CoachApi.Data.Configurations
                 .WithOne(u => u.Profile)
                 .HasForeignKey<UserProfile>(p => p.UserId);
                 
+            builder.Property(p => p.Gender)
+                .HasConversion<string>();
+            
+            builder.Property(p => p.Region)
+                .HasConversion<string>();
+
+            builder.Property(p => p.Theme)
+                .HasConversion<string>();
         }
     }
 }
