@@ -9,5 +9,3 @@ public class UserDto
     public required string Email { get; set; }
     public required UserTier Tier { get; set; }
 }
-
-

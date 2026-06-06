@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { CoachingGroup } from '../api/models/coaching-group.model';
-import { CreateGroupRequest } from '../api/requests/create-group-request.model';
+import { CreateGroupRequest } from '../api/requests/create-group.request';
 
 @Injectable({ providedIn: 'root' })
 export class GroupsService {

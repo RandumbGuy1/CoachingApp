@@ -1,7 +1,7 @@
 import { Component, ɵɵNgModuleDeclaration } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { SaveProfileRequest } from '../../core/api/requests/save-profile-request.model';
+import { SaveProfileRequest } from '../../core/api/requests/save-profile.request';
 import { UserProfile } from '../../core/api/models/user-profile.model';
 import { UserService } from '../../core/services/user.service';
 

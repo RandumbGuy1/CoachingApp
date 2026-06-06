@@ -1,21 +1,20 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { tap } from 'rxjs';
-
 import { Identity } from '../api/models/identity.model';
+import { ApiService } from '../services/api.service';
+import { RegisterRequest } from '../api/requests/register.request';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:5268/api/auth';
   private readonly TOKEN_KEY = 'auth_token';
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private api: ApiService) {}
 
   login(identifier: string, password: string) {
-    return this.http.post(this.API_URL + '/login', { identifier, password }).pipe(
+    return this.api.post('auth/login', { identifier, password }).pipe(
       tap((res: any) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
@@ -23,14 +22,16 @@ export class AuthService {
     );
   }
 
-  register(firstname: string, lastname: string, username: string, email: string, password: string, tier: string) {
-    return this.http.post(this.API_URL + '/register', { firstname, lastname, username, email, password, tier }).pipe(
+  register(request: RegisterRequest) {
+    return this.api.post('auth/register', request).pipe(
       tap((res: any) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
       })
     );
   }
+  
+  
 
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
@@ -56,7 +57,7 @@ export class AuthService {
       throw new Error('No refresh token available');
     }
 
-    return this.http.post<any>(this.API_URL + '/refresh', { refreshToken: refreshToken }).pipe(
+    return this.api.post('auth/refresh', { refreshToken: refreshToken }).pipe(
       tap((res: any) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);

@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { ApiService } from './api.service';
 import { User } from '../api/models/user.model';
 import { UserProfile } from '../api/models/user-profile.model';
-import { SaveProfileRequest } from '../api/requests/save-profile-request.model';
+import { SaveProfileRequest } from '../api/requests/save-profile.request';
 import { UserStore } from '../store/user.store';
 import { diff } from '../utils/diff.util';
 

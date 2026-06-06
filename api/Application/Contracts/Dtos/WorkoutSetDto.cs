@@ -1,10 +1,9 @@
-namespace CoachApi.Domain.Entities;
+namespace CoachApi.Application.Contracts.Dtos;
 
-public class WorkoutSet
+public class WorkoutSetDto
 {
     public Guid Id { get; set; }
     public Guid WorkoutLogId { get; set; }
-    public WorkoutLog WorkoutLog { get; set; } = default!;
 
     public required string Exercise { get; set; }
     public int Reps { get; set; } = default;

@@ -1,7 +1,8 @@
 import { FormsModule } from '@angular/forms';
 import { GroupsService } from '../../core/services/groups.service';
 import { Component } from '@angular/core';
-import { CreateGroupRequest } from '../../core/api/requests/create-group-request.model';
+import { CreateGroupRequest } from '../../core/api/requests/create-group.request';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-create-groups',
