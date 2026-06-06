@@ -1,13 +1,13 @@
-using CoachApi.Domain.Entities;
+using CoachApi.Domain.Enums;
 
-namespace CoachApi.Application.Contracts.Requests
-{ 
-    public class SaveIdentityRequest
-    {
-        public required string CurrentPassword { get; set; }
-        public string? Username { get; set; }
-        public string? Email { get; set; }
-        public string? NewPassword { get; set; }
-        public UserTier? Tier { get; set; }
-    }
+namespace CoachApi.Application.Contracts.Requests;
+
+public class SaveIdentityRequest
+{
+    public required string CurrentPassword { get; set; }
+    public string? Username { get; set; }
+    public string? Email { get; set; }
+    public string? NewPassword { get; set; }
+    public UserTier? Tier { get; set; }
 }
+

@@ -2,26 +2,26 @@ using CoachApi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CoachApi.Infrastructure.Data.Configurations
+namespace CoachApi.Infrastructure.Data.Configurations;
+
+public class ProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 {
-    public class ProfileConfiguration : IEntityTypeConfiguration<UserProfile>
+    public void Configure(EntityTypeBuilder<UserProfile> builder)
     {
-        public void Configure(EntityTypeBuilder<UserProfile> builder)
-        {
-            builder.HasKey(p => p.UserId);
+        builder.HasKey(p => p.UserId);
 
-            builder.HasOne(p => p.User)
-                .WithOne(u => u.Profile)
-                .HasForeignKey<UserProfile>(p => p.UserId);
-                
-            builder.Property(p => p.Gender)
-                .HasConversion<string>();
+        builder.HasOne(p => p.User)
+            .WithOne(u => u.Profile)
+            .HasForeignKey<UserProfile>(p => p.UserId);
             
-            builder.Property(p => p.Region)
-                .HasConversion<string>();
+        builder.Property(p => p.Gender)
+            .HasConversion<string>();
+        
+        builder.Property(p => p.Region)
+            .HasConversion<string>();
 
-            builder.Property(p => p.Theme)
-                .HasConversion<string>();
-        }
+        builder.Property(p => p.Theme)
+            .HasConversion<string>();
     }
 }
+
