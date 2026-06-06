@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ɵɵNgModuleDeclaration } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { SaveProfileRequest } from '../../core/models/save-profile-request.model';
-import { UserProfile } from '../../core/models/user-profile.model';
+import { SaveProfileRequest } from '../../core/api/requests/save-profile-request.model';
+import { UserProfile } from '../../core/api/models/user-profile.model';
 import { UserService } from '../../core/services/user.service';
-import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,58 +12,32 @@ import { AuthService } from '../../core/auth/auth.service';
 })
 export class ProfilePage {
   request: SaveProfileRequest = {};
-
-  currentUsername: string = '';
-  currentProfile: UserProfile | null = null;
   selectedImage: File | null = null
 
   error: string = '';
 
-  constructor(public router: Router, private userService: UserService, private auth: AuthService) {}
+  constructor(public router: Router, private userService: UserService) {}
+
+  ngOnInit() {
+    this.loadProfile();
+  }
 
   loadProfile() {
+    //NOTE: This is the component to modify user profile, so we want to start with the most recent data from the server instead of the cached profile in the store. 
+    // This ensures we don't accidentally overwrite any changes that were made to the profile from another session or tab.
     this.error = '';
-    this.currentUsername = this.auth.getCurrentIdentity()?.username || '';
-    
     this.userService.getUserProfile()?.subscribe({
       next: (profile: UserProfile) => {
-        this.currentProfile = profile;
-
-        this.request = {
-          username: this.currentUsername,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          avatarUrl: profile.avatarUrl,
-          bio: profile.bio,
-          gender: profile.gender,
-          region: profile.region,
-          theme: profile.theme,
-          receiveEmailNotifications: profile.receiveEmailNotifications
-        };
+        this.request = profile as SaveProfileRequest;
       },
       error: () => { this.error = 'Failed to load user and profile.'; },
     });
   }
 
   saveprofile() {
-    //Only send profile changes to the backend, otherwise we might accidentally overwrite fields with default values
-    const changes: SaveProfileRequest = {
-      username: this.diffField(this.currentUsername, this.request.username),
-      firstName: this.diffField(this.currentProfile?.firstName, this.request.firstName),
-      lastName: this.diffField(this.currentProfile?.lastName, this.request.lastName),
-      bio: this.diffField(this.currentProfile?.bio, this.request.bio),
-      avatarUrl: this.diffField(this.currentProfile?.avatarUrl, this.request.avatarUrl),
-      gender: this.diffField(this.currentProfile?.gender, this.request.gender),
-      region: this.diffField(this.currentProfile?.region, this.request.region),
-      theme: this.diffField(this.currentProfile?.theme, this.request.theme),
-      receiveEmailNotifications: this.diffField(
-        this.currentProfile?.receiveEmailNotifications,
-        this.request.receiveEmailNotifications
-      )
-    };
-
-    this.userService.saveUserProfile(changes).subscribe({
+    this.userService.saveUserProfile(this.request).subscribe({
       next: () => { 
+        //Upload avatar if a new image was selected, otherwise just reload profile to get any changes
         if (this.selectedImage) {
           this.userService.uploadAvatar(this.selectedImage).subscribe({
             next: () => { this.loadProfile(); },
@@ -78,6 +51,7 @@ export class ProfilePage {
     });
   }
 
+  //Select any new files for avatar upload
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -88,9 +62,5 @@ export class ProfilePage {
 
     this.selectedImage = input.files[0];
     this.request.avatarUrl = this.selectedImage.name;
-  }
-
-  diffField<T>(current: T | null | undefined, updated: T | null | undefined): T | null {
-    return current === updated ? null : updated ?? null;
   }
 }

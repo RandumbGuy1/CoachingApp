@@ -10,7 +10,7 @@ import { NavigationBarComponent } from './core/layout/navigation-bar/navigation-
 })
 export class App {
   collapsed: boolean = false;
-  protected readonly title = signal('client2');
+  protected readonly title = signal('client');
 
   openIconUrl: string = 'assets/images/icons/chevron-right.svg'
   closedIconUrl: string = 'assets/images/icons/chevron-left.svg'

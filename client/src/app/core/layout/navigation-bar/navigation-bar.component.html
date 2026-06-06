@@ -5,9 +5,7 @@
   [class.w-65]="!collapsed" 
 >
   @if (auth.isLoggedIn()) {
-    @if (user) {
-      <app-avatar [user]="user" [collapsed]="collapsed" class="w-full"></app-avatar>
-    }
+    <app-avatar [collapsed]="collapsed" class="w-full"></app-avatar>
   }
   @else {
     <div class="flex-1 flex items-start justify-center p-4">

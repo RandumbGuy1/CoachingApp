@@ -10,7 +10,6 @@
 
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-3">
-        <h1 class="text-2xl font-mono font-normal text-glow-light">Personal</h1>
         <label for="avatar">Profile Picture</label>
         <input
           id="avatar"
@@ -36,15 +35,6 @@
         />
       </div>
       <div class="flex flex-col gap-3">
-        <h1 class="text-2xl font-mono font-normal text-glow-light">Account</h1>
-        <input
-          [(ngModel)]="request.username"
-          type="name"
-          placeholder="Username"
-          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-          id="username"
-        />
-
         <label for="bio">Bio</label>
         <textarea
           id="bio"

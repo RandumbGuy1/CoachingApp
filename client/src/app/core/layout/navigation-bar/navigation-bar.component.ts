@@ -3,17 +3,14 @@ import { CommonModule } from '@angular/common';
 import { AvatarComponent } from "../../../shared/components/avatar/avatar";
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
-import { UserService } from '../../services/user.service';
-import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   imports: [CommonModule, AvatarComponent],
 })
-export class NavigationBarComponent implements OnInit {
+export class NavigationBarComponent {
   @Input() collapsed = false;
-  user: User | null = null;
 
   clients: NavigationElement = {
     title: "Clients",
@@ -136,14 +133,7 @@ export class NavigationBarComponent implements OnInit {
     this.groups,
   ];
 
-  constructor(public router: Router, public userService: UserService, public auth: AuthService) {}
-
-  ngOnInit(): void {
-    this.userService.getCurrentUser()?.subscribe({
-      next: (user) => this.user = user,
-      error: () => this.user = null,
-    });
-  }
+  constructor(public router: Router, public auth: AuthService) {}
 }
 
 interface NavigationElement {

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { tap } from 'rxjs';
 
-import { Identity } from '../models/identity.model';
+import { Identity } from '../api/models/identity.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

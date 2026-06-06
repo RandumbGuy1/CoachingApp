@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { TabsModule } from 'primeng/tabs';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { CoachingGroup, GroupsService } from '../../core/services/groups.service';
+import { GroupsService } from '../../core/services/groups.service';
 import { Router } from '@angular/router';
 import { GroupWidget } from '../../shared/components/group-widget/group-widget';
+import { CoachingGroup } from '../../core/api/models/coaching-group.model';
 
 @Component({
   selector: 'app-groups',

@@ -4,15 +4,15 @@
     [class.justify-end]="!collapsed"
     [class.justify-center]="collapsed"
     [class.pr-8]="!collapsed"
-    [title]="user.username"
+    [title]="username"
     (click)="router.navigate(['/profile'])"
   >
     <img [src]="profilePicture" class="w-[50px] h-[50px]">
 
     @if (!collapsed) {
       <div class="flex flex-col">
-        <p class="font-mono font-bold text-glow-blue-50 text-3xl max-w-40">{{ user.username }}</p>
-        <p class="font-mono font-bold text-light-700 text-xl max-w-40">{{ user.tier }}</p>
+        <p class="font-mono font-bold text-glow-blue-50 text-3xl max-w-40">{{ username }}</p>
+        <p class="font-mono font-bold text-light-700 text-xl max-w-40">{{ tier }}
       </div>
     }
   </button>

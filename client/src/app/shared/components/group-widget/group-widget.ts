@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CoachingGroup } from '../../../core/models/coaching-group.model';
+import { CoachingGroup } from '../../../core/api/models/coaching-group.model';
 
 @Component({
   selector: 'app-group-widget',

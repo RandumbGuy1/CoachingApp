@@ -1,6 +1,7 @@
 import { FormsModule } from '@angular/forms';
-import { CreateGroupRequest, GroupsService } from '../../core/services/groups.service';
+import { GroupsService } from '../../core/services/groups.service';
 import { Component } from '@angular/core';
+import { CreateGroupRequest } from '../../core/api/requests/create-group-request.model';
 
 @Component({
   selector: 'app-create-groups',

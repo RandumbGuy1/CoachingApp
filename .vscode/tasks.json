@@ -34,7 +34,7 @@
             "type": "shell",
             "command": "npm install",
             "options": {
-                "cwd": "${workspaceFolder}/client2"
+                "cwd": "${workspaceFolder}/client"
             }
         },
         //"start-client" starts the Angular development server
@@ -43,7 +43,7 @@
             "type": "shell",
             "command": "npm start",
             "options": {
-                "cwd": "${workspaceFolder}/client2"
+                "cwd": "${workspaceFolder}/client"
             },
             "isBackground": true,
 

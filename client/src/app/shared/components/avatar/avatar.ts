@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../../../core/models/user.model';
+import { UserProfile } from '../../../core/api/models/user-profile.model';
+import { Observable } from 'rxjs/internal/Observable';
+import { AuthService } from '../../../core/auth/auth.service';
+import { UserStore } from '../../../core/store/user.store';
 
 @Component({
   selector: 'app-avatar',
@@ -8,9 +11,18 @@ import { User } from '../../../core/models/user.model';
   templateUrl: './avatar.html',
 })
 export class AvatarComponent {
-  @Input() user: User = null!;
-  @Input() profilePicture: string = "assets/images/avatar.svg";
   @Input() collapsed: boolean = false;
 
-  constructor(public router: Router) {}
+  username: string = '';
+  tier: string = '';
+  profile$!: Observable<UserProfile | null>;
+  profilePicture: string = "assets/images/avatar.svg";
+
+  constructor(public router: Router, public userStore: UserStore, public auth: AuthService) {}
+
+  ngOnInit(): void {
+    this.username = this.auth.getCurrentIdentity()?.username ?? '';
+    this.tier = this.auth.getCurrentIdentity()?.tier ?? '';
+    this.profile$ = this.userStore.profile$;
+  }
 }
