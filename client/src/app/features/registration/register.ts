@@ -6,11 +6,13 @@ import { RegisterRequest } from '../../core/api/requests/register.request';
 import { UserTier } from '../../core/enums/user-tier.enum';
 import { Gender } from '../../core/enums/gender.enum';
 import { Region } from '../../core/enums/region.enum';
-import { Button } from "primeng/button";
+import { Select } from "primeng/select";
+import { genderOptions } from '../../core/enums/gender.enum';
+import { regionOptions } from '../../core/enums/region.enum';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, Button],
+  imports: [FormsModule, Select],
   templateUrl: './register.html',
 })
 export class RegisterPage {
@@ -25,9 +27,9 @@ export class RegisterPage {
     region: Region.NorthAmerica,
   };
 
-  genderOptions = Object.values(Gender);
-  regionOptions = Object.values(Region);
   error: string = '';
+  genderOptions = genderOptions;
+  regionOptions = regionOptions;
 
   constructor(public router: Router, private auth: AuthService) {}
 

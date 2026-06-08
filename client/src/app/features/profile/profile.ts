@@ -4,10 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { SaveProfileRequest } from '../../core/api/requests/save-profile.request';
 import { UserProfile } from '../../core/api/models/user-profile.model';
 import { UserService } from '../../core/services/user.service';
+import { genderOptions } from '../../core/enums/gender.enum';
+import { regionOptions } from '../../core/enums/region.enum';
+import { themeOptions } from '../../core/enums/app-theme.enum';
+import { Select } from "primeng/select";
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule],
+  imports: [FormsModule, Select],
   templateUrl: './profile.html',
 })
 export class ProfilePage {
@@ -15,6 +19,10 @@ export class ProfilePage {
   selectedImage: File | null = null
 
   error: string = '';
+
+  genderOptions = genderOptions;
+  regionOptions = regionOptions;
+  themeOptions = themeOptions;
 
   constructor(public router: Router, private userService: UserService) {}
 

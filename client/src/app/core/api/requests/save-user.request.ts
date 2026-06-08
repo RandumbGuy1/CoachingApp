@@ -1,6 +1,6 @@
 import { UserTier } from '../../enums/user-tier.enum';
 
-export interface SaveIdentityRequest {
+export interface SaveUserRequest {
   currentPassword: string;
   username?: string;
   email?: string;

@@ -15,6 +15,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<WorkoutLog> WorkoutLogs => Set<WorkoutLog>();
     public DbSet<WorkoutSet> WorkoutSets => Set<WorkoutSet>();
     public DbSet<GroupMembership> Memberships => Set<GroupMembership>();
+    public DbSet<JoinRequest> PendingMemberships => Set<JoinRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

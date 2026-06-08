@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CoachApi.Migrations
 {
     /// <inheritdoc />
-    public partial class SaveIdentityRequest : Migration
+    public partial class SaveUserRequest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

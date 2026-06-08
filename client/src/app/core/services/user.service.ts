@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { map, tap } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { tap } from 'rxjs';
 import { ApiService } from './api.service';
-import { User } from '../api/models/user.model';
 import { UserProfile } from '../api/models/user-profile.model';
 import { SaveProfileRequest } from '../api/requests/save-profile.request';
 import { UserStore } from '../store/user.store';
@@ -10,21 +8,7 @@ import { diff } from '../utils/diff.util';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  constructor(private api: ApiService, private auth: AuthService, private userStore: UserStore) {}
-
-  getCurrentUser() {
-    const identity = this.auth.getCurrentIdentity();
-    if (!identity) return null;
-
-    return this.api.get('me').pipe(
-      map((res: any) => {
-        return {
-          ...identity,
-          profile: res.profile,
-          memberships: res.memberships
-        } as User;
-    }));
-  }
+  constructor(private api: ApiService, private userStore: UserStore) {}
 
   getUserProfile() {
     return this.api.get<UserProfile>('me/profile').pipe(

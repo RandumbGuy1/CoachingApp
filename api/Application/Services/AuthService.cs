@@ -89,13 +89,13 @@ public class AuthService(IConfiguration config, AppDbContext context)
 
         if (existingToken.IsRevoked)
         {
-            await RevokeAllUserTokensAsync(existingToken);
+            await RevokeAllUserTokensAsync(existingToken.UserId);
             throw new UnauthorizedAccessException("Token reuse detected. All sessions revoked");
         }
 
         if (existingToken.ReplacedByToken != null)
         {
-            await RevokeAllUserTokensAsync(existingToken);
+            await RevokeAllUserTokensAsync(existingToken.UserId);
             throw new UnauthorizedAccessException("Token already replaced. All sessions revoked");
         }
 
@@ -112,7 +112,7 @@ public class AuthService(IConfiguration config, AppDbContext context)
         return new AuthResponse() { AccessToken = newAccessToken, RefreshToken = newRefreshToken.Token };
     }
 
-    public async Task<AuthResponse> SaveIdentityAsync(SaveIdentityRequest request, Guid userId)
+    public async Task<AuthResponse> SaveUserAsync(SaveUserRequest request, Guid userId)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId) 
             ?? throw new InvalidOperationException("User not found");
@@ -161,10 +161,15 @@ public class AuthService(IConfiguration config, AppDbContext context)
 
         await _db.SaveChangesAsync();
 
-        var accessToken = GenerateJwtToken(user.Id.ToString(), user.Email, user.Username, user.Tier.ToString()); 
+        //Remove all existing tokens to force re-login with new credentials, and remove old tokens to clean up the database
+        await RevokeAllUserTokensAsync(userId);
+        await RemoveOldTokensAsync(userId);
+
+        var accessToken = GenerateJwtToken(userId.ToString(), user.Email, user.Username, user.Tier.ToString()); 
         var refreshToken = GenerateRefreshToken(user);
 
         _db.RefreshTokens.Add(refreshToken);
+
         await _db.SaveChangesAsync();
 
         return new AuthResponse() { AccessToken = accessToken, RefreshToken = refreshToken.Token };
@@ -216,9 +221,9 @@ public class AuthService(IConfiguration config, AppDbContext context)
         await _db.SaveChangesAsync();
     }
 
-    public async Task RevokeAllUserTokensAsync(RefreshToken token)
+    public async Task RevokeAllUserTokensAsync(Guid userId)
     {
-        var userTokens = _db.RefreshTokens.Where(t => t.UserId == token.UserId);
+        var userTokens = _db.RefreshTokens.Where(t => t.UserId == userId);
 
         foreach (var t in userTokens)
             t.RevokedAt = DateTime.UtcNow;

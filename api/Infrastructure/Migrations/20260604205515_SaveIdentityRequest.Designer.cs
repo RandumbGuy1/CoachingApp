@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoachApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260604205515_SaveIdentityRequest")]
-    partial class SaveIdentityRequest
+    [Migration("20260604205515_SaveUserRequest")]
+    partial class SaveUserRequest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

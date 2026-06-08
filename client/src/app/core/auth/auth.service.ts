@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { tap } from 'rxjs';
-import { Identity } from '../api/models/identity.model';
+import { User } from '../api/models/user.model';
 import { ApiService } from '../services/api.service';
 import { RegisterRequest } from '../api/requests/register.request';
+import { SaveUserRequest } from '../api/requests/save-user.request';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -31,7 +32,15 @@ export class AuthService {
     );
   }
   
-  
+  //Overwriting identity claims so we need to refresh our tokens
+  saveUser(request: SaveUserRequest) {
+    return this.api.post('auth/save', request).pipe(
+      tap((res: any) => {
+        localStorage.setItem(this.TOKEN_KEY, res.accessToken);
+        localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
+      })
+    );
+  }
 
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
@@ -65,20 +74,22 @@ export class AuthService {
     );
   }
 
-  getCurrentIdentity(): Identity | null {
+  getCurrentUser(): User | null {
     const token = this.getAccessToken();
     if (!token) return null;
 
+    //We use claims instead of an async call since all other user data
+    //can be looked up with in async call using userId
     try {
       const decoded: any = jwtDecode(token);
-      const identity = {
+      const user = {
         id: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
         username: decoded['username'],
         email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
         tier: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-      } as Identity;
+      } as User;
 
-      return identity;
+      return user;
 
     } catch (e) {
       console.error('Failed to decode token', e);

@@ -8,10 +8,8 @@ namespace CoachApi.API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(IConfiguration config, AppDbContext context, AuthService authService) : ControllerBase
+public class AuthController(AuthService authService) : ControllerBase
 {
-    private readonly IConfiguration _config = config;
-    private readonly AppDbContext _db = context;
     private readonly AuthService _authService = authService;
 
     [HttpPost("login")]
@@ -57,12 +55,12 @@ public class AuthController(IConfiguration config, AppDbContext context, AuthSer
     }
 
     [HttpPost("save")]
-    public async Task<IActionResult> SaveIdentity([FromBody] SaveIdentityRequest request)
+    public async Task<IActionResult> SaveUser([FromBody] SaveUserRequest request)
     {
         try
         {
             var userId = User.GetUserId();
-            var authResponse = await _authService.SaveIdentityAsync(request, userId);
+            var authResponse = await _authService.SaveUserAsync(request, userId);
             return Ok(authResponse);
         }
         catch (InvalidOperationException ex)

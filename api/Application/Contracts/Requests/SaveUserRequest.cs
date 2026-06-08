@@ -2,7 +2,7 @@ using CoachApi.Domain.Enums;
 
 namespace CoachApi.Application.Contracts.Requests;
 
-public class SaveIdentityRequest
+public class SaveUserRequest
 {
     public required string CurrentPassword { get; set; }
     public string? Username { get; set; }

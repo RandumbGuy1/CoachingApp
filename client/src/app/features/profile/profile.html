@@ -43,29 +43,29 @@
           placeholder="Tell us about yourself..."
         ></textarea>
 
-        <label for="gender">Gender</label>
-        <select id="gender" [(ngModel)]="request.gender">
-          <option [ngValue]="null">Select gender</option>
-          <option *ngFor="let gender of Object.values(Gender)" [ngValue]="gender">
-            {{ gender }}
-          </option>
-        </select>
+        <p-select 
+          [(ngModel)]="request.gender" 
+          [options]="genderOptions" 
+          optionLabel="label" 
+          placeholder="Select Gender"
+        >
+        </p-select>
+        
+        <p-select 
+          [(ngModel)]="request.region" 
+          [options]="regionOptions" 
+          optionLabel="label" 
+          placeholder="Select Region"
+        >
+        </p-select>
 
-        <label for="region">Region</label>
-        <select id="region" [(ngModel)]="request.region">
-          <option [ngValue]="null">Select region</option>
-          <option *ngFor="let region of Object.values(Region)" [ngValue]="region">
-            {{ region }}
-          </option>
-        </select>
-
-        <label for="theme">Theme</label>
-        <select id="theme" [(ngModel)]="request.theme">
-          <option [ngValue]="null">Select theme</option>
-          <option *ngFor="let theme of Object.values(AppTheme)" [ngValue]="theme">
-            {{ theme }}
-          </option>
-        </select>
+        <p-select 
+          [(ngModel)]="request.theme" 
+          [options]="themeOptions" 
+          optionLabel="label" 
+          placeholder="Select Theme"
+        >
+        </p-select>
 
         <div class="flex flex-row mb-3 gap-5">
           <p class="font-mono font-bold">Recieve Notifications</p>

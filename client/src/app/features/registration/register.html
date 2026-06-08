@@ -35,11 +35,21 @@
           id="lastname"
         />
 
-        <p-dropdown>
-          [(ngModel)]="request
-          
-        </p-dropdown>
-
+        <p-select 
+          [(ngModel)]="request.gender" 
+          [options]="genderOptions" 
+          optionLabel="label" 
+          placeholder="Select Gender"
+        >
+        </p-select>
+        
+        <p-select 
+          [(ngModel)]="request.region" 
+          [options]="regionOptions" 
+          optionLabel="label" 
+          placeholder="Select Region"          
+        >
+        </p-select>
       </div>
       <div class="flex flex-col gap-3">
         <h1 class="text-2xl font-mono font-normal text-glow-light">Account</h1>

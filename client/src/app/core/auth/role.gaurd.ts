@@ -6,7 +6,7 @@ import { UserTier } from '../enums/user-tier.enum';
 export const roleGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
-  const tier = auth.getCurrentIdentity()?.tier;
+  const tier = auth.getCurrentUser()?.tier;
   const isPremium = tier === UserTier.Pro || tier === UserTier.Enterprise;
 
   if (!isPremium) router.navigate(['/']);

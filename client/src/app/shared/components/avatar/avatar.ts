@@ -21,8 +21,9 @@ export class AvatarComponent {
   constructor(public router: Router, public userStore: UserStore, public auth: AuthService) {}
 
   ngOnInit(): void {
-    this.username = this.auth.getCurrentIdentity()?.username ?? '';
-    this.tier = this.auth.getCurrentIdentity()?.tier ?? '';
+    let user = this.auth.getCurrentUser();
+    this.username = user?.username ?? '';
+    this.tier = user?.tier ?? '';
     this.profile$ = this.userStore.profile$;
   }
 }
