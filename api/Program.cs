@@ -1,52 +1,67 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using CoachApi.Data;
+using CoachApi.Application.Services;
+using CoachApi.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add authentication services
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-#pragma warning disable CS8604 // Possible null reference argument.
-    options.TokenValidationParameters = new TokenValidationParameters
+// Configuration
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("JWT key not configured");
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+    ?? throw new InvalidOperationException("JWT issuer not configured");
+
+var jwtAudience = builder.Configuration["Jwt:Audience"]
+    ?? throw new InvalidOperationException("JWT audience not configured");
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Database connection string not configured");
+
+// Authentication & Authorization
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true, // Validate the server that generates the token
-        ValidateAudience = true, // Validate the recipient of the token
-        ValidateLifetime = true, // Check if the token is not expired
-        ValidateIssuerSigningKey = true, // Validate signature of the token
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-#pragma warning restore CS8604 // Possible null reference argument.
-});
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+builder.Services.AddAuthorization();
 
-builder.Services.AddAuthorization(); // Add authorization services middleware
+// Database
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+// Application Services
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<GroupService>();
+builder.Services.AddScoped<UserService>();
 
-//Register Database in our app
-var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($"CONNECTION STRING: {conn}");
+// Controllers
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            ReferenceHandler.IgnoreCycles;
 
-builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-    );
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter());
+    });
 
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
@@ -57,6 +72,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// OpenAPI
+builder.Services.AddOpenApi();
+
 var app = builder.Build();
 
 //Apply migrations automatically on startup
@@ -66,7 +84,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-//Content security policy
+// Middleware
 app.UseCors("AllowAngular");
 app.Use(async (context, next) =>
 {
@@ -78,13 +96,16 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Configure the HTTP request pipeline.
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Dev only features
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
+//Endpoints
 app.MapControllers();
 
-//app.UseHttpsRedirection();
 app.Run();

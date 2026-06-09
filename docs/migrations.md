@@ -6,7 +6,7 @@
 - Changing default values
 
 ```bash
-  dotnet ef migrations add migration_name
+  dotnet ef migrations add migration_name 
   dotnet ef database update
 ```
 
