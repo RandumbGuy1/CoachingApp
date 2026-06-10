@@ -20,12 +20,12 @@ export class GroupsPage implements OnInit {
   constructor(public router: Router, private groupService: GroupsService) {}
 
   ngOnInit() {
-    this.groupService.getGroups('current').subscribe((groups) => {
-      this.currentGroups = groups;
+    this.groupService.getGroups({ includeString: '', includeRequestToJoin: false, includeGroupsIn: true }).subscribe((res: any) => {
+      this.currentGroups = res.groups;
     });
 
-    this.groupService.getGroups('public').subscribe((groups) => {
-      this.findGroups = groups;
+    this.groupService.getGroups({ includeString: '', includeRequestToJoin: true, includeGroupsIn: false }).subscribe((res: any) => {
+      this.findGroups = res.groups;
     });
   }
 }

@@ -11,6 +11,7 @@ public static class GroupMappings
         {
             Id = group.Id,
             Name = group.Name,
+            Color = group.Color,
             Description = group.Description,
             IsPublic = group.IsPublic,
             IsRequestToJoin = group.IsRequestToJoin,

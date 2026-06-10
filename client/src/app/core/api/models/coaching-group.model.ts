@@ -4,9 +4,8 @@ export interface CoachingGroup {
   id: string;
   name: string;
   description: string;
-  code: string;
   color: string;
   isPublic: boolean;
   isRequestToJoin: boolean;
-  memberships: GroupMembership[];
+  memberCount: number;
 }

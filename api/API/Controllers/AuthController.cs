@@ -1,6 +1,5 @@
 using CoachApi.Application.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
-using CoachApi.Infrastructure.Data;
 using CoachApi.API.Extensions;
 using CoachApi.Application.Services;
 
@@ -8,10 +7,8 @@ namespace CoachApi.API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(AuthService authService) : ControllerBase
+public class AuthController(AuthService _authService) : ControllerBase
 {
-    private readonly AuthService _authService = authService;
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {

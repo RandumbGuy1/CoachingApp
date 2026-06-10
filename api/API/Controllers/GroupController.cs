@@ -1,23 +1,15 @@
 using CoachApi.Application.Contracts.Requests;
-using CoachApi.Application.Contracts.Responses;
-using CoachApi.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using CoachApi.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using CoachApi.API.Extensions;
-using CoachApi.Domain.Enums;
 using CoachApi.Application.Services;
 
 namespace CoachApi.API.Controllers;
 
 [ApiController]
 [Route("api/groups")]
-public class GroupController(AppDbContext context, GroupService groupService) : ControllerBase
+public class GroupController(GroupService _groupService) : ControllerBase
 {
-    private readonly AppDbContext _db = context;
-    private readonly GroupService _groupService = groupService;
-
     [HttpPost]
     [Authorize(Roles = "Pro,Enterprise")]
     public async Task<IActionResult> CreateGroup(CreateGroupRequest request)

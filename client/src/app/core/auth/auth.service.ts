@@ -6,19 +6,22 @@ import { User } from '../api/models/user.model';
 import { ApiService } from '../services/api.service';
 import { RegisterRequest } from '../api/requests/register.request';
 import { SaveUserRequest } from '../api/requests/save-user.request';
+import { UserService } from '../services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
 
-  constructor(private router: Router, private api: ApiService) {}
+  constructor(private router: Router, private api: ApiService, private userService: UserService) {}
 
   login(identifier: string, password: string) {
     return this.api.post('auth/login', { identifier, password }).pipe(
       tap((res: any) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
+
+        this.userService.getUserProfile().subscribe();
       })
     );
   }
@@ -28,6 +31,8 @@ export class AuthService {
       tap((res: any) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
+
+        this.userService.getUserProfile().subscribe();
       })
     );
   }

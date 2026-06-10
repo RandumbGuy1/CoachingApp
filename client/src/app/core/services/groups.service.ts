@@ -3,6 +3,7 @@ import { tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { CoachingGroup } from '../api/models/coaching-group.model';
 import { CreateGroupRequest } from '../api/requests/create-group.request';
+import { GetGroupRequest } from '../api/requests/get-group.request';
 
 @Injectable({ providedIn: 'root' })
 export class GroupsService {
@@ -16,7 +17,7 @@ export class GroupsService {
     );
   }
 
-  getGroups(filter?: string) {
-    return this.api.get<CoachingGroup[]>(`groups/get/${filter || ''}`);
+  getGroups(request: GetGroupRequest) {
+    return this.api.get('groups/get/', request);
   }
 }

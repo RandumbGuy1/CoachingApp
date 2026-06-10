@@ -27,6 +27,9 @@ export class RegisterPage {
     region: Region.NorthAmerica,
   };
 
+  selectedGender: { label: any, value: any } | undefined = undefined;
+  selectedRegion: { label: any, value: any } | undefined = undefined;
+
   error: string = '';
   genderOptions = genderOptions;
   regionOptions = regionOptions;
@@ -34,6 +37,9 @@ export class RegisterPage {
   constructor(public router: Router, private auth: AuthService) {}
 
   register() {
+    if (this.selectedGender?.value) this.request.gender = this.selectedGender.value;
+    if (this.selectedRegion?.value) this.request.region = this.selectedRegion.value;
+
     this.auth.register(this.request).subscribe({
       next: () => this.router.navigate(['/']),
       error: () => { this.error = 'Registration failed. Please check your credentials.'; },

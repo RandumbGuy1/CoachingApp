@@ -1,5 +1,5 @@
 <div class="flex flex-col items-center justify-center h-full w-full gap-8">
-  <div class="bg-base-900 p-8 rounded-xl shadow w-150 border-light-300 border-1">
+  <div class="bg-base-900 p-8 rounded-xl shadow w-200 border-base-800 border-2">
 
     <div class="flex flex-row justify-center mb-5">
       <div class="flex flex-col gap-4 items-center">
@@ -10,17 +10,20 @@
 
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-3">
-        <label for="avatar">Profile Picture</label>
+        <img
+          [src]="userService.toAvatarUrl(request.avatarUrl)"
+          class="w-24 h-24 rounded-full object-cover"
+        />
+
         <input
           id="avatar"
           type="file"
           (change)="onFileSelected($event)"
         />
-        <p class="font-mono font-bold">{{ request.avatarUrl }}</p>
 
         <input
           [(ngModel)]="request.firstName"
-          type="name"
+          type="text"
           placeholder="First Name"
           class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
           id="firstname"
@@ -28,7 +31,7 @@
 
         <input
           [(ngModel)]="request.lastName"
-          type="name"
+          type="text"
           placeholder="Last Name"
           class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
           id="lastname"
@@ -41,10 +44,11 @@
           rows="5"
           [(ngModel)]="request.bio"
           placeholder="Tell us about yourself..."
+          class="border-base-600 border-2 p-5 rounded-md"
         ></textarea>
 
         <p-select 
-          [(ngModel)]="request.gender" 
+          [(ngModel)]="selectedGender" 
           [options]="genderOptions" 
           optionLabel="label" 
           placeholder="Select Gender"
@@ -52,7 +56,7 @@
         </p-select>
         
         <p-select 
-          [(ngModel)]="request.region" 
+          [(ngModel)]="selectedRegion" 
           [options]="regionOptions" 
           optionLabel="label" 
           placeholder="Select Region"
@@ -60,9 +64,9 @@
         </p-select>
 
         <p-select 
-          [(ngModel)]="request.theme" 
+          [(ngModel)]="selectedTheme" 
           [options]="themeOptions" 
-          optionLabel="label" 
+          optionLabel="label"
           placeholder="Select Theme"
         >
         </p-select>

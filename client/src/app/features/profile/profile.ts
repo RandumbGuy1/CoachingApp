@@ -1,4 +1,4 @@
-import { Component, ɵɵNgModuleDeclaration } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SaveProfileRequest } from '../../core/api/requests/save-profile.request';
@@ -8,15 +8,20 @@ import { genderOptions } from '../../core/enums/gender.enum';
 import { regionOptions } from '../../core/enums/region.enum';
 import { themeOptions } from '../../core/enums/app-theme.enum';
 import { Select } from "primeng/select";
+import { ToggleSwitch } from "primeng/toggleswitch";
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, Select],
+  imports: [FormsModule, Select, ToggleSwitch],
   templateUrl: './profile.html',
 })
 export class ProfilePage {
   request: SaveProfileRequest = {};
   selectedImage: File | null = null
+
+  selectedGender: { label: any, value: any } | undefined = undefined;
+  selectedRegion: { label: any, value: any } | undefined = undefined;
+  selectedTheme: { label: any, value: any } | undefined = undefined;
 
   error: string = '';
 
@@ -24,7 +29,7 @@ export class ProfilePage {
   regionOptions = regionOptions;
   themeOptions = themeOptions;
 
-  constructor(public router: Router, private userService: UserService) {}
+  constructor(public router: Router, public userService: UserService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadProfile();
@@ -36,13 +41,35 @@ export class ProfilePage {
     this.error = '';
     this.userService.getUserProfile()?.subscribe({
       next: (profile: UserProfile) => {
-        this.request = profile as SaveProfileRequest;
+        this.request = {
+          avatarUrl: profile.avatarUrl,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          bio: profile.bio,
+          gender: profile.gender,
+          region: profile.region,
+          theme: profile.theme,
+          receiveEmailNotifications: profile.receiveEmailNotifications,
+        }
+
+        this.selectedGender = genderOptions.find(o => o.value === profile.gender);
+        this.selectedRegion = regionOptions.find(o => o.value === profile.region);
+        this.selectedTheme = themeOptions.find(o => o.value === profile.theme);
+
+        this.cdr.detectChanges();
       },
-      error: () => { this.error = 'Failed to load user and profile.'; },
+      error: () => { 
+        this.error = 'Failed to load user and profile.';
+        this.cdr.detectChanges();
+      },
     });
   }
 
   saveprofile() {
+    if (this.selectedGender?.value) this.request.gender = this.selectedGender.value;
+    if (this.selectedRegion?.value) this.request.region = this.selectedRegion.value;
+    if (this.selectedTheme?.value) this.request.theme = this.selectedTheme.value;
+
     this.userService.saveUserProfile(this.request).subscribe({
       next: () => { 
         //Upload avatar if a new image was selected, otherwise just reload profile to get any changes

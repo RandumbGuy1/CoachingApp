@@ -12,22 +12,11 @@ import { AuthService } from '../../auth/auth.service';
 export class NavigationBarComponent {
   @Input() collapsed = false;
 
-  clients: NavigationElement = {
-    title: "Clients",
-    icon: "assets/images/icons/navigation/clients.svg",
-    tooltip: "View and manage clients",
-    url: '/clients',
-    color: 'selected',
-    showWhileLoggedOut: false,
-  };
-
   forms: NavigationElement = {
     title: "Forms",
     icon: "assets/images/icons/navigation/forms.svg",
     tooltip: "View and manage forms",
     url: '/forms',
-    color: 'selected',
-    showWhileLoggedOut: false,
   };
 
   settings: NavigationElement = {
@@ -115,12 +104,11 @@ export class NavigationBarComponent {
   homeImgUrl: string = 'assets/images/logo.png';
 
   mainElements: NavigationElement[] = [
-    this.clients,
-    this.forms,
     this.dashboard,
     this.goals,
     this.programs,
     this.workout,
+    this.forms,
     this.history,
     this.glossary,
     this.logout,

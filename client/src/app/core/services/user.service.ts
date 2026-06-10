@@ -9,9 +9,18 @@ import { diff } from '../utils/diff.util';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   constructor(private api: ApiService, private userStore: UserStore) {}
+  
+  toAvatarUrl(avatarUrl: string | null | undefined): string {
+    if (!avatarUrl) return 'assets/images/avatar.svg';
+
+    if (avatarUrl.startsWith('http')) return avatarUrl;
+
+    const apiOrigin = this.api.base.replace('/api', '');
+    return `${apiOrigin}${avatarUrl}`;
+  }
 
   getUserProfile() {
-    return this.api.get<UserProfile>('me/profile').pipe(
+    return this.api.get<UserProfile>('users/me/profile').pipe(
       tap(profile => this.userStore.setProfile(profile))
     );
   }
@@ -20,7 +29,7 @@ export class UserService {
     const current = this.userStore.getProfile() as SaveProfileRequest;
     const changes = diff(current, request);
 
-    return this.api.post<UserProfile>('me/profile/save', changes).pipe(
+    return this.api.post<UserProfile>('users/me/profile/save', changes).pipe(
       tap(updated => this.userStore.updateProfile(updated))
     );
   }
@@ -29,6 +38,6 @@ export class UserService {
     const formData = new FormData();
     formData.append('avatar', file);
 
-    return this.api.post<UserProfile>('me/profile/avatar', formData);
+    return this.api.post('users/me/profile/avatar', formData);
   }
 }

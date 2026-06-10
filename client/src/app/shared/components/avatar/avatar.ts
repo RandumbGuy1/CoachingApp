@@ -4,10 +4,12 @@ import { UserProfile } from '../../../core/api/models/user-profile.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserStore } from '../../../core/store/user.store';
+import { AsyncPipe } from '@angular/common';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-avatar',
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './avatar.html',
 })
 export class AvatarComponent {
@@ -16,9 +18,8 @@ export class AvatarComponent {
   username: string = '';
   tier: string = '';
   profile$!: Observable<UserProfile | null>;
-  profilePicture: string = "assets/images/avatar.svg";
 
-  constructor(public router: Router, public userStore: UserStore, public auth: AuthService) {}
+  constructor(public router: Router, public userService: UserService, public userStore: UserStore, public auth: AuthService) {}
 
   ngOnInit(): void {
     let user = this.auth.getCurrentUser();

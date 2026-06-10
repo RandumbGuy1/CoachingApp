@@ -1,16 +1,14 @@
 using CoachApi.Application.Contracts.Dtos;
 using CoachApi.Application.Contracts.Requests;
+using CoachApi.Application.Contracts.Responses;
 using CoachApi.Application.Mappings;
 using CoachApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoachApi.Application.Services;
 
-public class UserService(IConfiguration config, AppDbContext context)
+public class UserService(AppDbContext _db, IWebHostEnvironment _env)
 {
-    private readonly IConfiguration _config = config;
-    private readonly AppDbContext _db = context;
-
     public async Task<UserDto> GetUserAsync(Guid userId)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId) 
@@ -31,9 +29,6 @@ public class UserService(IConfiguration config, AppDbContext context)
     {
         var profile = await _db.UserProfiles.FirstOrDefaultAsync(p => p.UserId == userId)
             ?? throw new InvalidOperationException("User profile was not found");
-
-        if (!string.IsNullOrEmpty(request.AvatarUrl))
-            profile.AvatarUrl = request.AvatarUrl;
 
         if (!string.IsNullOrEmpty(request.FirstName))
             profile.FirstName = request.FirstName;
@@ -61,15 +56,26 @@ public class UserService(IConfiguration config, AppDbContext context)
         return profile.ToDto();
     }
 
-    public async Task<UserProfileDto> UploadAvatarAsync(IFormFile avatar, Guid userId)
+    public async Task UploadAvatarAsync(IFormFile avatar, Guid userId)
     {
+        if (avatar == null || avatar.Length == 0) throw new InvalidOperationException("No file uploaded");
+
         var profile = await _db.UserProfiles.FirstOrDefaultAsync(p => p.UserId == userId)
             ?? throw new InvalidOperationException("User profile was not found");
 
-        // Save the avatar file and update the profile
-        // ... (implementation for saving avatar file)
-        //await _db.SaveChangesAsync();
+        var uploadsPath = Path.Combine(_env.WebRootPath, "avatars", userId.ToString());
+        Directory.CreateDirectory(uploadsPath);
 
-        return profile.ToDto();
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(avatar.FileName)}";
+        var filePath = Path.Combine(uploadsPath, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+            await avatar.CopyToAsync(stream);
+
+        var publicUrl = $"/avatars/{userId}/{fileName}";
+
+        // Save URL to DB
+        profile.AvatarUrl = publicUrl;
+        await _db.SaveChangesAsync();
     }
 }

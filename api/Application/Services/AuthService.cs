@@ -12,11 +12,8 @@ using System.Security.Cryptography;
 
 namespace CoachApi.Application.Services;
 
-public class AuthService(IConfiguration config, AppDbContext context)
-{
-    private readonly IConfiguration _config = config;
-    private readonly AppDbContext _db = context;
-    
+public class AuthService(IConfiguration _config, AppDbContext _db)
+{    
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
         var user = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Identifier || u.Username == request.Identifier) 
@@ -87,7 +84,7 @@ public class AuthService(IConfiguration config, AppDbContext context)
             .SingleOrDefaultAsync(rt => rt.Token == request.RefreshToken)
             ?? throw new UnauthorizedAccessException("Invalid refresh token");
 
-        if (existingToken.IsRevoked)
+        if (existingToken.RevokedAt != null)
         {
             await RevokeAllUserTokensAsync(existingToken.UserId);
             throw new UnauthorizedAccessException("Token reuse detected. All sessions revoked");
@@ -99,7 +96,7 @@ public class AuthService(IConfiguration config, AppDbContext context)
             throw new UnauthorizedAccessException("Token already replaced. All sessions revoked");
         }
 
-        if (existingToken.IsExpired) 
+        if (existingToken.ExpiresAt <= DateTime.UtcNow)
             throw new UnauthorizedAccessException("Refresh token has expired");
 
         var user = existingToken.User ?? throw new UnauthorizedAccessException("User not found");
@@ -214,8 +211,13 @@ public class AuthService(IConfiguration config, AppDbContext context)
 
     public async Task RemoveOldTokensAsync(Guid userId)
     {
-        var oldTokens = _db.RefreshTokens
-            .Where(t => t.UserId == userId && (t.IsExpired || t.IsRevoked));
+        //Note: Do NOT filter on the db with computed properties
+        var oldTokens = await _db.RefreshTokens
+            .Where(r =>
+                r.UserId == userId &&
+                (r.ExpiresAt <= DateTime.UtcNow || r.RevokedAt != null)
+            )
+            .ToListAsync();
 
         _db.RefreshTokens.RemoveRange(oldTokens);
         await _db.SaveChangesAsync();

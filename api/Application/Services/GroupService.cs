@@ -8,10 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoachApi.Application.Services;
 
-public class GroupService(AppDbContext context)
+public class GroupService(AppDbContext _db)
 {
-    private readonly AppDbContext _db = context;
-
     public async Task<CreateGroupResponse> CreateGroupAsync(CreateGroupRequest request, Guid userId)
     {
         var group = new CoachingGroup 
@@ -84,8 +82,7 @@ public class GroupService(AppDbContext context)
     public async Task AddClientAsync(Guid groupId, Guid userId, Guid coachId)
     {
         var isCoachInGroup = await _db.Memberships
-            .Select(x => x.UserId == coachId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner))
-            .AnyAsync();
+            .AnyAsync(x => x.UserId == coachId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner));
 
         if (!isCoachInGroup) throw new InvalidOperationException("You must be a coach in this group to add clients");
 

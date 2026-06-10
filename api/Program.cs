@@ -108,4 +108,6 @@ if (app.Environment.IsDevelopment())
 //Endpoints
 app.MapControllers();
 
+app.UseStaticFiles();
+
 app.Run();

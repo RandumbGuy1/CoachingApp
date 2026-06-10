@@ -8,10 +8,8 @@ namespace CoachApi.API.Controllers;
 
 [ApiController]
 [Route("api/users")]
-public class UserController(UserService userService) : ControllerBase
+public class UserController(UserService _userService) : ControllerBase
 {
-    private readonly UserService _userService = userService;
-
     [Authorize(Roles = "Free,Pro,Enterprise")]
     [HttpGet("me")]
     public async Task<IActionResult> GetUser()
@@ -19,7 +17,7 @@ public class UserController(UserService userService) : ControllerBase
         try
         {
             var userId = User.GetUserId();
-            var response = _userService.GetUserAsync(userId);
+            var response = await _userService.GetUserAsync(userId);
             return Ok(response);
         }
         catch (InvalidOperationException ex) {
@@ -31,10 +29,12 @@ public class UserController(UserService userService) : ControllerBase
     [HttpGet("me/profile")]
     public async Task<IActionResult> GetUserProfile()
     {
+        //Note: Be careful to use "dotnet run" occasionally as launch configurations may not be properly configured
+        // resulting in stale dlls being run leading to strange errors
         try
         {
             var userId = User.GetUserId();
-            var response = _userService.GetUserProfileAsync(userId);
+            var response = await _userService.GetUserProfileAsync(userId);
             return Ok(response);
         }
         catch (InvalidOperationException ex) {
@@ -49,7 +49,7 @@ public class UserController(UserService userService) : ControllerBase
         try
         {
             var userId = User.GetUserId();
-            var response = _userService.SaveUserProfileAsync(request, userId);
+            var response = await _userService.SaveUserProfileAsync(request, userId);
             return Ok(response);
         }
         catch (InvalidOperationException ex) {
@@ -64,8 +64,8 @@ public class UserController(UserService userService) : ControllerBase
         try
         {
             var userId = User.GetUserId();
-            var response = _userService.UploadAvatarAsync(avatar, userId);
-            return Ok(response);
+            await _userService.UploadAvatarAsync(avatar, userId);
+            return Ok();
         }
         catch (InvalidOperationException ex) {
             return BadRequest(ex.Message);

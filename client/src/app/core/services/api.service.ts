@@ -4,7 +4,7 @@ import { environment } from "../../../environments/environment.development";
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly base = environment.apiUrl;
+  public readonly base = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

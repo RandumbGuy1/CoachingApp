@@ -31,6 +31,7 @@ export const routes: Routes = [
       { path: 'inbox', component: InboxPage },
       { path: 'programs', component: ProgramsPage },
       { path: 'workout', component: WorkoutPage },
+      { path: 'forms', component: FormsPage },
       { path: 'settings', component: SettingsPage },
       { path: 'info', component: InfoPage },
       { path: 'history', component: HistoryPage },
@@ -41,14 +42,14 @@ export const routes: Routes = [
     ],
   },
 
-  {
-    path: '',
-    canActivate: [authGuard, roleGuard],
-    children: [
-      { path: 'clients', component: ClientsPage },
-      { path: 'forms', component: FormsPage },
-    ],
-  },
+  // {
+  //   path: '',
+  //   canActivate: [authGuard, roleGuard],
+  //   children: [
+  //     { path: 'clients', component: ClientsPage },
+  //     { path: 'forms', component: FormsPage },
+  //   ],
+  // },
 
   { path: '**', redirectTo: '' } // fallback
 ];
