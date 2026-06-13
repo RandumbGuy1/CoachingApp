@@ -16,4 +16,5 @@ public class User
     //Navigation properties
     public required UserProfile Profile { get; set; } = default!;
     public List<GroupMembership> Memberships { get; set; } = [];
+    public Guid? SelectedMembershipId { get; set; }
 }

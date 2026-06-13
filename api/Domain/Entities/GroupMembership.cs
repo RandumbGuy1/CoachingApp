@@ -4,6 +4,7 @@ namespace CoachApi.Domain.Entities;
 
 public class GroupMembership
 {
+    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public User User { get; set; } = default!;
     public Guid CoachingGroupId { get; set; }

@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './group-selector.component.html',
 })
-export class DashboardPage {
-  
+export class GroupSelectorComponent {
+  //TODO: Hook up the backend to a dropdown which reads from membership.store
 }

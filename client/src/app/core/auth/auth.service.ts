@@ -7,6 +7,8 @@ import { ApiService } from '../services/api.service';
 import { RegisterRequest } from '../api/requests/register.request';
 import { SaveUserRequest } from '../api/requests/save-user.request';
 import { UserService } from '../services/user.service';
+import { AuthResponse } from '../api/responses/auth.response';
+import { LoginRequest } from '../api/requests/login.request';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -15,9 +17,9 @@ export class AuthService {
 
   constructor(private router: Router, private api: ApiService, private userService: UserService) {}
 
-  login(identifier: string, password: string) {
-    return this.api.post('auth/login', { identifier, password }).pipe(
-      tap((res: any) => {
+  login(request: LoginRequest) {
+    return this.api.post<AuthResponse>('auth/login', request).pipe(
+      tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
 
@@ -27,8 +29,8 @@ export class AuthService {
   }
 
   register(request: RegisterRequest) {
-    return this.api.post('auth/register', request).pipe(
-      tap((res: any) => {
+    return this.api.post<AuthResponse>('auth/register', request).pipe(
+      tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
 
@@ -39,8 +41,8 @@ export class AuthService {
   
   //Overwriting identity claims so we need to refresh our tokens
   saveUser(request: SaveUserRequest) {
-    return this.api.post('auth/save', request).pipe(
-      tap((res: any) => {
+    return this.api.post<AuthResponse>('auth/save', request).pipe(
+      tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
       })
@@ -71,8 +73,8 @@ export class AuthService {
       throw new Error('No refresh token available');
     }
 
-    return this.api.post('auth/refresh', { refreshToken: refreshToken }).pipe(
-      tap((res: any) => {
+    return this.api.post<AuthResponse>('auth/refresh', { refreshToken: refreshToken }).pipe(
+      tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
       })

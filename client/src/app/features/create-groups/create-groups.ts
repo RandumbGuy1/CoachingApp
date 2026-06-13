@@ -3,6 +3,7 @@ import { GroupsService } from '../../core/services/groups.service';
 import { Component } from '@angular/core';
 import { CreateGroupRequest } from '../../core/api/requests/create-group.request';
 import { SelectModule } from 'primeng/select';
+import { CreateGroupResponse } from '../../core/api/responses/create-group.response';
 
 @Component({
   selector: 'app-create-groups',
@@ -40,8 +41,8 @@ export class CreateGroupsPage {
   }
 
   create() {
-    this.groupService.createGroup(this.group).subscribe((name) => {
-      if (name) console.log(`Group ${name} created successfully!`);
+    this.groupService.createGroup(this.group).subscribe((response: CreateGroupResponse) => {
+      if (response) console.log(`Group ${response.name} created successfully!`);
       else this.error = 'Failed to create group. Please try again.';
     });
   }
