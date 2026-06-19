@@ -26,6 +26,7 @@ public static class GroupMappings
             Id = membership.Id,
             Role = membership.Role,
             CoachingGroupId = membership.CoachingGroupId,
+            CoachingGroup = membership.Group.ToDto(),
             UserId = membership.CoachingGroupId
         };
     }

@@ -48,7 +48,7 @@
         ></textarea>
 
         <p-select 
-          [(ngModel)]="selectedGender" 
+          [(ngModel)]="request.gender" 
           [options]="genderOptions" 
           optionLabel="label" 
           placeholder="Select Gender"
@@ -56,7 +56,7 @@
         </p-select>
         
         <p-select 
-          [(ngModel)]="selectedRegion" 
+          [(ngModel)]="request.region" 
           [options]="regionOptions" 
           optionLabel="label" 
           placeholder="Select Region"
@@ -64,8 +64,8 @@
         </p-select>
 
         <p-select 
-          [(ngModel)]="selectedTheme" 
-          [options]="themeOptions" 
+          [(ngModel)]="request.theme"
+          [options]="themeOptions"
           optionLabel="label"
           placeholder="Select Theme"
         >

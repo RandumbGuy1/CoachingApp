@@ -16,7 +16,7 @@ export class LoginPage {
   constructor(public router: Router, private auth: AuthService) {}
 
   login() {
-    this.auth.login(this.identifier, this.password).subscribe({
+    this.auth.login({ identifier: this.identifier, password: this.password }).subscribe({
       next: () => this.router.navigate(['/']),
       error: () => { this.error = 'Login failed. Please check your credentials.'; },
     });

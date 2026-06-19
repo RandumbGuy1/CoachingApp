@@ -1,0 +1,10 @@
+<p-select
+  [(ngModel)]="selectedMembership" 
+  [options]="allMembershipOptions" 
+  optionLabel="label"
+  [placeholder]="!allMemberships ? 'No Memberships' : 'Select Membership'"
+  [disabled]="!allMemberships"
+>
+</p-select>
+
+<p class="font-mono font-bold text-warning">{{ error }}</p>

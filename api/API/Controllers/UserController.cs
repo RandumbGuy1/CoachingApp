@@ -58,36 +58,6 @@ public class UserController(UserService _userService) : ControllerBase
     }
 
     [Authorize(Roles = "Free,Pro,Enterprise")]
-    [HttpPost("me/membership")]
-    public async Task<IActionResult> GetSelectedMembership()
-    {
-        try
-        {
-            var userId = User.GetUserId();
-            var response = await _userService.GetSelectedMembershipAsync(userId);
-            return Ok(response);
-        }
-        catch (InvalidOperationException ex) {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [Authorize(Roles = "Free,Pro,Enterprise")]
-    [HttpPost("me/membership/save")]
-    public async Task<IActionResult> SaveSelectedMembership(Guid membershipId)
-    {
-        try
-        {
-            var userId = User.GetUserId();
-            await _userService.SaveSelectedMembershipAsync(membershipId, userId);
-            return Ok();
-        }
-        catch (InvalidOperationException ex) {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [Authorize(Roles = "Free,Pro,Enterprise")]
     [HttpPost("me/profile/avatar")]
     public async Task<IActionResult> UploadAvatar(IFormFile avatar)
     {

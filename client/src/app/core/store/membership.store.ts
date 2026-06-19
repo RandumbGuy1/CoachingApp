@@ -7,11 +7,17 @@ import { GroupMembership } from '../api/models/group-membership.model';
 })
 export class MembershipStore {
   private readonly allMemberships = new BehaviorSubject<GroupMembership[] | null>(null);
+  readonly allMemberships$: Observable<GroupMembership[] | null> = this.allMemberships.asObservable();
+  
   private readonly selectedMembership = new BehaviorSubject<GroupMembership | null>(null);
   readonly selectedMembership$: Observable<GroupMembership | null> = this.selectedMembership.asObservable();
 
   getSelectedMembership(): GroupMembership | null {
     return this.selectedMembership.value;
+  }
+
+  getAllMemberships(): GroupMembership[] | null {
+    return this.allMemberships.value;
   }
 
   setSelectedMembership(membership: GroupMembership | null): void {

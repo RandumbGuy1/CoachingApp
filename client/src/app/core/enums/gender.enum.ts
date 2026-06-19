@@ -5,7 +5,7 @@ export enum Gender {
   Other = "Other",
 }
 
-export const genderOptions = [
+export const genderOptions: { label: string, value: Gender }[] = [
   { label: 'Male', value: Gender.Male },
   { label: 'Female', value: Gender.Female },
   { label: 'NonBinary', value: Gender.NonBinary },

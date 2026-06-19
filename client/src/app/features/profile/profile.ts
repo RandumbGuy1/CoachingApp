@@ -1,5 +1,4 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SaveProfileRequest } from '../../core/api/requests/save-profile.request';
 import { UserProfile } from '../../core/api/models/user-profile.model';
@@ -19,17 +18,13 @@ export class ProfilePage {
   request: SaveProfileRequest = {};
   selectedImage: File | null = null
 
-  selectedGender: { label: any, value: any } | undefined = undefined;
-  selectedRegion: { label: any, value: any } | undefined = undefined;
-  selectedTheme: { label: any, value: any } | undefined = undefined;
-
   error: string = '';
 
   genderOptions = genderOptions;
   regionOptions = regionOptions;
   themeOptions = themeOptions;
 
-  constructor(public router: Router, public userService: UserService, private cdr: ChangeDetectorRef) {}
+  constructor(public userService: UserService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadProfile();
@@ -52,10 +47,6 @@ export class ProfilePage {
           receiveEmailNotifications: profile.receiveEmailNotifications,
         }
 
-        this.selectedGender = genderOptions.find(o => o.value === profile.gender);
-        this.selectedRegion = regionOptions.find(o => o.value === profile.region);
-        this.selectedTheme = themeOptions.find(o => o.value === profile.theme);
-
         this.cdr.detectChanges();
       },
       error: () => { 
@@ -66,10 +57,6 @@ export class ProfilePage {
   }
 
   saveprofile() {
-    if (this.selectedGender?.value) this.request.gender = this.selectedGender.value;
-    if (this.selectedRegion?.value) this.request.region = this.selectedRegion.value;
-    if (this.selectedTheme?.value) this.request.theme = this.selectedTheme.value;
-
     this.userService.saveUserProfile(this.request).subscribe({
       next: () => { 
         //Upload avatar if a new image was selected, otherwise just reload profile to get any changes
