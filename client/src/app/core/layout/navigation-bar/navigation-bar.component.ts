@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from "../../../shared/components/avatar/avatar";
 import { Router } from '@angular/router';

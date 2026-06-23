@@ -13,7 +13,6 @@ import { CreateGroupResponse } from '../../core/api/responses/create-group.respo
 export class CreateGroupsPage {
   group: CreateGroupRequest = {
     name: '',
-    code: this.generateCode(),
     description: '',
     color: '#FFFF',
     isPublic: true,
@@ -23,22 +22,6 @@ export class CreateGroupsPage {
   error: string = '';
 
   constructor(private groupService: GroupsService) {}
-
-  changeCode() {
-    this.group.code = this.generateCode();
-  }
-
-  generateCode(length: number = 6): string {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let result = "";
-
-    for (let i = 0; i < length; i++) {
-      const index = Math.floor(Math.random() * chars.length);
-      result += chars[index];
-    }
-
-    return result;
-  }
 
   create() {
     this.groupService.createGroup(this.group).subscribe((response: CreateGroupResponse) => {

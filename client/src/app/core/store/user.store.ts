@@ -9,6 +9,8 @@ export class UserStore {
   private readonly profile = new BehaviorSubject<UserProfile | null>(null);
   readonly profile$: Observable<UserProfile | null> = this.profile.asObservable();
 
+  defaultProfileImage: string = 'assets/images/avatar.svg';
+
   getProfile(): UserProfile | null {
     return this.profile.value;
   }

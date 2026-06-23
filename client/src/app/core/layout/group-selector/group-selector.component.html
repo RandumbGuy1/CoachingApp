@@ -1,10 +1,13 @@
-<p-select
-  [(ngModel)]="selectedMembership" 
-  [options]="allMembershipOptions" 
-  optionLabel="label"
-  [placeholder]="!allMemberships ? 'No Memberships' : 'Select Membership'"
-  [disabled]="!allMemberships"
->
-</p-select>
+@if (auth.isLoggedIn()) {
+  <p-select
+    class="absolute top-5 right-10"
+    [(ngModel)]="selectedMembership" 
+    [options]="allMembershipOptions" 
+    optionLabel="label"
+    [placeholder]="!allMemberships ? 'No Memberships' : 'Select Membership'"
+    [disabled]="!allMemberships"
+  >
+  </p-select>
 
-<p class="font-mono font-bold text-warning">{{ error }}</p>
+  <p class="font-mono font-bold text-warning">{{ error }}</p>
+}

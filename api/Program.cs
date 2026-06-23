@@ -49,6 +49,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<GroupService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<MembershipService>();
 
 // Controllers
 builder.Services.AddControllers()

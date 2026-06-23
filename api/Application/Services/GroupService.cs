@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using CoachApi.Application.Contracts.Requests;
 using CoachApi.Application.Contracts.Responses;
 using CoachApi.Application.Mappings;
@@ -12,11 +14,13 @@ public class GroupService(AppDbContext _db)
 {
     public async Task<CreateGroupResponse> CreateGroupAsync(CreateGroupRequest request, Guid userId)
     {
+        string joinCode = GenerateJoinCode();
+
         var group = new CoachingGroup 
         { 
             Id = Guid.NewGuid(), 
             Name = request.Name,
-            Code = request.Code,
+            Code = joinCode,
             Description = request.Description,
             Color = request.Color,
             IsPublic = request.IsPublic,
@@ -35,7 +39,41 @@ public class GroupService(AppDbContext _db)
         });
 
         await _db.SaveChangesAsync();
-        return new CreateGroupResponse { Name = group.Name };
+        return new CreateGroupResponse { Name = group.Name, JoinCode = joinCode };
+    }
+
+    public async Task<string> GetJoinCodeAsync(Guid groupId, Guid userId)
+    {
+        var group = await _db.CoachingGroups.FindAsync(groupId) 
+            ?? throw new InvalidOperationException("Group not found");
+        
+        var isCoachInGroup = await _db.Memberships
+            .AnyAsync(x => x.UserId == userId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner));
+
+        if (!isCoachInGroup) throw new InvalidOperationException("You must be a coach in this group to view the join code");
+
+        return group.Code;
+    }
+
+    public async Task<string> RotateJoinCodeAsync(Guid groupId, Guid userId)
+    {
+        var group = await _db.CoachingGroups.FindAsync(groupId) 
+            ?? throw new InvalidOperationException("Group not found");
+        
+        var isCoachInGroup = await _db.Memberships
+            .AnyAsync(x => x.UserId == userId && x.CoachingGroupId == groupId && x.Role == GroupRole.Owner);
+
+        if (!isCoachInGroup) throw new InvalidOperationException("You must be the group owner to rotate the join code");
+            
+        string newCode;
+        do {
+            newCode = GenerateJoinCode();
+        } while (await _db.CoachingGroups.AnyAsync(g => g.Code == newCode));
+
+        group.Code = newCode;
+        await _db.SaveChangesAsync();
+
+        return newCode;
     }
 
     public async Task<JoinResponse> JoinGroupAsync(Guid groupId, JoinCodeRequest request, Guid userId)
@@ -79,16 +117,21 @@ public class GroupService(AppDbContext _db)
         return new JoinResponse { IsPending = false };
     }
 
-    public async Task AddClientAsync(Guid groupId, Guid userId, Guid coachId)
+    public async Task ApprovePendingMembership(Guid groupId, Guid clientId, Guid userId)
+    {
+        //TODO: Finish pending membership implementation
+    }
+
+    public async Task AddClientAsync(Guid groupId, Guid clientId, Guid userId)
     {
         var isCoachInGroup = await _db.Memberships
-            .AnyAsync(x => x.UserId == coachId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner));
+            .AnyAsync(x => x.UserId == userId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner));
 
         if (!isCoachInGroup) throw new InvalidOperationException("You must be a coach in this group to add clients");
 
         _db.Memberships.Add(new GroupMembership
         {
-            UserId = userId,
+            UserId = clientId,
             CoachingGroupId = groupId,
             Role = GroupRole.Client
         });
@@ -156,5 +199,18 @@ public class GroupService(AppDbContext _db)
         var groups = await query.ToListAsync();
 
         return new GetGroupResponse{ Groups = groups.ToDtoList() };
+    }
+
+    public string GenerateJoinCode()
+    {
+        const int length = 8;
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var bytes = RandomNumberGenerator.GetBytes(length);
+        var result = new char[length];
+
+        for (int i = 0; i < length; i++)
+            result[i] = chars[bytes[i] % chars.Length];
+
+        return new string(result);
     }
 }

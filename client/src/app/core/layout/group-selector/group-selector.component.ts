@@ -4,20 +4,21 @@ import { MembershipService } from '../../services/membership.service';
 import { MembershipStore } from '../../store/membership.store';
 import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-group-selector',
   imports: [FormsModule, Select],
   templateUrl: './group-selector.component.html',
 })
 export class GroupSelectorComponent implements OnInit {
   selectedMembership: GroupMembership | null = null;
-  allMemberships: GroupMembership[] | null = [];
+  allMemberships: GroupMembership[] = [];
 
   allMembershipOptions: { label: string, value: GroupMembership }[] = [];
   error: string = '';
 
-  constructor(public membershipService: MembershipService, public membershipStore: MembershipStore) {}
+  constructor(public membershipService: MembershipService, public membershipStore: MembershipStore, public auth: AuthService) {}
 
   ngOnInit() {
     this.membershipService.loadMemberships().subscribe({
@@ -26,9 +27,9 @@ export class GroupSelectorComponent implements OnInit {
 
     this.membershipStore.allMemberships$.subscribe(memberships => {
       this.allMemberships = memberships;
-      this.allMembershipOptions = !memberships ? [] : memberships.map(m => ({
-        label: m.coachingGroup.name,
-        value: m
+      this.allMembershipOptions = memberships.map(membership => ({
+        label: membership.coachingGroup.name,
+        value: membership
       }));
     });
 

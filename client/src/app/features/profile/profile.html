@@ -10,16 +10,30 @@
 
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-3">
-        <img
-          [src]="userService.toAvatarUrl(request.avatarUrl)"
-          class="w-24 h-24 rounded-full object-cover"
-        />
+        <div class="relative w-24 h-24">
+          <img
+            [src]="previewUrl || request.avatarUrl || userStore.defaultProfileImage"
+            class="w-24 h-24 rounded-full object-cover"
+          />
 
-        <input
-          id="avatar"
-          type="file"
-          (change)="onFileSelected($event)"
-        />
+          <!-- Hidden file input -->
+          <input
+            id="avatar"
+            type="file"
+            class="hidden"
+            (change)="onFileSelected($event)"
+          />
+
+          <!-- Plus icon button -->
+          <label
+            for="avatar"
+            class="absolute bottom-0 right-0 bg-base-700 text-light-200 
+                  w-7 h-7 rounded-full flex items-center justify-center 
+                  cursor-pointer hover:bg-base-800 transition"
+          >
+            +
+          </label>
+        </div>
 
         <input
           [(ngModel)]="request.firstName"
@@ -50,7 +64,8 @@
         <p-select 
           [(ngModel)]="request.gender" 
           [options]="genderOptions" 
-          optionLabel="label" 
+          optionLabel="label"
+          optionValue="value"
           placeholder="Select Gender"
         >
         </p-select>
@@ -58,7 +73,8 @@
         <p-select 
           [(ngModel)]="request.region" 
           [options]="regionOptions" 
-          optionLabel="label" 
+          optionLabel="label"
+          optionValue="value"
           placeholder="Select Region"
         >
         </p-select>
@@ -67,6 +83,7 @@
           [(ngModel)]="request.theme"
           [options]="themeOptions"
           optionLabel="label"
+          optionValue="value"
           placeholder="Select Theme"
         >
         </p-select>

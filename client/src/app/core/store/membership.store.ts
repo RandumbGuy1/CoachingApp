@@ -6,8 +6,8 @@ import { GroupMembership } from '../api/models/group-membership.model';
   providedIn: 'root'
 })
 export class MembershipStore {
-  private readonly allMemberships = new BehaviorSubject<GroupMembership[] | null>(null);
-  readonly allMemberships$: Observable<GroupMembership[] | null> = this.allMemberships.asObservable();
+  private readonly allMemberships = new BehaviorSubject<GroupMembership[]>([]);
+  readonly allMemberships$: Observable<GroupMembership[]> = this.allMemberships.asObservable();
   
   private readonly selectedMembership = new BehaviorSubject<GroupMembership | null>(null);
   readonly selectedMembership$: Observable<GroupMembership | null> = this.selectedMembership.asObservable();
@@ -16,7 +16,7 @@ export class MembershipStore {
     return this.selectedMembership.value;
   }
 
-  getAllMemberships(): GroupMembership[] | null {
+  getAllMemberships(): GroupMembership[] {
     return this.allMemberships.value;
   }
 
@@ -24,7 +24,7 @@ export class MembershipStore {
     this.selectedMembership.next(membership);
   }
 
-  setAllMemberships(memberships: GroupMembership[] | null): void {
+  setAllMemberships(memberships: GroupMembership[]): void {
     this.allMemberships.next(memberships);
   }
 

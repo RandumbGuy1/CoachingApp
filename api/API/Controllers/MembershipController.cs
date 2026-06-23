@@ -10,7 +10,7 @@ namespace CoachApi.API.Controllers;
 public class MembershipController(MembershipService _membershipService) : ControllerBase
 {
     [Authorize(Roles = "Free,Pro,Enterprise")]
-    [HttpPost("me")]
+    [HttpGet("me")]
     public async Task<IActionResult> GetSelectedMembership()
     {
         try
@@ -40,7 +40,7 @@ public class MembershipController(MembershipService _membershipService) : Contro
     }
 
     [Authorize(Roles = "Free,Pro,Enterprise")]
-    [HttpPost("me/all")]
+    [HttpGet("me/all")]
     public async Task<IActionResult> GetAllMemberships()
     {
         try

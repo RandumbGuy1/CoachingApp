@@ -1,13 +1,13 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SaveProfileRequest } from '../../core/api/requests/save-profile.request';
-import { UserProfile } from '../../core/api/models/user-profile.model';
 import { UserService } from '../../core/services/user.service';
 import { genderOptions } from '../../core/enums/gender.enum';
 import { regionOptions } from '../../core/enums/region.enum';
 import { themeOptions } from '../../core/enums/app-theme.enum';
 import { Select } from "primeng/select";
 import { ToggleSwitch } from "primeng/toggleswitch";
+import { UserStore } from '../../core/store/user.store';
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +17,7 @@ import { ToggleSwitch } from "primeng/toggleswitch";
 export class ProfilePage {
   request: SaveProfileRequest = {};
   selectedImage: File | null = null
+  previewUrl: string | null = null;
 
   error: string = '';
 
@@ -24,56 +25,37 @@ export class ProfilePage {
   regionOptions = regionOptions;
   themeOptions = themeOptions;
 
-  constructor(public userService: UserService, private cdr: ChangeDetectorRef) {}
+  constructor(public userService: UserService, public userStore: UserStore) {}
 
   ngOnInit() {
-    this.loadProfile();
-  }
-
-  loadProfile() {
-    //NOTE: This is the component to modify user profile, so we want to start with the most recent data from the server instead of the cached profile in the store. 
-    // This ensures we don't accidentally overwrite any changes that were made to the profile from another session or tab.
     this.error = '';
-    this.userService.getUserProfile()?.subscribe({
-      next: (profile: UserProfile) => {
-        this.request = {
-          avatarUrl: profile.avatarUrl,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          bio: profile.bio,
-          gender: profile.gender,
-          region: profile.region,
-          theme: profile.theme,
-          receiveEmailNotifications: profile.receiveEmailNotifications,
-        }
+    this.userService.getUserProfile().subscribe({
+      error: () => { this.error = 'Failed to load user and profile.'; }
+    });
 
-        this.cdr.detectChanges();
-      },
-      error: () => { 
-        this.error = 'Failed to load user and profile.';
-        this.cdr.detectChanges();
-      },
+    this.userStore.profile$.subscribe(profile => {
+      this.request = {
+        avatarUrl: profile?.avatarUrl,
+        firstName: profile?.firstName,
+        lastName: profile?.lastName,
+        bio: profile?.bio,
+        gender: profile?.gender,
+        region: profile?.region,
+        theme: profile?.theme,
+        receiveEmailNotifications: profile?.receiveEmailNotifications,
+      }
     });
   }
 
   saveprofile() {
-    this.userService.saveUserProfile(this.request).subscribe({
-      next: () => { 
-        //Upload avatar if a new image was selected, otherwise just reload profile to get any changes
-        if (this.selectedImage) {
-          this.userService.uploadAvatar(this.selectedImage).subscribe({
-            next: () => { this.loadProfile(); },
-            error: () => { this.error = 'Failed to upload avatar.'; }
-          });
-        } else {
-          this.loadProfile();
-        }
-      },
-      error: () => { this.error = 'Failed to save profile.'; }
-    });
+    this.error = '';
+    this.userService.saveProfileAndAvatar(this.request, this.selectedImage)
+      .subscribe({
+        next: () => this.selectedImage = null,
+        error: () => this.error = 'Failed to save profile.'
+      });
   }
 
-  //Select any new files for avatar upload
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -82,7 +64,9 @@ export class ProfilePage {
       return;
     }
 
+    //Select any new files for avatar upload and show preview
     this.selectedImage = input.files[0];
     this.request.avatarUrl = this.selectedImage.name;
+    this.previewUrl = URL.createObjectURL(this.selectedImage);
   }
 }

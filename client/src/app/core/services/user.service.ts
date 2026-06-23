@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs';
+import { of, switchMap, tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { UserProfile } from '../api/models/user-profile.model';
 import { SaveProfileRequest } from '../api/requests/save-profile.request';
@@ -33,13 +33,10 @@ export class UserService {
     return this.api.post('users/me/profile/avatar', formData);
   }
 
-  //Remove /api from static image loading files
-  toAvatarUrl(avatarUrl: string | null | undefined): string {
-    if (!avatarUrl) return 'assets/images/avatar.svg';
-
-    if (avatarUrl.startsWith('http')) return avatarUrl;
-
-    const apiOrigin = this.api.base.replace('/api', '');
-    return `${apiOrigin}${avatarUrl}`;
+  saveProfileAndAvatar(request: SaveProfileRequest, file: File | null) {
+    return this.saveUserProfile(request).pipe(
+      switchMap(() => file ? this.uploadAvatar(file) : of(null)),
+      switchMap(() => this.getUserProfile())
+    );
   }
 }

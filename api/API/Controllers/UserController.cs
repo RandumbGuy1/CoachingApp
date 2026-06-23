@@ -64,7 +64,8 @@ public class UserController(UserService _userService) : ControllerBase
         try
         {
             var userId = User.GetUserId();
-            await _userService.UploadAvatarAsync(avatar, userId);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            await _userService.UploadAvatarAsync(avatar, userId, baseUrl);
             return Ok();
         }
         catch (InvalidOperationException ex) {

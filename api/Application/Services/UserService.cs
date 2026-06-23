@@ -55,7 +55,7 @@ public class UserService(AppDbContext _db, IWebHostEnvironment _env)
         return profile.ToDto();
     }
 
-    public async Task UploadAvatarAsync(IFormFile avatar, Guid userId)
+    public async Task UploadAvatarAsync(IFormFile avatar, Guid userId, string baseUrl)
     {
         if (avatar == null || avatar.Length == 0) throw new InvalidOperationException("No file uploaded");
 
@@ -71,7 +71,7 @@ public class UserService(AppDbContext _db, IWebHostEnvironment _env)
         using (var stream = new FileStream(filePath, FileMode.Create))
             await avatar.CopyToAsync(stream);
 
-        var publicUrl = $"/avatars/{userId}/{fileName}";
+        var publicUrl = $"{baseUrl}/avatars/{userId}/{fileName}";
 
         profile.AvatarUrl = publicUrl;
         await _db.SaveChangesAsync();

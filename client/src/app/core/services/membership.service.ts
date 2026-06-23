@@ -21,7 +21,7 @@ export class MembershipService {
   }
 
   getAllMemberships() {
-    return this.api.get<GroupMembership[]>('memberships/me/save').pipe(
+    return this.api.get<GroupMembership[]>('memberships/me/all').pipe(
       tap(memberships => this.membershipStore.setAllMemberships(memberships))
     );
   }

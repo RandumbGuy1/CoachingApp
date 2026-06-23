@@ -1,10 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavigationBarComponent } from './core/layout/navigation-bar/navigation-bar.component';
+import { GroupSelectorComponent } from './core/layout/group-selector/group-selector.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavigationBarComponent],
+  imports: [RouterOutlet, NavigationBarComponent, GroupSelectorComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
