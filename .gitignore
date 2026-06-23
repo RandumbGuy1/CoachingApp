@@ -60,6 +60,9 @@ out/
 *.userosscache
 *.sln.docstates
 
+# Ignore user-uploaded content
+api/wwwroot/avatars/
+
 # Visual Studio cache
 .vs/
 

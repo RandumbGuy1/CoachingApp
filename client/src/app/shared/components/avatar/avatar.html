@@ -8,7 +8,7 @@
     (click)="router.navigate(['/profile'])"
   >
     @if (profile$ | async; as profile) {
-      <img [src]="userService.toAvatarUrl(profile.avatarUrl)" class="w-16 h-16 rounded-full object-cover">
+      <img [src]="profile.avatarUrl || userStore.defaultProfileImage" class="w-16 h-16 rounded-full object-cover">
     }
 
     @if (!collapsed) {

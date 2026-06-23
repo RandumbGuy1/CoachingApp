@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/internal/Observable';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserStore } from '../../../core/store/user.store';
 import { AsyncPipe } from '@angular/common';
-import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-avatar',
@@ -19,7 +18,7 @@ export class AvatarComponent {
   tier: string = '';
   profile$!: Observable<UserProfile | null>;
 
-  constructor(public router: Router, public userService: UserService, public userStore: UserStore, public auth: AuthService) {}
+  constructor(public router: Router, public userStore: UserStore, public auth: AuthService) {}
 
   ngOnInit(): void {
     let user = this.auth.getCurrentUser();
