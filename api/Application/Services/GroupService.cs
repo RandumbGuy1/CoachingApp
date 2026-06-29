@@ -119,7 +119,11 @@ public class GroupService(AppDbContext _db)
 
     public async Task ApprovePendingMembership(Guid groupId, Guid clientId, Guid userId)
     {
-        //TODO: Finish pending membership implementation
+        //TODO:
+        //Fix up groups page with new styling and hook it up to the front end
+        //Have navigation bar sync with current membership
+        //Setup basic frontend for the dashboard
+        //Finish pending membership implementation
     }
 
     public async Task AddClientAsync(Guid groupId, Guid clientId, Guid userId)
@@ -185,16 +189,39 @@ public class GroupService(AppDbContext _db)
     {
         var query = _db.CoachingGroups.AsQueryable();
 
-        if (request.IncludeGroupsIn)
-            query = query.Where(g => g.IsPublic || _db.Memberships.Any(m => m.CoachingGroupId == g.Id && m.UserId == userId));
-        else 
-            query = query.Where(g => g.IsPublic);
-
-        if (!request.IncludeRequestToJoin)
-            query = query.Where(g => !g.IsRequestToJoin);
-
         if (!string.IsNullOrWhiteSpace(request.IncludeString))
-            query = query.Where(g => g.Name.Contains(request.IncludeString));
+            query = query.Where(g => g.Name.Contains(request.IncludeString) || (g.Description != null && g.Description.Contains(request.IncludeString)));
+
+        if (request.IsPublic != null)
+            query = query.Where(g => g.IsPublic == request.IsPublic);
+
+        if (request.IsRequestToJoin != null)
+            query = query.Where(g => g.IsRequestToJoin == request.IsRequestToJoin);
+
+        var userMembershipGroupIds = _db.Memberships
+            .Where(m => m.UserId == userId)
+            .Select(m => m.CoachingGroupId)
+            .ToHashSet();
+
+        var otherUserMembershipGroupIds = request.OtherUserId != null
+            ? [.. _db.Memberships
+                .Where(m => m.UserId == request.OtherUserId)
+                .Select(m => m.CoachingGroupId)]
+            : new HashSet<Guid>();
+
+        //Filter wether the sender is in the groups
+        if (request.IsUserInGroup is true)
+            query = query.Where(g => userMembershipGroupIds.Contains(g.Id));
+
+        if (request.IsUserInGroup is false)
+            query = query.Where(g => !userMembershipGroupIds.Contains(g.Id));
+
+        // Filter wether the requested user is in the groups
+        if (request.IsOtherUserInGroup is true)
+            query = query.Where(g => otherUserMembershipGroupIds.Contains(g.Id));
+
+        if (request.IsOtherUserInGroup is false)
+            query = query.Where(g => !otherUserMembershipGroupIds.Contains(g.Id));
 
         var groups = await query.ToListAsync();
 

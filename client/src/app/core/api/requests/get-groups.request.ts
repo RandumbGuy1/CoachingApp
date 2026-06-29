@@ -1,7 +1,11 @@
 export interface GetGroupsRequest {
-  includeString: string;
-  includeRequestToJoin: boolean;
-  includeGroupsIn: boolean;
+    includeString?: string;
+
+    isPublic?: boolean;
+    isRequestToJoin?: boolean;
+    isUserInGroup?: boolean;
+    isOtherUserInGroup?: boolean;
+    otherUserId?: string;
 
   page?: number;
   pageSize?: number;
