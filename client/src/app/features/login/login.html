@@ -8,32 +8,34 @@
       </div>
     </div>
 
-    <div class="flex flex-row justify-center">
-      <div class="flex flex-col gap-3">
-        <input
-          [(ngModel)]="identifier"
-          type="identifier"
-          placeholder="Username or Email"
-          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-          id="identifier"
-        />
+    <form (ngSubmit)="login()" class="flex flex-col gap-3">
+      <input
+        [(ngModel)]="identifier"
+        name="identifier"
+        type="text"
+        placeholder="Username or Email"
+        autocomplete="username"
+        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+        id="identifier"
+      />
 
-        <input
-          [(ngModel)]="password"
-          type="password"
-          placeholder="Password"
-          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-          id="password"
-        />
-      </div>
-    </div>
+      <input
+        [(ngModel)]="password"
+        name="password"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+        id="password"
+      />
 
-    <button
-      (click)="login()"
-      class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
-    >
-      <p class="font-mono font-bold">Submit</p>
-    </button>
+      <button
+        type="submit"
+        class="w-full bg-base-600 text-glow-light-hover p-2 mt-3 rounded hover:bg-base-200 transition"
+      >
+        <p class="font-mono font-bold">Submit</p>
+      </button>
+    </form>
   </div>
 
   <div class="bg-base-900 p-8 rounded-xl shadow w-80 border-base-600 border-2 flex flex-col items-center justify-center gap-4">

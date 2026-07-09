@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { SaveProfileRequest } from '../../core/api/requests/save-profile.request';
 import { UserService } from '../../core/services/user.service';
-import { genderOptions } from '../../core/enums/gender.enum';
-import { regionOptions } from '../../core/enums/region.enum';
-import { themeOptions } from '../../core/enums/app-theme.enum';
+import { GENDER_OPTIONS } from '../../core/enums/gender.enum';
+import { REGION_OPTIONS } from '../../core/enums/region.enum';
+import { THEME_OPTIONS } from '../../core/enums/app-theme.enum';
 import { Select } from "primeng/select";
 import { ToggleSwitch } from "primeng/toggleswitch";
 import { UserStore } from '../../core/store/user.store';
+import { SaveUserRequest } from '../../core/api/requests/save-user.request';
+import { TIER_OPTIONS } from '../../core/enums/user-tier.enum';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,23 +20,28 @@ import { UserStore } from '../../core/store/user.store';
 })
 export class ProfilePage {
   request: SaveProfileRequest = {};
-  selectedImage: File | null = null
+  selectedImage: File | null = null;
   previewUrl: string | null = null;
 
   error: string = '';
+  errorUser: string = '';
 
-  genderOptions = genderOptions;
-  regionOptions = regionOptions;
-  themeOptions = themeOptions;
+  requestUser: SaveUserRequest = { currentPassword: '' };
+  newPassword: string = '';
 
-  constructor(public userService: UserService, public userStore: UserStore) {}
+  genderOptions = GENDER_OPTIONS;
+  regionOptions = REGION_OPTIONS;
+  themeOptions = THEME_OPTIONS;
+  tierOptions = TIER_OPTIONS;
+
+  constructor(
+    public userService: UserService,
+    private auth: AuthService,
+    public userStore: UserStore,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
-    this.error = '';
-    this.userService.getUserProfile().subscribe({
-      error: () => { this.error = 'Failed to load user and profile.'; }
-    });
-
     this.userStore.profile$.subscribe(profile => {
       this.request = {
         avatarUrl: profile?.avatarUrl,
@@ -43,17 +52,47 @@ export class ProfilePage {
         region: profile?.region,
         theme: profile?.theme,
         receiveEmailNotifications: profile?.receiveEmailNotifications,
-      }
+      };
+    });
+
+    this.userStore.user$.subscribe(user => {
+      this.requestUser = {
+        currentPassword: '',
+        username: user?.username,
+        email: user?.email,
+        tier: user?.tier,
+      };
     });
   }
 
-  saveprofile() {
+  saveProfile() {
     this.error = '';
-    this.userService.saveProfileAndAvatar(this.request, this.selectedImage)
-      .subscribe({
-        next: () => this.selectedImage = null,
-        error: () => this.error = 'Failed to save profile.'
-      });
+    this.userService.saveProfileAndAvatar(this.request, this.selectedImage).subscribe({
+      next: () => this.selectedImage = null,
+      error: (err: HttpErrorResponse) => {
+        this.error = err.error || err.message || 'Failed to save profile.';
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  saveUser() {
+    this.errorUser = '';
+    this.requestUser.newPassword = this.newPassword;
+    this.auth.saveUser(this.requestUser).subscribe({
+      next: () => {
+        this.requestUser.currentPassword = '',
+        this.newPassword = '';
+      },
+      error: (err: HttpErrorResponse) => {
+        this.errorUser = err.error || err.message || 'Failed to save user.';
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  onChangePasswordModalOpen() {
+    
   }
 
   onFileSelected(event: Event) {
@@ -64,7 +103,6 @@ export class ProfilePage {
       return;
     }
 
-    //Select any new files for avatar upload and show preview
     this.selectedImage = input.files[0];
     this.request.avatarUrl = this.selectedImage.name;
     this.previewUrl = URL.createObjectURL(this.selectedImage);

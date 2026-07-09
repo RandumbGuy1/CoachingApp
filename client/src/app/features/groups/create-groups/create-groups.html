@@ -1,0 +1,74 @@
+<div class="flex flex-col items-center justify-center h-full w-full">
+  <div class="bg-base-900 p-8 rounded-xl border-base-800 border-2 w-full max-w-150 flex flex-col gap-5">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-mono font-bold text-glow-blue">Create Group</h1>
+      <button
+        (click)="router.navigate(['/groups'])"
+        class="font-mono text-sm text-glow-blue-hover transition"
+      >
+        ← Back to Groups
+      </button>
+    </div>
+
+    @if (error) {
+      <p class="font-mono font-bold text-warning">{{ error }}</p>
+    }
+
+    <!-- Name -->
+    <input
+      [(ngModel)]="group.name"
+      type="text"
+      placeholder="Group Name"
+      class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition font-mono"
+    />
+
+    <!-- Description -->
+    <input
+      [(ngModel)]="group.description"
+      type="text"
+      placeholder="Description"
+      class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition font-mono"
+    />
+
+    <!-- Colour -->
+    <div class="flex items-center gap-4">
+      <span class="font-mono text-light-500 text-sm">Group Colour</span>
+      <input
+        type="color"
+        [(ngModel)]="group.color"
+        class="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0.5"
+      />
+      <span class="font-mono text-sm text-light-600">{{ group.color }}</span>
+    </div>
+
+    <!-- Toggles -->
+    <div class="border-t border-base-700 pt-4 flex flex-col gap-5">
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-0.5">
+          <span class="font-mono font-bold text-light-300">Public</span>
+          <span class="font-mono text-xs text-light-500">Anyone can find and view this group</span>
+        </div>
+        <p-toggleswitch [(ngModel)]="group.isPublic"/>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-0.5">
+          <span class="font-mono font-bold text-light-300">Request to Join</span>
+          <span class="font-mono text-xs text-light-500">New members must be approved by a coach</span>
+        </div>
+        <p-toggleswitch [(ngModel)]="group.isRequestToJoin"/>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button
+      (click)="create()"
+      class="w-full bg-base-600 text-glow-light-hover p-2 rounded font-mono font-bold hover:bg-base-200 transition"
+    >
+      Create Group
+    </button>
+
+  </div>
+</div>

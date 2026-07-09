@@ -1,9 +1,8 @@
-<div class="flex flex-col items-center justify-center h-full w-full gap-8">
+<div class="flex flex-row items-center justify-center h-full w-full gap-10">
   <div class="bg-base-900 p-8 rounded-xl shadow w-200 border-base-800 border-2">
-
     <div class="flex flex-row justify-center mb-5">
       <div class="flex flex-col gap-4 items-center">
-        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue">{{ request.firstName }}'s Profile</h1>
+        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue">Profile</h1>
         <p class="font-mono font-bold text-warning">{{ error }}</p>
       </div>
     </div>
@@ -96,7 +95,71 @@
       </div>
     </div>
     <button
-      (click)="saveprofile()"
+      (click)="saveProfile()"
+      class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
+    >
+      <p class="font-mono font-bold">Submit</p>
+    </button>
+  </div>
+  <div class="bg-base-900 p-8 rounded-xl shadow w-100 border-base-800 border-2">
+    <div class="flex flex-row justify-center mb-5">
+      <div class="flex flex-col gap-4 items-center">
+        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue">User</h1>
+        <p class="font-mono font-bold text-warning">{{ errorUser }}</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <input
+        [(ngModel)]="requestUser.username"
+        type="text"
+        placeholder="Username"
+        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+        id="username"
+      />
+
+      <input
+        [(ngModel)]="requestUser.email"
+        type="text"
+        placeholder="Email"
+        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+        id="email"
+      />
+
+      <input
+        [(ngModel)]="newPassword"
+        type="password"
+        placeholder="New Password"
+        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+        id="newPassword"
+      />
+
+      <p-select 
+          [(ngModel)]="requestUser.tier"
+          [options]="tierOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select Tier"
+        >
+      </p-select>
+      
+      <input
+        [(ngModel)]="requestUser.currentPassword"
+        type="password"
+        placeholder="Current Password"
+        class="w-full p-2 mt-4 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
+        id="currentPassword"
+      />
+
+      <button
+        (click)="onChangePasswordModalOpen()"
+        class="font-mono text-sm text-glow-blue-hover transition"
+      >
+        ← Back to Groups
+      </button>
+    </div>
+    <button
+      (click)="saveUser()"
       class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
     >
       <p class="font-mono font-bold">Submit</p>

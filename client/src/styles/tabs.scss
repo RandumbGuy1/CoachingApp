@@ -1,0 +1,28 @@
+.p-tablist {
+  background: var(--color-base-800) !important;
+  border-color: var(--color-base-700) !important;
+}
+
+.p-tab {
+  color: var(--color-light-500) !important;
+  font-family: var(--font-mono) !important;
+}
+
+.p-tab:not(.p-tab-active):hover {
+  color: var(--color-light-300) !important;
+  border-color: var(--color-base-600) !important;
+}
+
+.p-tab.p-tab-active {
+  color: var(--color-glow-blue-100) !important;
+  border-color: var(--color-glow-blue-500) !important;
+}
+
+.p-tabs-active-bar {
+  background: var(--color-glow-blue-500) !important;
+}
+
+.p-tabpanels {
+  background: var(--color-base-900) !important;
+  color: var(--color-light-50) !important;
+}

@@ -13,8 +13,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(cloned).pipe(
     catchError((error: HttpErrorResponse) => {
-      //Prevent refresh requests from getting intercepted
-      if (req.url.includes('/refresh')) return throwError(() => error);
+      //Prevent auth endpoints from triggering a token refresh
+      if (req.url.includes('/auth/')) return throwError(() => error);
 
       if (error.status === 401 && auth.getRefreshToken()) {
         return auth.refresh().pipe(

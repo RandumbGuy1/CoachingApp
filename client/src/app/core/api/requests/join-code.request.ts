@@ -1,3 +1,3 @@
 export interface JoinCodeRequest {
-  code: string;
+  code?: string;
 }

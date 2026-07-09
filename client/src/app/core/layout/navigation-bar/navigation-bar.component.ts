@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AvatarComponent } from "../../../shared/components/avatar/avatar";
+import { AvatarComponent } from "../../../shared/components/avatar/avatar.component";
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 

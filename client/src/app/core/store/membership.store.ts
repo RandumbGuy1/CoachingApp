@@ -30,5 +30,6 @@ export class MembershipStore {
 
   clear(): void {
     this.selectedMembership.next(null);
+    this.allMemberships.next([]);
   }
 }

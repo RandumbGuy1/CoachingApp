@@ -3,7 +3,7 @@ export enum AppTheme {
   Dark = "Dark",
 }
 
-export const themeOptions: { label: string, value: AppTheme }[] = [
+export const THEME_OPTIONS: { label: string, value: AppTheme }[] = [
   { label: 'Light', value: AppTheme.Light },
-  { label: 'Dark', value: AppTheme.Dark }
+  { label: 'Dark', value: AppTheme.Dark }   
 ];

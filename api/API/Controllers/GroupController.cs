@@ -26,7 +26,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
         }
     }
 
-    [HttpPost("{groupId}/join")]
+    [HttpPost("join/{groupId}")]
     [Authorize(Roles = "Free,Pro,Enterprise")]
     public async Task<IActionResult> JoinGroup(Guid groupId, [FromBody] JoinCodeRequest request)
     {
@@ -42,7 +42,23 @@ public class GroupController(GroupService _groupService) : ControllerBase
         }
     }
 
-    [HttpPost("{groupId}/add/{userId}")]
+    [HttpPost("join/code")]
+    [Authorize(Roles = "Free,Pro,Enterprise")]
+    public async Task<IActionResult> JoinGroupViaCode([FromBody] JoinCodeRequest request)
+    {
+        try
+        {
+            var userId = User.GetUserId();
+            var joinResponse = await _groupService.JoinGroupViaCodeAsync(request, userId);
+            return Ok(joinResponse);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("add/{groupId}/{userId}")]
     [Authorize(Roles = "Pro,Enterprise")]
     public async Task<IActionResult> AddClient(Guid groupId, Guid userId)
     {
@@ -58,7 +74,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
         }
     }
 
-    [HttpPost("{groupId}/promote/{userId}")]
+    [HttpPost("promote/{groupId}/{userId}")]
     [Authorize(Roles = "Pro,Enterprise")]
     public async Task<IActionResult> PromoteUser(Guid groupId, Guid userId)
     {
@@ -73,7 +89,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
         }
     }
 
-    [HttpPost("{groupId}/transfer/{userId}")]
+    [HttpPost("transfer/{groupId}/{userId}")]
     [Authorize(Roles = "Pro,Enterprise")]
     public async Task<IActionResult> TransferOwnership(Guid groupId, Guid userId)
     {
@@ -91,7 +107,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
 
     [HttpGet("get")]
     [Authorize(Roles = "Free,Pro,Enterprise")]
-    public async Task<IActionResult> GetGroups([FromBody] GetGroupRequest request)
+    public async Task<IActionResult> GetGroups([FromQuery] GetGroupRequest request)
     {
         try
         {

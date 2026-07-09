@@ -4,7 +4,7 @@ import { CoachingGroup } from '../../../core/api/models/coaching-group.model';
 @Component({
   selector: 'app-group-widget',
   imports: [],
-  templateUrl: './group-widget.html',
+  templateUrl: './group-widget.component.html',
 })
 export class GroupWidget {
   @Input() group: CoachingGroup = {} as CoachingGroup;

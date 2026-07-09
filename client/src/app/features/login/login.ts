@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +14,15 @@ export class LoginPage {
   password = '';
   error = '';
 
-  constructor(public router: Router, private auth: AuthService) {}
+  constructor(public router: Router, private auth: AuthService, private cdr: ChangeDetectorRef) {}
 
   login() {
     this.auth.login({ identifier: this.identifier, password: this.password }).subscribe({
       next: () => this.router.navigate(['/']),
-      error: () => { this.error = 'Login failed. Please check your credentials.'; },
+      error: (err: HttpErrorResponse) => {
+        this.error = err.error || err.message || 'An error occurred during login.';
+        this.cdr.detectChanges();
+      },
     });
   }
 }

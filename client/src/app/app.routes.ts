@@ -15,7 +15,7 @@ import { RegisterPage } from './features/registration/register';
 import { ClientsPage } from './features/clients/clients';
 import { FormsPage } from './features/forms/forms';
 import { GroupsPage } from './features/groups/groups';
-import { CreateGroupsPage } from './features/create-groups/create-groups';
+import { CreateGroupsPage } from './features/groups/create-groups/create-groups';
 import { roleGuard } from './core/auth/role.gaurd';
 
 export const routes: Routes = [
@@ -38,18 +38,18 @@ export const routes: Routes = [
       { path: 'glossary', component: GlossaryPage },
       { path: 'profile', component: ProfilePage },
       { path: 'groups', component: GroupsPage },
-      { path: 'groups/create', component: CreateGroupsPage },
     ],
   },
 
-  // {
-  //   path: '',
-  //   canActivate: [authGuard, roleGuard],
-  //   children: [
-  //     { path: 'clients', component: ClientsPage },
-  //     { path: 'forms', component: FormsPage },
-  //   ],
-  // },
+  {
+    path: '',
+    canActivate: [authGuard, roleGuard],
+    children: [
+      { path: 'clients', component: ClientsPage },
+      { path: 'forms', component: FormsPage },
+      { path: 'groups/create', component: CreateGroupsPage },
+    ],
+  },
 
   { path: '**', redirectTo: '' } // fallback
 ];

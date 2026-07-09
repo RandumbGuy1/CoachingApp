@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { tap } from 'rxjs';
+import { catchError, forkJoin, Observable, of, tap } from 'rxjs';
 import { User } from '../api/models/user.model';
 import { ApiService } from '../services/api.service';
 import { RegisterRequest } from '../api/requests/register.request';
@@ -9,21 +9,45 @@ import { SaveUserRequest } from '../api/requests/save-user.request';
 import { UserService } from '../services/user.service';
 import { AuthResponse } from '../api/responses/auth.response';
 import { LoginRequest } from '../api/requests/login.request';
+import { MembershipService } from '../services/membership.service';
+import { UserStore } from '../store/user.store';
+import { MembershipStore } from '../store/membership.store';
+import { diff } from '../utils/diff.util';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
 
-  constructor(private router: Router, private api: ApiService, private userService: UserService) {}
+  constructor(
+    private router: Router,
+    private api: ApiService,
+    private userService: UserService,
+    private membershipService: MembershipService,
+    private userStore: UserStore,
+    private membershipStore: MembershipStore
+  ) {}
+
+  bootstrapFromStorage(): Observable<any> {
+    const user = this.getCurrentUser();
+    if (!user) return of(null);
+
+    this.userStore.setUser(user);
+    return forkJoin([
+      this.userService.getUserProfile().pipe(catchError(() => of(null))),
+      this.membershipService.loadMemberships().pipe(catchError(() => of(null))),
+    ]);
+  }
 
   login(request: LoginRequest) {
     return this.api.post<AuthResponse>('auth/login', request).pipe(
       tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
+        this.userStore.setUser(this.getCurrentUser());
 
         this.userService.getUserProfile().subscribe();
+        this.membershipService.loadMemberships().subscribe();
       })
     );
   }
@@ -33,18 +57,29 @@ export class AuthService {
       tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
+        this.userStore.setUser(this.getCurrentUser());
 
         this.userService.getUserProfile().subscribe();
+        this.membershipService.loadMemberships().subscribe();
       })
     );
   }
-  
-  //Overwriting identity claims so we need to refresh our tokens
+
   saveUser(request: SaveUserRequest) {
-    return this.api.post<AuthResponse>('auth/save', request).pipe(
+    const user = this.userStore.getUser();
+    const current = user ? {
+      username: user.username,
+      email: user.email,
+      tier: user.tier,
+    } as SaveUserRequest : {};
+
+    const changes = diff(current, request);
+
+    return this.api.post<AuthResponse>('auth/save', changes).pipe(
       tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
+        this.userStore.setUser(this.getCurrentUser());
       })
     );
   }
@@ -52,7 +87,11 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    this.router.navigate(['/login']);
+    this.userStore.clear();
+    this.membershipStore.clear();
+    if (this.router.navigated && !this.router.url.startsWith('/login')) {
+      this.router.navigate(['/login']);
+    }
   }
 
   isLoggedIn(): boolean {
@@ -69,35 +108,29 @@ export class AuthService {
 
   refresh() {
     const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      throw new Error('No refresh token available');
-    }
+    if (!refreshToken) throw new Error('No refresh token available');
 
     return this.api.post<AuthResponse>('auth/refresh', { refreshToken: refreshToken }).pipe(
       tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
+        this.userStore.setUser(this.getCurrentUser());
       })
     );
   }
 
-  getCurrentUser(): User | null {
+  private getCurrentUser(): User | null {
     const token = this.getAccessToken();
     if (!token) return null;
 
-    //We use claims instead of an async call since all other user data
-    //can be looked up with in async call using userId
     try {
       const decoded: any = jwtDecode(token);
-      const user = {
+      return {
         id: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
         username: decoded['username'],
         email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
         tier: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
       } as User;
-
-      return user;
-
     } catch (e) {
       console.error('Failed to decode token', e);
       return null;

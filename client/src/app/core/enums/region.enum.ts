@@ -9,7 +9,7 @@ export enum Region {
   Other = "Other",
 }
 
-export const regionOptions: { label: string, value: Region }[]  = [
+export const REGION_OPTIONS: { label: string, value: Region }[]  = [
   { label: 'North America', value: Region.NorthAmerica },
   { label: 'South America', value: Region.SouthAmerica },
   { label: 'Europe', value: Region.Europe },

@@ -114,10 +114,10 @@
 
 /* Utility classes for text glow effects */
 @utility glow-light {
-    text-shadow:
-        0 0 5px var(--color-light-950),
-        0 0 10px var(--color-light-950),
-        0 0 20px var(--color-light-950);
+  text-shadow:
+      0 0 5px var(--color-light-950),
+      0 0 10px var(--color-light-950),
+      0 0 20px var(--color-light-950);
 }
 
 @utility glow-light-icon {
@@ -128,10 +128,10 @@
 }
 
 @utility glow-blue {
-    text-shadow:
-        0 0 5px var(--color-glow-blue-700),
-        0 0 10px var(--color-glow-blue-700),
-        0 0 20px var(--color-glow-blue-700);
+  text-shadow:
+      0 0 5px var(--color-glow-blue-700),
+      0 0 10px var(--color-glow-blue-700),
+      0 0 20px var(--color-glow-blue-700);
 }
 
 @utility glow-blue-icon {
@@ -142,10 +142,10 @@
 }
 
 @utility glow-orange {
-    text-shadow:
-        0 0 5px var(--color-glow-orange-600),
-        0 0 10px var(--color-glow-orange-600),
-        0 0 20px var(--color-glow-orange-600);
+  text-shadow:
+      0 0 5px var(--color-glow-orange-600),
+      0 0 10px var(--color-glow-orange-600),
+      0 0 20px var(--color-glow-orange-600);
 }
 
 @utility glow-orange-icon {
@@ -156,27 +156,27 @@
 }
 
 @utility text-glow-light {
-    @apply text-light-300 glow-light;
+  @apply text-light-300 glow-light;
 }
 
 @utility text-glow-light-hover {
-    @apply text-light-300 hover:text-light-50 hover:glow-light transition;
+  @apply text-light-300 hover:text-light-50 hover:glow-light transition;
 }
 
 @utility text-glow-blue {
-    @apply text-glow-blue-100 glow-blue;
+  @apply text-glow-blue-100 glow-blue;
 }
 
 @utility text-glow-blue-hover {
-    @apply text-glow-blue-100 hover:text-light-50 hover:glow-blue transition;
+  @apply text-glow-blue-100 hover:text-light-50 hover:glow-blue transition;
 }
 
 @utility text-glow-orange {
-    @apply text-glow-orange-100 glow-orange;
+  @apply text-glow-orange-100 glow-orange;
 }
 
 @utility text-glow-orange-hover {
-    @apply text-glow-orange-100 hover:text-light-50 hover:glow-orange transition;
+  @apply text-glow-orange-100 hover:text-light-50 hover:glow-orange transition;
 }
 
 @utility scrollbar-base {

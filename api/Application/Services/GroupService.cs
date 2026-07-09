@@ -76,7 +76,7 @@ public class GroupService(AppDbContext _db)
         return newCode;
     }
 
-    public async Task<JoinResponse> JoinGroupAsync(Guid groupId, JoinCodeRequest request, Guid userId)
+    public async Task<JoinGroupResponse> JoinGroupAsync(Guid groupId, JoinCodeRequest request, Guid userId)
     {
         var group = await _db.CoachingGroups.FindAsync(groupId) 
             ?? throw new InvalidOperationException("Group not found");
@@ -102,7 +102,7 @@ public class GroupService(AppDbContext _db)
 
             await _db.SaveChangesAsync();
 
-            return new JoinResponse { IsPending = true };
+            return new JoinGroupResponse { IsPending = true };
         }
 
         _db.Memberships.Add(new GroupMembership
@@ -114,16 +114,67 @@ public class GroupService(AppDbContext _db)
 
         await _db.SaveChangesAsync();
 
-        return new JoinResponse { IsPending = false };
+        return new JoinGroupResponse { IsPending = false };
+    }
+
+    public async Task<JoinGroupResponse> JoinGroupViaCodeAsync(JoinCodeRequest request, Guid userId)
+    {
+        var group = await _db.CoachingGroups.FirstOrDefaultAsync(g => g.Code == request.Code) 
+            ?? throw new InvalidOperationException("Invalid join code");
+
+        var existsInGroup = await _db.Memberships
+            .AnyAsync(x => x.UserId == userId && x.CoachingGroupId == group.Id);
+
+        if (existsInGroup) throw new InvalidOperationException("Already in this group");
+
+        //Send a join request if the group requires approval to join, otherwise add them to the group directly
+        if (group.IsRequestToJoin)
+        {
+            _db.PendingMemberships.Add(new JoinRequest
+            {
+                UserId = userId,
+                CoachingGroupId = group.Id,
+                Status = JoinRequestStatus.Pending
+            });
+
+            await _db.SaveChangesAsync();
+
+            return new JoinGroupResponse { IsPending = true };
+        }
+
+        _db.Memberships.Add(new GroupMembership
+        {
+            UserId = userId,
+            CoachingGroupId = group.Id,
+            Role = GroupRole.Client
+        });
+
+        await _db.SaveChangesAsync();
+
+        return new JoinGroupResponse { IsPending = false };
     }
 
     public async Task ApprovePendingMembership(Guid groupId, Guid clientId, Guid userId)
     {
-        //TODO:
-        //Fix up groups page with new styling and hook it up to the front end
-        //Have navigation bar sync with current membership
-        //Setup basic frontend for the dashboard
-        //Finish pending membership implementation
+        var isCoachInGroup = await _db.Memberships
+            .AnyAsync(x => x.UserId == userId && x.CoachingGroupId == groupId && (x.Role == GroupRole.Coach || x.Role == GroupRole.Owner));
+
+        if (!isCoachInGroup) throw new InvalidOperationException("You must be a coach in this group to approve join requests");
+
+        var pendingMembership = await _db.PendingMemberships
+            .FirstOrDefaultAsync(x => x.UserId == clientId && x.CoachingGroupId == groupId && x.Status == JoinRequestStatus.Pending)
+            ?? throw new InvalidOperationException("No pending join request found for this user");
+
+        pendingMembership.Status = JoinRequestStatus.Approved;
+
+        _db.Memberships.Add(new GroupMembership
+        {
+            UserId = clientId,
+            CoachingGroupId = groupId,
+            Role = GroupRole.Client
+        });
+
+        await _db.SaveChangesAsync();
     }
 
     public async Task AddClientAsync(Guid groupId, Guid clientId, Guid userId)

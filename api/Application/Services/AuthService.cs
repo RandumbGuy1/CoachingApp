@@ -113,23 +113,15 @@ public class AuthService(IConfiguration _config, AppDbContext _db)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId) 
             ?? throw new InvalidOperationException("User not found");
+            
+        if (string.IsNullOrEmpty(request.CurrentPassword))
+            throw new InvalidOperationException("Current password is required.");
 
-        bool requiresPassword = 
-            !string.IsNullOrEmpty(request.NewPassword) || 
-            !string.IsNullOrEmpty(request.Email) || 
-            !string.IsNullOrEmpty(request.Username); 
+        var hasher = new PasswordHasher<User>();
+        var verify = hasher.VerifyHashedPassword(user, user.PasswordHash, request.CurrentPassword);
 
-        if (requiresPassword)
-        {
-            if (string.IsNullOrEmpty(request.CurrentPassword))
-                throw new InvalidOperationException("Current password is required.");
-
-            var hasher = new PasswordHasher<User>();
-            var verify = hasher.VerifyHashedPassword(user, user.PasswordHash, request.CurrentPassword);
-
-            if (verify == PasswordVerificationResult.Failed)
-                throw new InvalidOperationException("Current password is incorrect.");
-        }
+        if (verify == PasswordVerificationResult.Failed)
+            throw new InvalidOperationException("Current password is incorrect.");
 
         if (!string.IsNullOrEmpty(request.Username))
         {
@@ -149,7 +141,11 @@ public class AuthService(IConfiguration _config, AppDbContext _db)
 
         if (!string.IsNullOrEmpty(request.NewPassword))
         {
-            var hasher = new PasswordHasher<User>();
+            var match = hasher.VerifyHashedPassword(user, user.PasswordHash, request.NewPassword);
+
+            if (match == PasswordVerificationResult.Success)
+                throw new InvalidOperationException("New password cannot be the same as the current password.");
+
             user.PasswordHash = hasher.HashPassword(user, request.NewPassword);
         }
 

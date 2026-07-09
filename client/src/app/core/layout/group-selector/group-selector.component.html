@@ -1,13 +1,11 @@
-@if (auth.isLoggedIn()) {
+@if (userStore.user$ | async) {
   <p-select
     class="absolute top-5 right-10"
-    [(ngModel)]="selectedMembership" 
-    [options]="allMembershipOptions" 
+    [(ngModel)]="selectedMembership"
+    [options]="allMembershipOptions"
     optionLabel="label"
-    [placeholder]="!allMemberships ? 'No Memberships' : 'Select Membership'"
-    [disabled]="!allMemberships"
+    [placeholder]="!allMemberships.length ? 'No Memberships' : 'Select Membership'"
+    [disabled]="!allMemberships.length"
   >
   </p-select>
-
-  <p class="font-mono font-bold text-warning">{{ error }}</p>
 }

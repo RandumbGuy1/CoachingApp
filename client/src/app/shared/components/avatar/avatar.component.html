@@ -1,0 +1,25 @@
+<div class="flex flex-row gap-10">
+  <button
+    class="flex h-35 hover:bg-base-700 transition-all items-center gap-4 w-full overflow-hidden"
+    [class.justify-end]="!collapsed"
+    [class.justify-center]="collapsed"
+    [class.pr-8]="!collapsed"
+    [title]="(user$ | async)?.username"
+    (click)="router.navigate(['/profile'])"
+  >
+    @if (profile$ | async; as profile) {
+      <img [src]="profile.avatarUrl || userStore.defaultProfileImage" class="w-16 h-16 rounded-full object-cover shrink-0">
+    } @else {
+      <img [src]="userStore.defaultProfileImage" class="w-16 h-16 rounded-full object-cover shrink-0">
+    }
+
+    @if (!collapsed) {
+      <div class="flex flex-col">
+        @if (userStore.user$ | async; as user) {
+          <p class="font-mono font-bold text-glow-blue-50 text-3xl max-w-40">{{ user.username || 'User' }}</p>
+          <p class="font-mono font-bold text-light-700 text-xl max-w-40">{{ user.tier || 'Free' }}</p>
+        }
+      </div>
+    }
+  </button>
+</div>

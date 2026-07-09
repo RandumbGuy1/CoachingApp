@@ -1,0 +1,47 @@
+<div class="bg-base-900 rounded-xl border-base-800 border-2 p-6 flex flex-col gap-4">
+  <div class="flex justify-between items-center">
+    <h2 class="text-2xl font-mono font-bold text-light-300">Recent Progress</h2>
+    <button
+      (click)="navigateToHistory()"
+      class="font-mono text-sm text-glow-blue-hover transition"
+    >
+      View History →
+    </button>
+  </div>
+
+  @if (progress.length === 0) {
+    <div class="flex items-center justify-center py-8">
+      <p class="font-mono text-light-500">No recent workouts recorded.</p>
+    </div>
+  } @else {
+    <div class="flex flex-col gap-0">
+      @for (entry of progress; track entry.exerciseName) {
+        <div class="flex items-center justify-between py-3 border-b border-base-700 last:border-0">
+          <div class="flex flex-col gap-0.5">
+            <span class="font-mono font-bold text-light-300">{{ entry.exerciseName }}</span>
+            <span class="font-mono text-xs text-light-600">{{ entry.date | date:'MMM d, y' }}</span>
+          </div>
+          <div class="flex items-center gap-6">
+            <span class="font-mono text-sm text-light-400">
+              {{ entry.reps }} reps @ {{ entry.weight }}{{ entry.unit }}
+            </span>
+            <span
+              class="font-mono text-sm font-bold w-14 text-right"
+              [class.text-glow-green-300]="getDelta(entry) > 0"
+              [class.text-light-600]="getDelta(entry) === 0"
+              [class.text-error]="getDelta(entry) < 0"
+            >
+              @if (getDelta(entry) > 0) {
+                +{{ getDelta(entry) }}kg
+              } @else if (getDelta(entry) < 0) {
+                {{ getDelta(entry) }}kg
+              } @else {
+                —
+              }
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

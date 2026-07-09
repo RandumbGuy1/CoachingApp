@@ -1,6 +1,6 @@
 namespace CoachApi.Application.Contracts.Responses;
 
-public class JoinResponse
+public class JoinGroupResponse
 {
     public required bool IsPending { get; set; }
 }
