@@ -1,55 +1,38 @@
 import { Routes } from '@angular/router';
-import { DashboardPage } from './features/dashboard/dashboard';
-import { GoalsPage } from './features/goals/goals';
-import { HistoryPage } from './features/history/history';
-import { InfoPage } from './features/info/info';
-import { SettingsPage } from './features/settings/settings';
-import { WorkoutPage } from './features/workout/workout';
-import { ProgramsPage } from './features/programs/programs';
-import { InboxPage } from './features/inbox/inbox';
-import { GlossaryPage } from './features/glossary/glossary';
-import { ProfilePage } from './features/profile/profile';
-import { LoginPage } from './features/login/login';
-import { authGuard } from './core/auth/auth.guard';
-import { RegisterPage } from './features/registration/register';
-import { ClientsPage } from './features/clients/clients';
-import { FormsPage } from './features/forms/forms';
-import { GroupsPage } from './features/groups/groups';
-import { CreateGroupsPage } from './features/groups/create-groups/create-groups';
-import { roleGuard } from './core/auth/role.gaurd';
+import { requireTier } from './core/auth/tier.guard';
+import { requireLogin } from './core/auth/login.guard';
+import { UserTier } from './core/enums/user-tier.enum';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginPage },
-  { path: 'register', component: RegisterPage },
+  { path: '', loadComponent: () => import('./features/landing/landing').then(m => m.LandingPage) },
+  { path: 'login', loadComponent: () => import('./features/login/login').then(m => m.LoginPage), canActivate: [requireLogin(false)] },
+  { path: 'register', loadComponent: () => import('./features/registration/register').then(m => m.RegisterPage), canActivate: [requireLogin(false)] },
 
   {
     path: '',
-    canActivate: [authGuard],
+    canActivate: [requireLogin(true), requireTier(UserTier.Lite)],
     children: [
-      { path: '', component: DashboardPage },
-      { path: 'goals', component: GoalsPage },
-      { path: 'inbox', component: InboxPage },
-      { path: 'programs', component: ProgramsPage },
-      { path: 'workout', component: WorkoutPage },
-      { path: 'forms', component: FormsPage },
-      { path: 'settings', component: SettingsPage },
-      { path: 'info', component: InfoPage },
-      { path: 'history', component: HistoryPage },
-      { path: 'glossary', component: GlossaryPage },
-      { path: 'profile', component: ProfilePage },
-      { path: 'groups', component: GroupsPage },
+      { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard').then(m => m.DashboardPage) },
+      { path: 'goals', loadComponent: () => import('./features/goals/goals').then(m => m.GoalsPage) },
+      { path: 'inbox', loadComponent: () => import('./features/inbox/inbox').then(m => m.InboxPage) },
+      { path: 'programs', loadComponent: () => import('./features/programs/programs').then(m => m.ProgramsPage) },
+      { path: 'workout', loadComponent: () => import('./features/workout/workout').then(m => m.WorkoutPage) },
+      { path: 'forms', loadComponent: () => import('./features/forms/forms').then(m => m.FormsPage) },
+      { path: 'settings', loadComponent: () => import('./features/settings/settings').then(m => m.SettingsPage) },
+      { path: 'info', loadComponent: () => import('./features/info/info').then(m => m.InfoPage) },
+      { path: 'history', loadComponent: () => import('./features/history/history').then(m => m.HistoryPage) },
+      { path: 'glossary', loadComponent: () => import('./features/glossary/glossary').then(m => m.GlossaryPage) },
+      { path: 'profile', loadComponent: () => import('./features/profile/profile').then(m => m.ProfilePage) },
+      { path: 'clients', loadComponent: () => import('./features/clients/clients').then(m => m.ClientsPage), canActivate: [requireTier(UserTier.Pro)] },
+      {
+        path: 'groups',
+        loadComponent: () => import('./features/groups/groups').then(m => m.GroupsPage),
+        children: [
+          { path: 'create', loadComponent: () => import('./features/groups/create-groups/create-groups').then(m => m.CreateGroupsPage), canActivate: [requireTier(UserTier.Pro)] },
+        ],
+      },
     ],
   },
 
-  {
-    path: '',
-    canActivate: [authGuard, roleGuard],
-    children: [
-      { path: 'clients', component: ClientsPage },
-      { path: 'forms', component: FormsPage },
-      { path: 'groups/create', component: CreateGroupsPage },
-    ],
-  },
-
-  { path: '**', redirectTo: '' } // fallback
+  { path: '**', redirectTo: '' },
 ];

@@ -12,11 +12,13 @@ import { UserStore } from '../../core/store/user.store';
 import { SaveUserRequest } from '../../core/api/requests/save-user.request';
 import { TIER_OPTIONS } from '../../core/enums/user-tier.enum';
 import { AuthService } from '../../core/auth/auth.service';
+import { ForgotPasswordModalService } from '../../core/services/forgot-password-modal.service';
 
 @Component({
   selector: 'app-profile',
   imports: [FormsModule, Select, ToggleSwitch],
   templateUrl: './profile.html',
+  styleUrl: './profile.scss',
 })
 export class ProfilePage {
   request: SaveProfileRequest = {};
@@ -36,9 +38,10 @@ export class ProfilePage {
 
   constructor(
     public userService: UserService,
-    private auth: AuthService,
+    private authService: AuthService,
     public userStore: UserStore,
     private cdr: ChangeDetectorRef,
+    private forgotPasswordModal: ForgotPasswordModalService,
   ) {}
 
   ngOnInit() {
@@ -79,7 +82,7 @@ export class ProfilePage {
   saveUser() {
     this.errorUser = '';
     this.requestUser.newPassword = this.newPassword;
-    this.auth.saveUser(this.requestUser).subscribe({
+    this.authService.saveUser(this.requestUser).subscribe({
       next: () => {
         this.requestUser.currentPassword = '',
         this.newPassword = '';
@@ -92,7 +95,7 @@ export class ProfilePage {
   }
 
   onChangePasswordModalOpen() {
-    
+    this.forgotPasswordModal.open();
   }
 
   onFileSelected(event: Event) {

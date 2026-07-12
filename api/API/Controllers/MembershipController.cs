@@ -9,7 +9,7 @@ namespace CoachApi.API.Controllers;
 [Route("api/memberships")]
 public class MembershipController(MembershipService _membershipService) : ControllerBase
 {
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     [HttpGet("me")]
     public async Task<IActionResult> GetSelectedMembership()
     {
@@ -24,7 +24,7 @@ public class MembershipController(MembershipService _membershipService) : Contro
         }
     }
 
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     [HttpPost("me/save")]
     public async Task<IActionResult> SaveSelectedMembership(Guid membershipId)
     {
@@ -39,7 +39,7 @@ public class MembershipController(MembershipService _membershipService) : Contro
         }
     }
 
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     [HttpGet("me/all")]
     public async Task<IActionResult> GetAllMemberships()
     {

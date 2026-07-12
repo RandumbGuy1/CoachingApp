@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import { GroupMembership } from '../../api/models/group-membership.model';
 import { MembershipService } from '../../services/membership.service';
 import { MembershipStore } from '../../store/membership.store';
-import { UserStore } from '../../store/user.store';
 import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-group-selector',
-  imports: [FormsModule, Select, AsyncPipe],
+  imports: [FormsModule, Select],
   templateUrl: './group-selector.component.html',
 })
 export class GroupSelectorComponent implements OnInit {
@@ -20,7 +18,6 @@ export class GroupSelectorComponent implements OnInit {
   constructor(
     public membershipService: MembershipService,
     public membershipStore: MembershipStore,
-    public userStore: UserStore,
   ) {}
 
   ngOnInit() {

@@ -24,7 +24,6 @@ export class NavigationBarComponent {
     icon: "assets/images/icons/navigation/settings.svg",
     tooltip: "Edit application settings",
     url: '/settings',
-    showWhileLoggedOut: true,
   };
 
   info: NavigationElement = {
@@ -32,7 +31,6 @@ export class NavigationBarComponent {
     icon: "assets/images/icons/navigation/info.svg",
     tooltip: "View application info",
     url: '/info',
-    showWhileLoggedOut: true,
   };
 
   inbox: NavigationElement = {
@@ -55,7 +53,7 @@ export class NavigationBarComponent {
     icon: "assets/images/icons/navigation/logout.svg",
     tooltip: "Log out of the application",
     url: '',
-    callback: () => this.auth.logout(),
+    callback: () => this.authService.logout(),
     color: 'warning',
   };
 
@@ -63,7 +61,7 @@ export class NavigationBarComponent {
     title: "Dashboard",
     icon: "assets/images/icons/navigation/dashboard.svg",
     tooltip: "Go to dashboard",
-    url: '',
+    url: '/dashboard',
   };
 
   goals: NavigationElement = {
@@ -101,8 +99,6 @@ export class NavigationBarComponent {
     url: '/glossary',
   };
 
-  homeImgUrl: string = 'assets/images/logo.png';
-
   mainElements: NavigationElement[] = [
     this.dashboard,
     this.goals,
@@ -121,7 +117,7 @@ export class NavigationBarComponent {
     this.groups,
   ];
 
-  constructor(public router: Router, public auth: AuthService) {}
+  constructor(public router: Router, public authService: AuthService) {}
 }
 
 interface NavigationElement {
@@ -130,7 +126,6 @@ interface NavigationElement {
   tooltip: string;
   url: string;
   callback?: () => void;
-  showWhileLoggedOut?: boolean;
   isCoachOnly?: boolean;
   color?: string;
   notificationCount?: number;

@@ -11,6 +11,7 @@ public class User
 
     //Permissions
     public required UserTier Tier { get; set; }
+    public List<UserEntitlement> Entitlements { get; set; } = [];
     public List<RefreshToken> RefreshTokens { get; set; } = [];
 
     //Navigation properties

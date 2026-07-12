@@ -1,100 +1,126 @@
-<div class="flex flex-col items-center justify-center h-full w-full gap-8">
-  <div class="bg-base-900 p-8 rounded-xl shadow w-150 border-base-800 border-2">
+<div class="noise-layer"></div>
 
-    <div class="flex flex-row justify-center mb-5">
-      <div class="flex flex-col gap-4 items-center">
-        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue">Register</h1>
-        <p class="font-mono font-bold text-warning">{{ error }}</p>
+<div class="relative flex items-center justify-center min-h-full w-full overflow-hidden py-10">
+
+  <div class="blob blob-register"></div>
+
+  <div class="relative z-10 flex flex-col items-center gap-5 w-full max-w-2xl px-4">
+
+    <img src="assets/images/logo.png" class="w-36 mb-2">
+
+    <div class="glass-card rounded-2xl p-8 w-full flex flex-col gap-5">
+
+      <div class="flex flex-col gap-1 text-center">
+        <h1 class="text-2xl font-bold text-site-text">Create your account</h1>
+        <p class="text-sm text-site-text-secondary">It's free to get started</p>
       </div>
+
+      @if (error) {
+        <p class="text-warning text-sm font-mono text-center">{{ error }}</p>
+      }
+
+      <form (ngSubmit)="register()" class="flex flex-col gap-5">
+
+        <div class="grid grid-cols-2 gap-6">
+
+          <!-- Personal -->
+          <div class="flex flex-col gap-3">
+            <h2 class="text-sm font-bold text-site-accent uppercase tracking-widest">Personal</h2>
+
+            <input
+              [(ngModel)]="request.firstName"
+              name="firstName"
+              type="text"
+              placeholder="First Name"
+              autocomplete="given-name"
+              class="glass-input"
+            />
+            <input
+              [(ngModel)]="request.lastName"
+              name="lastName"
+              type="text"
+              placeholder="Last Name"
+              autocomplete="family-name"
+              class="glass-input"
+            />
+            <p-select
+              class="w-full"
+              [(ngModel)]="selectedGender"
+              name="gender"
+              [options]="genderOptions"
+              optionLabel="label"
+              placeholder="Select Gender"
+            />
+            <p-select
+              class="w-full"
+              [(ngModel)]="selectedRegion"
+              name="region"
+              [options]="regionOptions"
+              optionLabel="label"
+              placeholder="Select Region"
+            />
+          </div>
+
+          <!-- Account -->
+          <div class="flex flex-col gap-3">
+            <h2 class="text-sm font-bold text-site-accent uppercase tracking-widest">Account</h2>
+
+            <input
+              [(ngModel)]="request.username"
+              name="username"
+              type="text"
+              placeholder="Username"
+              autocomplete="username"
+              class="glass-input"
+            />
+            <input
+              [(ngModel)]="request.email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              autocomplete="email"
+              class="glass-input"
+            />
+            <input
+              [(ngModel)]="request.password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              autocomplete="new-password"
+              class="glass-input"
+            />
+          </div>
+
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-110 transition"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+      <div class="border-t border-site-border pt-4 text-center">
+        <span class="text-sm text-site-text-secondary">Already have an account? </span>
+        <button
+          (click)="router.navigate(['/login'])"
+          class="text-sm font-bold text-site-accent hover:text-site-text-secondary transition"
+        >
+          Log in
+        </button>
+      </div>
+
     </div>
 
-    <form (ngSubmit)="register()" class="flex flex-col gap-5">
-      <div class="flex flex-row justify-between gap-8">
-        <div class="flex flex-col gap-3">
-          <h1 class="text-2xl font-mono font-normal text-glow-light">Personal</h1>
-          <input
-            [(ngModel)]="request.firstName"
-            name="firstName"
-            type="text"
-            placeholder="First Name"
-            autocomplete="given-name"
-            class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-            id="firstname"
-          />
+    <button
+      (click)="router.navigate(['/landing'])"
+      class="self-start text-sm text-site-text-dim hover:text-site-text-secondary transition"
+    >
+      ← Back to home
+    </button>
 
-          <input
-            [(ngModel)]="request.lastName"
-            name="lastName"
-            type="text"
-            placeholder="Last Name"
-            autocomplete="family-name"
-            class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-            id="lastname"
-          />
-
-          <p-select
-            [(ngModel)]="selectedGender"
-            name="gender"
-            [options]="genderOptions"
-            optionLabel="label"
-            placeholder="Select Gender"
-          >
-          </p-select>
-
-          <p-select
-            [(ngModel)]="selectedRegion"
-            name="region"
-            [options]="regionOptions"
-            optionLabel="label"
-            placeholder="Select Region"
-          >
-          </p-select>
-        </div>
-        <div class="flex flex-col gap-3">
-          <h1 class="text-2xl font-mono font-normal text-glow-light">Account</h1>
-          <input
-            [(ngModel)]="request.username"
-            name="username"
-            type="text"
-            placeholder="Username"
-            autocomplete="username"
-            class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-            id="username"
-          />
-
-          <input
-            [(ngModel)]="request.email"
-            name="email"
-            type="email"
-            placeholder="Email"
-            autocomplete="email"
-            class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-            id="email"
-          />
-
-          <input
-            [(ngModel)]="request.password"
-            name="password"
-            type="password"
-            placeholder="Password"
-            autocomplete="new-password"
-            class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-            id="password"
-          />
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        class="w-full bg-base-600 text-glow-light-hover p-2 rounded hover:bg-base-200 transition"
-      >
-        <p class="font-mono font-bold">Submit</p>
-      </button>
-    </form>
   </div>
 
-  <div class="bg-base-900 p-8 rounded-xl shadow w-80  border-base-600 border-2 flex flex-col items-center justify-center gap-4">
-    <p class="font-mono text-light">Already have an account?</p>
-    <button (click)="router.navigate(['/login'])" class="font-bold text-glow-blue-hover transition">Log in Here</button>
-  </div>
 </div>

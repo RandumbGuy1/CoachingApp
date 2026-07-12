@@ -1,11 +1,9 @@
-@if (userStore.user$ | async) {
-  <p-select
-    class="absolute top-5 right-10"
-    [(ngModel)]="selectedMembership"
-    [options]="allMembershipOptions"
-    optionLabel="label"
-    [placeholder]="!allMemberships.length ? 'No Memberships' : 'Select Membership'"
-    [disabled]="!allMemberships.length"
-  >
-  </p-select>
-}
+<p-select
+  class="absolute top-5 right-10"
+  [(ngModel)]="selectedMembership"
+  [options]="allMembershipOptions"
+  optionLabel="label"
+  [placeholder]="!allMemberships.length ? 'No Memberships' : 'Select Membership'"
+  [disabled]="!allMemberships.length"
+>
+</p-select>

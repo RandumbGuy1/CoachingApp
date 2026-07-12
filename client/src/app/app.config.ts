@@ -27,8 +27,8 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     provideAppInitializer(() => {
-      const auth = inject(AuthService);
-      return firstValueFrom(auth.bootstrapFromStorage());
+      const authService = inject(AuthService);
+      return firstValueFrom(authService.bootstrapFromStorage());
     }),
   ]
 };

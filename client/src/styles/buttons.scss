@@ -1,30 +1,37 @@
-// .btn-primary {
-//     @apply w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition;
-// }
-
-// .link-btn {
-//     @apply font-bold text-glow-blue-hover transition;
-// }
-
 .button-hover-light {
   &:hover {
-
-    /* Text only */
     p {
-        @apply text-light-50 glow-blue transition-all;
+      color: var(--color-light-50);
+      text-shadow:
+        0 0 5px var(--color-glow-blue-700),
+        0 0 10px var(--color-glow-blue-700),
+        0 0 20px var(--color-glow-blue-700);
+      transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 
-        &.text-warning {
-            @apply text-light-orange-50 glow-orange transition-all;
-        }
+      &.text-warning {
+        color: var(--color-light-orange-50);
+        text-shadow:
+          0 0 5px var(--color-glow-orange-600),
+          0 0 10px var(--color-glow-orange-600),
+          0 0 20px var(--color-glow-orange-600);
+      }
     }
 
-    /* Mask icon */
     .icon-wrapper {
-        @apply text-light-50 glow-blue-icon transition-all;
+      color: var(--color-light-50);
+      filter:
+        drop-shadow(0 0 5px var(--color-glow-blue-700))
+        drop-shadow(0 0 10px var(--color-glow-blue-700))
+        drop-shadow(0 0 20px var(--color-glow-blue-700));
+      transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 
-        &.text-warning {
-            @apply text-light-orange-50 glow-orange-icon transition-all;
-        }
+      &.text-warning {
+        color: var(--color-light-orange-50);
+        filter:
+          drop-shadow(0 0 5px var(--color-glow-orange-600))
+          drop-shadow(0 0 10px var(--color-glow-orange-600))
+          drop-shadow(0 0 20px var(--color-glow-orange-600));
+      }
     }
   }
 }

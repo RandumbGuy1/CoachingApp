@@ -28,7 +28,7 @@ export class GroupsPage implements OnInit {
 
   constructor(public router: Router, private groupService: GroupsService, private userStore: UserStore) {
     this.canCreateGroup$ = this.userStore.user$.pipe(
-      map(user => user?.tier !== UserTier.Free)
+      map(user => user?.tier === UserTier.Pro)
     );
   }
 

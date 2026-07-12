@@ -4,8 +4,8 @@ import { AuthService } from './auth.service';
 import { catchError, switchMap, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(AuthService);
-  const token = auth.getAccessToken();
+  const authService = inject(AuthService);
+  const token = authService.getAccessToken();
 
   const cloned = token ? req.clone({ 
     setHeaders: { Authorization: "Bearer " + token }
@@ -16,17 +16,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       //Prevent auth endpoints from triggering a token refresh
       if (req.url.includes('/auth/')) return throwError(() => error);
 
-      if (error.status === 401 && auth.getRefreshToken()) {
-        return auth.refresh().pipe(
+      if (error.status === 401 && authService.getRefreshToken()) {
+        return authService.refresh().pipe(
           switchMap(() => {
             const newReq = req.clone({
-              setHeaders: { Authorization: "Bearer " + auth.getAccessToken() }
+              setHeaders: { Authorization: "Bearer " + authService.getAccessToken() }
             });
             return next(newReq);
           }),
 
           catchError(refreshError => {
-            auth.logout();
+            authService.logout();
             return throwError(() => refreshError);
           })
         );

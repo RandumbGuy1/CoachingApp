@@ -15,6 +15,7 @@ import { REGION_OPTIONS } from '../../core/enums/region.enum';
   selector: 'app-register',
   imports: [FormsModule, Select],
   templateUrl: './register.html',
+  styleUrl: './register.scss',
 })
 export class RegisterPage {
   request: RegisterRequest = {
@@ -35,13 +36,13 @@ export class RegisterPage {
   genderOptions = GENDER_OPTIONS;
   regionOptions = REGION_OPTIONS;
 
-  constructor(public router: Router, private auth: AuthService, private cdr: ChangeDetectorRef) {}
+  constructor(public router: Router, private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   register() {
     if (this.selectedGender?.value) this.request.gender = this.selectedGender.value;
     if (this.selectedRegion?.value) this.request.region = this.selectedRegion.value;
 
-    this.auth.register(this.request).subscribe({
+    this.authService.register(this.request).subscribe({
       next: () => this.router.navigate(['/']),
       error: (err: HttpErrorResponse) => {
         this.error = err.error || err.message || 'Registration failed. Please check your details.';

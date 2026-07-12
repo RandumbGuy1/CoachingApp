@@ -1,75 +1,62 @@
 
-<div 
-  class="h-full flex flex-col items-end bg-base-800 transition-all" 
-  [class.w-20]="collapsed" 
-  [class.w-65]="!collapsed" 
+<div
+  class="h-full flex flex-col items-end bg-base-800 transition-all"
+  [class.w-20]="collapsed"
+  [class.w-65]="!collapsed"
 >
-  @if (auth.isLoggedIn()) {
-    <app-avatar [collapsed]="collapsed" class="w-full"></app-avatar>
-  }
-  @else {
-    <div class="flex-1 flex items-start justify-center p-4">
-      <img [src]="homeImgUrl" class="w-60 mt-3 mb-3" width="240" height="240">
-    </div>
-  }
+  <app-avatar [collapsed]="collapsed" class="w-full"></app-avatar>
 
   @for (element of mainElements; track element) {
-    @if ((auth.isLoggedIn() || element.showWhileLoggedOut)) {
-      <button
-        class="button-hover-light flex h-15 hover:bg-base hover:scale-110 transition-all items-center gap-4 w-full"
-        [class.justify-end]="!collapsed"
-        [class.justify-center]="collapsed"
-        [class.pr-8]="!collapsed"
-        [title]="element.tooltip"
-        (click)="element.callback ? element.callback() : router.navigate([element.url])"
-      >
-        <div class="icon-wrapper"
+    <button
+      class="button-hover-light flex h-15 hover:bg-base hover:scale-110 transition-all items-center gap-4 w-full"
+      [class.justify-end]="!collapsed"
+      [class.justify-center]="collapsed"
+      [class.pr-8]="!collapsed"
+      [title]="element.tooltip"
+      (click)="element.callback ? element.callback() : router.navigate([element.url])"
+    >
+      <div class="icon-wrapper"
+        [class.text-light-500]="!element.color"
+        [class.text-selected]="element.color === 'selected'"
+        [class.text-warning]="element.color === 'warning'">
+        <span
+          class="icon-mask w-[25px] h-[25px]"
+          [style.maskImage]="'url(' + element.icon + ')'"
+          [style.webkitMaskImage]="'url(' + element.icon + ')'"
+        ></span>
+      </div>
+
+      @if (!collapsed) {
+        <p
+          class="font-mono font-semibold text-xl"
           [class.text-light-500]="!element.color"
           [class.text-selected]="element.color === 'selected'"
-          [class.text-warning]="element.color === 'warning'">
-          <span
-            class="icon-mask w-[25px] h-[25px]"
-            [style.maskImage]="'url(' + element.icon + ')'"
-            [style.webkitMaskImage]="'url(' + element.icon + ')'"
-          ></span>
-        </div>
-
-        @if (!collapsed) {
-          <p
-            class="font-mono font-semibold text-xl"
-            [class.text-light-500]="!element.color"
-            [class.text-selected]="element.color === 'selected'"
-            [class.text-warning]="element.color === 'warning'"
-          >
-            {{ element.title }}
-          </p>
-        }
-        
-      </button>
-    }
+          [class.text-warning]="element.color === 'warning'"
+        >
+          {{ element.title }}
+        </p>
+      }
+    </button>
   }
 
-  <div 
+  <div
     class="flex flex-row flex-wrap bg-base-900 w-full h-45 mt-auto items-start gap-10 p-5 overflow-y-auto scrollbar-base scrollbar-base-webkit"
     [class.justify-center]="collapsed"
     [class.justify-start]="!collapsed"
   >
     @for (element of bottomElements; track element) {
-      @if (auth.isLoggedIn() || element.showWhileLoggedOut) {
-        <button
-          class="relative flex hover:scale-110 transition"
-          (click)="element.callback ? element.callback() : router.navigate([element.url])"
-        >
-          <img [src]="element.icon" class="w-[20px] h-[20px]">
+      <button
+        class="relative flex hover:scale-110 transition"
+        (click)="element.callback ? element.callback() : router.navigate([element.url])"
+      >
+        <img [src]="element.icon" class="w-[20px] h-[20px]">
 
-          <!-- Notification badge -->
-          @if (element.notificationCount && element.notificationCount > 0) {
-            <span class="absolute -top-3 -right-3 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-              {{ element.notificationCount }}
-            </span>
-          }
-        </button>
-      }
+        @if (element.notificationCount && element.notificationCount > 0) {
+          <span class="absolute -top-3 -right-3 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            {{ element.notificationCount }}
+          </span>
+        }
+      </button>
     }
   </div>
 </div>

@@ -1,168 +1,176 @@
-<div class="flex flex-row items-center justify-center h-full w-full gap-10">
-  <div class="bg-base-900 p-8 rounded-xl shadow w-200 border-base-800 border-2">
-    <div class="flex flex-row justify-center mb-5">
-      <div class="flex flex-col gap-4 items-center">
-        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue">Profile</h1>
-        <p class="font-mono font-bold text-warning">{{ error }}</p>
-      </div>
-    </div>
+<div class="max-w-5xl h-full mx-auto px-6 py-8 items-center justify-center flex flex-col gap-6">
 
-    <div class="flex flex-row justify-between">
-      <div class="flex flex-col gap-3">
-        <div class="relative w-24 h-24">
+  <h1 class="text-2xl font-bold text-site-text">Profile</h1>
+
+  <div class="flex flex-col lg:flex-row gap-6 items-start">
+
+    <!-- Profile card -->
+    <div class="glass-card rounded-2xl p-7 flex flex-col gap-6 flex-1">
+
+      <h2 class="text-xs font-bold text-site-accent uppercase tracking-widest">Personal Info</h2>
+
+      <!-- Avatar + name -->
+      <div class="flex items-start gap-5">
+        <div class="relative shrink-0">
           <img
             [src]="previewUrl || request.avatarUrl || userStore.defaultProfileImage"
-            class="w-24 h-24 rounded-full object-cover"
+            class="w-20 h-20 rounded-full object-cover ring-2 ring-site-border"
           />
-
-          <!-- Hidden file input -->
-          <input
-            id="avatar"
-            type="file"
-            class="hidden"
-            (change)="onFileSelected($event)"
-          />
-
-          <!-- Plus icon button -->
           <label
             for="avatar"
-            class="absolute bottom-0 right-0 bg-base-700 text-light-200 
-                  w-7 h-7 rounded-full flex items-center justify-center 
-                  cursor-pointer hover:bg-base-800 transition"
-          >
-            +
-          </label>
+            class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-site-accent flex items-center justify-center cursor-pointer hover:brightness-110 transition text-site-text text-base leading-none font-bold"
+          >+</label>
+          <input id="avatar" type="file" class="hidden" (change)="onFileSelected($event)" />
         </div>
-
-        <input
-          [(ngModel)]="request.firstName"
-          type="text"
-          placeholder="First Name"
-          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-          id="firstname"
-        />
-
-        <input
-          [(ngModel)]="request.lastName"
-          type="text"
-          placeholder="Last Name"
-          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-          id="lastname"
-        />
+        <div class="flex flex-col gap-2 flex-1">
+          <input
+            [(ngModel)]="request.firstName"
+            name="firstName"
+            type="text"
+            placeholder="First Name"
+            class="glass-input"
+          />
+          <input
+            [(ngModel)]="request.lastName"
+            name="lastName"
+            type="text"
+            placeholder="Last Name"
+            class="glass-input"
+          />
+        </div>
       </div>
-      <div class="flex flex-col gap-3">
-        <label for="bio">Bio</label>
+
+      <!-- Bio -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-xs text-site-text-secondary">Bio</label>
         <textarea
-          id="bio"
-          rows="5"
           [(ngModel)]="request.bio"
+          name="bio"
+          rows="4"
           placeholder="Tell us about yourself..."
-          class="border-base-600 border-2 p-5 rounded-md"
+          class="glass-input resize-none"
         ></textarea>
+      </div>
 
-        <p-select 
-          [(ngModel)]="request.gender" 
-          [options]="genderOptions" 
+      <!-- Selects -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <p-select
+          class="w-full"
+          [(ngModel)]="request.gender"
+          name="gender"
+          [options]="genderOptions"
           optionLabel="label"
           optionValue="value"
-          placeholder="Select Gender"
-        >
-        </p-select>
-        
-        <p-select 
-          [(ngModel)]="request.region" 
-          [options]="regionOptions" 
+          placeholder="Gender"
+        />
+        <p-select
+          class="w-full"
+          [(ngModel)]="request.region"
+          name="region"
+          [options]="regionOptions"
           optionLabel="label"
           optionValue="value"
-          placeholder="Select Region"
-        >
-        </p-select>
-
-        <p-select 
+          placeholder="Region"
+        />
+        <p-select
+          class="w-full"
           [(ngModel)]="request.theme"
+          name="theme"
           [options]="themeOptions"
           optionLabel="label"
           optionValue="value"
-          placeholder="Select Theme"
-        >
-        </p-select>
+          placeholder="Theme"
+        />
+      </div>
 
-        <div class="flex flex-row mb-3 gap-5">
-          <p class="font-mono font-bold">Recieve Notifications</p>
-          <p-toggleswitch [(ngModel)]="request.receiveEmailNotifications"/>
+      <!-- Notifications -->
+      <div class="flex items-center justify-between py-3 border-t border-site-border/50">
+        <div class="flex flex-col gap-0.5">
+          <span class="text-sm text-site-text">Email Notifications</span>
+          <span class="text-xs text-site-text-dim">Receive updates and alerts by email</span>
         </div>
-
+        <p-toggleswitch [(ngModel)]="request.receiveEmailNotifications" name="notifications" />
       </div>
-    </div>
-    <button
-      (click)="saveProfile()"
-      class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
-    >
-      <p class="font-mono font-bold">Submit</p>
-    </button>
-  </div>
-  <div class="bg-base-900 p-8 rounded-xl shadow w-100 border-base-800 border-2">
-    <div class="flex flex-row justify-center mb-5">
-      <div class="flex flex-col gap-4 items-center">
-        <h1 class="text-5xl font-mono font-bold text-light text-glow-blue">User</h1>
-        <p class="font-mono font-bold text-warning">{{ errorUser }}</p>
-      </div>
-    </div>
 
-    <div class="flex flex-col gap-3">
-      <input
-        [(ngModel)]="requestUser.username"
-        type="text"
-        placeholder="Username"
-        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-        id="username"
-      />
-
-      <input
-        [(ngModel)]="requestUser.email"
-        type="text"
-        placeholder="Email"
-        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-        id="email"
-      />
-
-      <input
-        [(ngModel)]="newPassword"
-        type="password"
-        placeholder="New Password"
-        class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-        id="newPassword"
-      />
-
-      <p-select 
-          [(ngModel)]="requestUser.tier"
-          [options]="tierOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Select Tier"
-        >
-      </p-select>
-      
-      <input
-        [(ngModel)]="requestUser.currentPassword"
-        type="password"
-        placeholder="Current Password"
-        class="w-full p-2 mt-4 rounded text-light-300 bg-base-700 hover:bg-base-800 transition"
-        id="currentPassword"
-      />
+      @if (error) {
+        <p class="text-sm text-warning">{{ error }}</p>
+      }
 
       <button
-        (click)="onChangePasswordModalOpen()"
-        class="font-mono text-sm text-glow-blue-hover transition"
+        (click)="saveProfile()"
+        class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-110 transition text-sm"
       >
-        ← Back to Groups
+        Save Profile
       </button>
+
     </div>
-    <button
-      (click)="saveUser()"
-      class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
-    >
-      <p class="font-mono font-bold">Submit</p>
-    </button>
+
+    <!-- Account card -->
+    <div class="glass-card rounded-2xl p-7 flex flex-col gap-4 lg:w-80 w-full">
+
+      <h2 class="text-xs font-bold text-site-accent uppercase tracking-widest">Account</h2>
+
+      <input
+        [(ngModel)]="requestUser.username"
+        name="username"
+        type="text"
+        placeholder="Username"
+        class="glass-input"
+      />
+      <input
+        [(ngModel)]="requestUser.email"
+        name="email"
+        type="email"
+        placeholder="Email"
+        class="glass-input"
+      />
+      <p-select
+        class="w-full"
+        [(ngModel)]="requestUser.tier"
+        name="tier"
+        [options]="tierOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Tier"
+      />
+
+      <div class="flex flex-col gap-3 pt-3 border-t border-site-border/50">
+        <p class="text-xs font-bold text-site-accent uppercase tracking-widest">Change Password</p>
+        <input
+          [(ngModel)]="newPassword"
+          name="newPassword"
+          type="password"
+          placeholder="New Password"
+          class="glass-input"
+        />
+        <input
+          [(ngModel)]="requestUser.currentPassword"
+          name="currentPassword"
+          type="password"
+          placeholder="Current Password"
+          class="glass-input"
+        />
+        <button
+          (click)="onChangePasswordModalOpen()"
+          class="text-xs text-site-text-dim hover:text-site-text-secondary transition text-left"
+        >
+          ← Forgot password?
+        </button>
+      </div>
+
+      @if (errorUser) {
+        <p class="text-sm text-warning">{{ errorUser }}</p>
+      }
+
+      <button
+        (click)="saveUser()"
+        class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-110 transition text-sm mt-auto"
+      >
+        Save Account
+      </button>
+
+    </div>
+
   </div>
+
 </div>

@@ -1,0 +1,51 @@
+<div
+  class="cart-overlay"
+  [class.visible]="open"
+  (click)="closed.emit()"
+></div>
+
+<div class="cart-drawer" [class.open]="open">
+
+  <div class="flex justify-between items-center px-5 py-4 border-b border-site-border">
+    <h2 class="text-site-text font-bold">Cart</h2>
+    <button
+      (click)="closed.emit()"
+      class="text-site-text-dim hover:text-site-text transition text-2xl leading-none"
+    >×</button>
+  </div>
+
+  <div class="flex-1 overflow-y-auto p-5 flex flex-col gap-3">
+    @if (((cart.items$ | async)?.length ?? 0) === 0) {
+      <p class="text-site-text-secondary text-sm text-center mt-12">Your cart is empty.</p>
+    }
+    @for (item of (cart.items$ | async)!; track item.id) {
+      <div class="glass-card rounded-xl p-4 flex justify-between items-start gap-3">
+        <div class="flex flex-col gap-1 flex-1 min-w-0">
+          <p class="text-site-text font-semibold text-sm leading-snug">{{ item.name }}</p>
+          @if (item.badge) {
+            <span class="text-xs text-site-accent">{{ item.badge }}</span>
+          }
+          <p class="text-site-text-secondary text-sm font-mono">${{ item.price }}</p>
+        </div>
+        <button
+          (click)="cart.remove(item.id)"
+          class="text-site-text-dim hover:text-site-text transition text-xs pt-0.5 shrink-0"
+        >Remove</button>
+      </div>
+    }
+  </div>
+
+  <div class="border-t border-site-border p-5 flex flex-col gap-3">
+    <div class="flex justify-between items-center">
+      <span class="text-site-text font-bold">Total</span>
+      <span class="text-site-text font-bold font-mono">${{ cart.total$ | async }}</span>
+    </div>
+    <button
+      class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-110 transition text-sm"
+    >
+      Checkout
+    </button>
+    <p class="text-site-text-dim text-xs text-center">Checkout coming soon.</p>
+  </div>
+
+</div>

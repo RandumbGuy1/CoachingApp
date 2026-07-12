@@ -10,7 +10,7 @@ namespace CoachApi.API.Controllers;
 [Route("api/users")]
 public class UserController(UserService _userService) : ControllerBase
 {
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     [HttpGet("me")]
     public async Task<IActionResult> GetUser()
     {
@@ -25,7 +25,7 @@ public class UserController(UserService _userService) : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     [HttpGet("me/profile")]
     public async Task<IActionResult> GetUserProfile()
     {
@@ -42,7 +42,7 @@ public class UserController(UserService _userService) : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     [HttpPost("me/profile/save")]
     public async Task<IActionResult> SaveUserProfile([FromBody] SaveProfileRequest request)
     {
@@ -57,7 +57,7 @@ public class UserController(UserService _userService) : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     [HttpPost("me/profile/avatar")]
     public async Task<IActionResult> UploadAvatar(IFormFile avatar)
     {

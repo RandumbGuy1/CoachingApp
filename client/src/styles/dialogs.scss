@@ -1,0 +1,16 @@
+.p-dialog {
+  background: var(--color-base-900) !important;
+  border: 2px solid var(--color-base-800) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+}
+
+.p-dialog-content {
+  background: var(--color-base-900) !important;
+  padding: 0 !important;
+  border-radius: 0.75rem !important;
+}
+
+.p-dialog-mask {
+  background: rgba(0, 0, 0, 0.65) !important;
+}

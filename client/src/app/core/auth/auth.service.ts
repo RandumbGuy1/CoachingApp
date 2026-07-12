@@ -106,6 +106,18 @@ export class AuthService {
     return localStorage.getItem(this.REFRESH_TOKEN_KEY);
   }
 
+  forgotPassword(email: string) {
+    return this.api.post<void>('auth/forgot-password', { email });
+  }
+
+  verifyResetCode(email: string, code: string) {
+    return this.api.post<void>('auth/verify-reset-code', { email, code });
+  }
+
+  resetPassword(email: string, code: string, newPassword: string) {
+    return this.api.post<void>('auth/reset-password', { email, code, newPassword });
+  }
+
   refresh() {
     const refreshToken = this.getRefreshToken();
     if (!refreshToken) throw new Error('No refresh token available');

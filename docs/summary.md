@@ -12,6 +12,17 @@ Clients will be able to join groups and send their coaches any necessary trainin
 - Coaches: Personal trainers, normally a paid tier
 - Clients: Trainees, a free tier
 
+## Lead Magnets / Offers / Resources
+- 1-1 Coaching Sign Up
+- Lifting Ebooks + Programs
+- Get Ready System: Auto generate warmup plans given user data
+- Power Program System: Auto generate lifting programs 
+- Progression Engine: Auto generates next progression steps reading user log data
+- Macro Maker System: Auto generate meal plans?
+- Body Restoration System: Auto generate rehab plans?
+- 20 Minute setup call
+- Free Community
+
 ## Features for Clients
 - Can set Bodyweight and Strength goals
 

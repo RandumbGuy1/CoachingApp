@@ -11,7 +11,7 @@ namespace CoachApi.API.Controllers;
 public class GroupController(GroupService _groupService) : ControllerBase
 {
     [HttpPost]
-    [Authorize(Roles = "Pro,Enterprise")]
+    [Authorize(Roles = "Pro")]
     public async Task<IActionResult> CreateGroup(CreateGroupRequest request)
     {
         try
@@ -27,7 +27,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
     }
 
     [HttpPost("join/{groupId}")]
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     public async Task<IActionResult> JoinGroup(Guid groupId, [FromBody] JoinCodeRequest request)
     {
         try
@@ -43,7 +43,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
     }
 
     [HttpPost("join/code")]
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     public async Task<IActionResult> JoinGroupViaCode([FromBody] JoinCodeRequest request)
     {
         try
@@ -59,7 +59,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
     }
 
     [HttpPost("add/{groupId}/{userId}")]
-    [Authorize(Roles = "Pro,Enterprise")]
+    [Authorize(Roles = "Pro")]
     public async Task<IActionResult> AddClient(Guid groupId, Guid userId)
     {
         try
@@ -75,7 +75,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
     }
 
     [HttpPost("promote/{groupId}/{userId}")]
-    [Authorize(Roles = "Pro,Enterprise")]
+    [Authorize(Roles = "Pro")]
     public async Task<IActionResult> PromoteUser(Guid groupId, Guid userId)
     {
         try {
@@ -90,7 +90,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
     }
 
     [HttpPost("transfer/{groupId}/{userId}")]
-    [Authorize(Roles = "Pro,Enterprise")]
+    [Authorize(Roles = "Pro")]
     public async Task<IActionResult> TransferOwnership(Guid groupId, Guid userId)
     {
         try
@@ -106,7 +106,7 @@ public class GroupController(GroupService _groupService) : ControllerBase
     }
 
     [HttpGet("get")]
-    [Authorize(Roles = "Free,Pro,Enterprise")]
+    [Authorize(Roles = "Free,Lite,Pro")]
     public async Task<IActionResult> GetGroups([FromQuery] GetGroupRequest request)
     {
         try
