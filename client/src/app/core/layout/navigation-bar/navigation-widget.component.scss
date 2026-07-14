@@ -1,0 +1,132 @@
+:host {
+  display: contents;
+}
+
+.nav-trigger {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 60;
+  border-radius: 50%;
+  transition: opacity 0.2s ease;
+
+  &:hover { opacity: 0.8; }
+}
+
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+}
+
+.nav-panel {
+  position: fixed;
+  top: 4.5rem;
+  left: 1rem;
+  width: 13rem;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  padding: 0.375rem;
+  border-radius: 0.75rem;
+  gap: 1px;
+  animation: nav-appear 0.15s ease-out;
+}
+
+@keyframes nav-appear {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+.nav-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  transition: background 0.15s ease;
+  overflow: hidden;
+
+  &:hover { background: rgba(255, 255, 255, 0.05); }
+}
+
+.nav-username {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-site-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-tier {
+  font-size: 0.6875rem;
+  color: var(--color-site-text-dim);
+}
+
+.nav-divider {
+  height: 1px;
+  background: var(--color-site-border);
+  margin: 0.25rem 0.375rem;
+  opacity: 0.4;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-site-text-secondary);
+  transition: background 0.15s ease, color 0.15s ease;
+  text-align: left;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-site-text);
+  }
+
+  &.warning {
+    color: rgb(248 113 113);
+    &:hover { color: rgb(252 165 165); background: rgba(239, 68, 68, 0.08); }
+  }
+}
+
+.nav-bottom {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  padding: 0.375rem 0.5rem;
+}
+
+.nav-bottom-btn {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  transition: background 0.15s ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.07); }
+}
+
+.nav-badge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  background: rgb(220 38 38);
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

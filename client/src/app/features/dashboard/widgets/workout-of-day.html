@@ -1,55 +1,59 @@
-<div class="bg-base-900 rounded-xl border-base-800 border-2 p-6 flex flex-col gap-4">
-  <h2 class="text-2xl font-mono font-bold text-light-300">Today's Workout</h2>
+<div class="glass-card rounded-xl p-6 flex flex-col gap-4">
+  <h2 class="text-lg font-bold text-site-text">Today's Workout</h2>
 
   @if (!workout) {
     <div class="flex items-center justify-center py-10">
-      <p class="font-mono text-light-500">Loading...</p>
+      <p class="text-site-text-dim text-sm font-mono">Loading...</p>
     </div>
   } @else if (workout.isRestDay) {
     <div class="flex flex-col items-center justify-center gap-4 py-8">
-      <div class="w-20 h-20 rounded-full bg-base-700 flex items-center justify-center text-4xl select-none">
-        🌙
+      <div class="w-16 h-16 rounded-full bg-site-surface flex items-center justify-center text-3xl select-none">
+        <span
+          class="icon-mask w-4 h-4"
+          [style.maskImage]="'url(' + crescentIcon + ')'"
+          [style.webkitMaskImage]="'url(' + crescentIcon + ')'"
+        ></span>
       </div>
-      <p class="text-2xl font-mono font-bold text-light-300">Rest Day</p>
-      <p class="font-mono text-sm text-light-500 text-center">Recovery is part of the process. Take it easy today.</p>
+      <p class="text-xl font-bold text-site-text">Rest Day</p>
+      <p class="text-sm text-site-text-secondary text-center leading-relaxed">Recovery is part of the process. Take it easy today.</p>
     </div>
   } @else if (workout.completed) {
     <div class="flex flex-col gap-4 opacity-50 pointer-events-none">
       <div class="flex items-center gap-3">
-        <div class="w-7 h-7 rounded-full bg-glow-green-500 flex items-center justify-center text-base-950 font-bold text-sm shrink-0">
+        <div class="w-6 h-6 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center text-green-400 text-xs font-bold shrink-0">
           ✓
         </div>
         <div>
-          <p class="text-lg font-mono font-bold text-light-300">{{ workout.workoutName }}</p>
-          <p class="text-xs font-mono text-light-500">Completed</p>
+          <p class="font-bold text-site-text">{{ workout.workoutName }}</p>
+          <p class="text-xs text-site-text-dim">Completed</p>
         </div>
       </div>
-      <div class="flex flex-col gap-0">
+      <div class="flex flex-col">
         @for (exercise of workout.exercises; track exercise.name) {
-          <div class="flex justify-between py-2 border-b border-base-700 last:border-0">
-            <span class="font-mono text-light-400">{{ exercise.name }}</span>
-            <span class="font-mono text-sm text-light-600">{{ exercise.sets }}×{{ exercise.reps }} @ {{ exercise.weight }}{{ exercise.unit }}</span>
+          <div class="flex justify-between py-2.5 border-b border-site-border/30 last:border-0">
+            <span class="text-sm text-site-text-secondary font-mono">{{ exercise.name }}</span>
+            <span class="text-sm text-site-text-dim font-mono">{{ exercise.sets }}×{{ exercise.reps }} @ {{ exercise.weight }}{{ exercise.unit }}</span>
           </div>
         }
       </div>
-      <button disabled class="w-full bg-base-700 text-light-600 p-3 rounded font-mono font-bold cursor-not-allowed">
+      <button disabled class="w-full bg-site-surface text-site-text-dim border border-site-border/40 p-3 rounded-lg font-bold text-sm cursor-not-allowed">
         Workout Complete ✓
       </button>
     </div>
   } @else {
     <div class="flex flex-col gap-4">
-      <p class="text-xl font-mono font-bold text-warning">{{ workout.workoutName }}</p>
-      <div class="flex flex-col gap-0">
+      <p class="font-bold text-site-accent">{{ workout.workoutName }}</p>
+      <div class="flex flex-col">
         @for (exercise of workout.exercises; track exercise.name) {
-          <div class="flex justify-between py-2 border-b border-base-700 last:border-0">
-            <span class="font-mono text-light-300">{{ exercise.name }}</span>
-            <span class="font-mono text-sm text-light-500">{{ exercise.sets }}×{{ exercise.reps }} @ {{ exercise.weight }}{{ exercise.unit }}</span>
+          <div class="flex justify-between py-2.5 border-b border-site-border/30 last:border-0">
+            <span class="text-sm text-site-text font-mono">{{ exercise.name }}</span>
+            <span class="text-sm text-site-text-secondary font-mono">{{ exercise.sets }}×{{ exercise.reps }} @ {{ exercise.weight }}{{ exercise.unit }}</span>
           </div>
         }
       </div>
       <button
         (click)="startWorkout()"
-        class="w-full bg-base-600 text-glow-light-hover p-2 mt-6 rounded hover:bg-base-200 transition"
+        class="w-full bg-site-accent text-site-text font-bold p-3 mt-4 rounded-lg hover:brightness-110 transition text-sm"
       >
         Start Workout →
       </button>

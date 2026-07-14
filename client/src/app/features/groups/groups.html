@@ -1,79 +1,102 @@
-<div class="flex flex-col gap-6 p-8">
-  <div class="flex gap-6 items-center">
-    <!-- Tabs -->
-    <div class="flex-1 bg-base-900 rounded-xl border-base-800 border-2 overflow-hidden">
-      <p-tabs value="0">
-        <p-tablist>
-          <p-tab value="0" class="text-lg font-mono">Current Groups</p-tab>
-          <p-tab value="1" class="text-lg font-mono">Find Groups</p-tab>
-        </p-tablist>
-        <p-tabpanels>
+<div class="noise-layer"></div>
 
-          <p-tabpanel value="0">
-            @if (currentGroups.length === 0) {
-              <div class="flex flex-col items-center justify-center gap-4 py-60 text-center">
-                <span class="text-5xl select-none">👥</span>
-                <p class="text-xl font-mono font-bold text-light-300">No Groups Yet</p>
-                <p class="font-mono text-sm text-light-500">
-                  You haven't joined any groups.<br>Browse the Find Groups tab or enter a join code.
-                </p>
-              </div>
-            } @else {
-              <div class="flex flex-col gap-4">
-                @for (group of currentGroups; track group.id) {
-                  <app-group-widget [group]="group" [isCurrentGroup]="true"></app-group-widget>
-                }
-              </div>
-            }
-          </p-tabpanel>
+<div class="relative min-h-screen overflow-x-hidden">
+  <div
+    class="blob"
+    style="background: radial-gradient(circle, rgba(162, 198, 255, 0.1) 0%, transparent 65%); width: 800px; height: 800px; top: 10%; left: 50%; transform: translateX(-50%);"
+  ></div>
 
-          <p-tabpanel value="1">
-            @if (findGroups.length === 0) {
-              <div class="flex flex-col items-center justify-center gap-4 py-60 text-center">
-                <span class="text-5xl select-none">🔍</span>
-                <p class="text-xl font-mono font-bold text-light-300">No Groups Found</p>
-                <p class="font-mono text-sm text-light-500">
-                  There are no public groups available right now.
-                </p>
-              </div>
-            } @else {
-              <div class="flex flex-col gap-4">
-                @for (group of findGroups; track group.id) {
-                  <app-group-widget [group]="group"></app-group-widget>
-                }
-              </div>
-            }
-          </p-tabpanel>
+  <div class="flex flex-col gap-6 p-8 pt-16">
 
-        </p-tabpanels>
-      </p-tabs>
-    </div>
+    <!-- Page header -->
+    <p class="text-xs font-bold tracking-widest text-site-accent uppercase">Groups</p>
 
-    <!-- Join with code -->
-    <div class="flex flex-col gap-10 ">
-      <div class="bg-base-900 rounded-xl border-base-800 border-2 p-6 flex flex-col gap-4 w-64 shrink-0">
-        <h3 class="font-mono font-bold text-light-300 text-lg">Join with Code</h3>
-        <input
-          [(ngModel)]="joinCode"
-          type="text"
-          placeholder="Enter join code"
-          class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition font-mono"
-        />
-        <button
-          class="w-full bg-base-600 text-glow-light-hover p-2 rounded font-mono font-bold hover:bg-base-200 transition"
-        >
-          Join Group
-        </button>
+    <div class="flex gap-6 items-start">
+
+      <!-- Tabs -->
+      <div class="flex-1 glass-card rounded-xl overflow-hidden">
+        <p-tabs value="0">
+          <p-tablist>
+            <p-tab value="0" class="text-sm font-mono">Current Groups</p-tab>
+            <p-tab value="1" class="text-sm font-mono">Find Groups</p-tab>
+          </p-tablist>
+          <p-tabpanels>
+
+            <p-tabpanel value="0">
+              @if (currentGroups.length === 0) {
+                <div class="flex flex-col items-center justify-center gap-4 py-40 text-center">
+                  <span
+                    class="inline icon-mask w-10 h-10"
+                    [style.maskImage]="'url(' + groups + ')'"
+                    [style.webkitMaskImage]="'url(' + groups + ')'"
+                  ></span>
+                  <p class="text-lg font-bold text-site-text">No Groups Yet</p>
+                  <p class="text-sm text-site-text-secondary leading-relaxed">
+                    You haven't joined any groups.<br>Browse the Find Groups tab or enter a join code.
+                  </p>
+                </div>
+              } @else {
+                <div class="flex flex-col gap-3 p-4">
+                  @for (group of currentGroups; track group.id) {
+                    <app-group-widget [group]="group" [isCurrentGroup]="true"></app-group-widget>
+                  }
+                </div>
+              }
+            </p-tabpanel>
+
+            <p-tabpanel value="1">
+              @if (findGroups.length === 0) {
+                <div class="flex flex-col items-center justify-center gap-4 py-40 text-center">
+                  <span
+                    class="inline icon-mask w-10 h-10"
+                    [style.maskImage]="'url(' + magnifyingGlass + ')'"
+                    [style.webkitMaskImage]="'url(' + magnifyingGlass + ')'"
+                  ></span>
+                  <p class="text-lg font-bold text-site-text">No Groups Found</p>
+                  <p class="text-sm text-site-text-secondary">
+                    There are no public groups available right now.
+                  </p>
+                </div>
+              } @else {
+                <div class="flex flex-col gap-3 p-4">
+                  @for (group of findGroups; track group.id) {
+                    <app-group-widget [group]="group"></app-group-widget>
+                  }
+                </div>
+              }
+            </p-tabpanel>
+
+          </p-tabpanels>
+        </p-tabs>
       </div>
 
-      @if (canCreateGroup$ | async) {
-        <button
-          (click)="router.navigate(['groups/create'])"
-          class="w-full border-2 border-base-100 bg-base-600 text-glow-light-hover p-2 rounded font-mono font-bold hover:bg-base-200 transition"
-        >
-          + Create Group
-        </button>
-      }
+      <!-- Sidebar -->
+      <div class="flex flex-col gap-4 w-64 shrink-0">
+
+        <!-- Join with code -->
+        <div class="glass-card rounded-xl p-5 flex flex-col gap-3">
+          <h3 class="font-bold text-site-text">Join with Code</h3>
+          <input
+            [(ngModel)]="joinCode"
+            type="text"
+            placeholder="Enter join code"
+            class="glass-input"
+          />
+          <button class="w-full bg-site-accent text-site-text font-bold py-2 rounded-lg hover:brightness-110 transition text-sm">
+            Join Group
+          </button>
+        </div>
+
+        @if (canCreateGroup$ | async) {
+          <button
+            (click)="router.navigate(['groups/create'])"
+            class="w-full glass-card rounded-xl py-2.5 text-site-text-secondary hover:text-site-text border border-site-border/40 font-bold text-sm transition"
+          >
+            + Create Group
+          </button>
+        }
+
+      </div>
     </div>
   </div>
 </div>

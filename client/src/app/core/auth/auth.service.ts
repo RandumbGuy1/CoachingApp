@@ -90,7 +90,7 @@ export class AuthService {
     this.userStore.clear();
     this.membershipStore.clear();
     if (this.router.navigated && !this.router.url.startsWith('/login')) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
     }
   }
 

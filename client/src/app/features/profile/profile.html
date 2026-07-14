@@ -12,9 +12,10 @@
       <!-- Avatar + name -->
       <div class="flex items-start gap-5">
         <div class="relative shrink-0">
-          <img
-            [src]="previewUrl || request.avatarUrl || userStore.defaultProfileImage"
-            class="w-20 h-20 rounded-full object-cover ring-2 ring-site-border"
+          <app-user-avatar
+            [username]="userStore.getUser()?.username ?? ''"
+            [avatarUrl]="previewUrl || request.avatarUrl"
+            size="lg"
           />
           <label
             for="avatar"

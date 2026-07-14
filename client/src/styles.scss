@@ -13,3 +13,12 @@ body {
   color: var(--color-site-text);
   font-family: var(--font-mono);
 }
+
+* {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

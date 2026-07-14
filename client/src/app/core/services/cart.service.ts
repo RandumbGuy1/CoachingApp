@@ -14,7 +14,7 @@ export class CartService {
 
   readonly items$ = this._items$.asObservable();
   readonly count$ = this._items$.pipe(map(items => items.length));
-  readonly total$ = this._items$.pipe(map(items => items.reduce((s, i) => s + i.price, 0)));
+  readonly total$ = this._items$.pipe(map(items => items.reduce((s, i) => s + i.price, 0).toFixed(2)));
 
   add(item: CartItem): void {
     const current = this._items$.getValue();

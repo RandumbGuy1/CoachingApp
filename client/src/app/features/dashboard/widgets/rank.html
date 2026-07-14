@@ -1,27 +1,28 @@
-<div class="bg-base-900 rounded-xl border-base-800 border-2 p-6 flex flex-col gap-5">
-  <h2 class="text-2xl font-mono font-bold text-light-300">Rank</h2>
+<div class="glass-card rounded-xl p-6 flex flex-col gap-5">
+  <h2 class="text-lg font-bold text-site-text">Rank</h2>
 
   @if (!rankInfo) {
     <div class="flex items-center justify-center py-6">
-      <p class="font-mono text-light-500">Loading...</p>
+      <p class="text-site-text-dim text-sm font-mono">Loading...</p>
     </div>
   } @else {
     <div class="flex flex-col items-center gap-4">
+
       <!-- Badge -->
       <div
-        class="w-24 h-24 rounded-full flex items-center justify-center"
+        class="w-20 h-20 rounded-full flex items-center justify-center"
         [style.background-color]="getBadgeBg()"
         [style.border]="getBadgeBorder()"
         [style.box-shadow]="getBadgeGlow()"
       >
-        <span class="font-mono font-bold text-4xl" [style.color]="rankConfig.color">
+        <span class="font-mono font-bold text-3xl" [style.color]="rankConfig.color">
           {{ rankConfig.initial }}
         </span>
       </div>
 
       <!-- Rank name -->
       <span
-        class="text-2xl font-mono font-bold"
+        class="text-xl font-bold font-mono"
         [style.color]="rankConfig.color"
         [style.text-shadow]="'0 0 12px ' + rankConfig.color + 'cc'"
       >
@@ -31,14 +32,14 @@
       <!-- ELO progress -->
       <div class="flex flex-col gap-1.5 w-full">
         <div class="flex justify-between w-full">
-          <span class="font-mono text-xs text-light-500">{{ rankInfo.elo }} ELO</span>
+          <span class="text-xs text-site-text-secondary font-mono">{{ rankInfo.elo }} ELO</span>
           @if (rankConfig.maxElo) {
-            <span class="font-mono text-xs text-light-600">{{ rankConfig.maxElo }}</span>
+            <span class="text-xs text-site-text-dim font-mono">{{ rankConfig.maxElo }}</span>
           } @else {
-            <span class="font-mono text-xs text-light-600">MAX</span>
+            <span class="text-xs text-site-text-dim font-mono">MAX</span>
           }
         </div>
-        <div class="w-full h-2 bg-base-700 rounded-full overflow-hidden">
+        <div class="w-full h-1.5 bg-site-surface rounded-full overflow-hidden">
           <div
             class="h-full rounded-full transition-all duration-500"
             [style.width.%]="getEloProgress()"
@@ -48,10 +49,11 @@
       </div>
 
       <!-- Wilks score -->
-      <div class="border-t border-base-700 w-full pt-3 flex justify-between">
-        <span class="font-mono text-sm text-light-500">Wilks Score</span>
-        <span class="font-mono font-bold text-light-300">{{ rankInfo.wilksScore }}</span>
+      <div class="border-t border-site-border/40 w-full pt-3 flex justify-between">
+        <span class="text-sm text-site-text-secondary">Wilks Score</span>
+        <span class="font-bold text-site-text font-mono">{{ rankInfo.wilksScore }}</span>
       </div>
+
     </div>
   }
 </div>

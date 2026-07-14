@@ -9,6 +9,7 @@ import { WorkoutStreak } from '../../../core/api/models/workout-streak.model';
 })
 export class StreakWidget implements OnInit {
   streak: WorkoutStreak | null = null;
+  fireIcon = 'assets/images/icons/fire.svg';
 
   constructor(private dashboardService: DashboardService) {}
 

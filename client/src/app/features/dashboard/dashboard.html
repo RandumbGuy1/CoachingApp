@@ -1,25 +1,34 @@
-<div class="flex flex-col gap-6 p-8">
-  <div class="bg-base-900 rounded-xl border-base-800 border-2 p-6 flex flex-col gap-4 w-fit">
-    <div class="flex items-baseline gap-4">
-      <span class="font-mono text-light-500">{{ today | date:'EEEE, MMMM d, y' }}</span>
+<div class="noise-layer"></div>
+
+<div class="relative min-h-screen overflow-x-hidden">
+  <div
+    class="blob"
+    style="background: radial-gradient(circle, rgba(162, 198, 255, 0.1) 0%, transparent 65%); width: 800px; height: 800px; top: 10%; left: 50%; transform: translateX(-50%);"
+  ></div>
+
+  <div class="flex flex-col gap-6 p-8 pt-16">
+
+    <!-- Date header -->
+    <div class="flex items-baseline gap-3">
+      <p class="text-xs font-bold tracking-widest text-site-accent uppercase">Dashboard</p>
+      <span class="text-site-text-dim text-sm font-mono">{{ today | date:'EEEE, MMMM d, y' }}</span>
     </div>
+
+    <!-- Top widgets row -->
+    <div class="flex gap-5">
+      <div class="flex-[3]">
+        <app-workout-of-day></app-workout-of-day>
+      </div>
+      <div class="flex-1">
+        <app-streak-widget></app-streak-widget>
+      </div>
+      <div class="flex-1">
+        <app-rank-widget></app-rank-widget>
+      </div>
+    </div>
+
+    <!-- Recent Progress full width -->
+    <app-recent-progress></app-recent-progress>
+
   </div>
-  <!-- Date header -->
-  
-
-  <div class="flex gap-5">
-    <div class="flex-[3]">
-      <app-workout-of-day></app-workout-of-day>
-    </div>
-    <div class="flex-1">
-      <app-streak-widget></app-streak-widget>
-    </div>
-    <div class="flex-1">
-      <app-rank-widget></app-rank-widget>
-    </div>
-  </div>
-
-  <!-- Recent Progress full width -->
-  <app-recent-progress></app-recent-progress>
-
 </div>

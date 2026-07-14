@@ -7,11 +7,11 @@
     [title]="(user$ | async)?.username"
     (click)="router.navigate(['/profile'])"
   >
-    @if (profile$ | async; as profile) {
-      <img [src]="profile.avatarUrl || userStore.defaultProfileImage" class="w-16 h-16 rounded-full object-cover shrink-0">
-    } @else {
-      <img [src]="userStore.defaultProfileImage" class="w-16 h-16 rounded-full object-cover shrink-0">
-    }
+    <app-user-avatar
+      [username]="(user$ | async)?.username ?? ''"
+      [avatarUrl]="(profile$ | async)?.avatarUrl"
+      size="md"
+    />
 
     @if (!collapsed) {
       <div class="flex flex-col">

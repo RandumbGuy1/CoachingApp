@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GroupMembership } from '../../api/models/group-membership.model';
 import { MembershipService } from '../../services/membership.service';
 import { MembershipStore } from '../../store/membership.store';
-import { Select } from 'primeng/select';
+import { Select, SelectChangeEvent } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -31,10 +31,12 @@ export class GroupSelectorComponent implements OnInit {
 
     this.membershipStore.selectedMembership$.subscribe(membership => {
       this.selectedMembership = membership;
+      console.log(this.selectedMembership);
     });
   }
 
-  onMembershipSelect(membership: GroupMembership) {
+  onMembershipSelect(event: SelectChangeEvent) {
+    let membership = event.value;
     this.membershipService.saveSelectedMembership(membership.id).subscribe();
   }
 }

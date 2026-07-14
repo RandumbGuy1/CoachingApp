@@ -1,19 +1,26 @@
-<div class="flex flex-col items-center justify-center h-full w-full">
-  <div class="bg-base-900 p-8 rounded-xl border-base-800 border-2 w-full max-w-150 flex flex-col gap-5">
+<div class="noise-layer"></div>
+
+<div class="relative min-h-screen flex items-center justify-center p-8 overflow-x-hidden">
+  <div
+    class="blob"
+    style="background: radial-gradient(circle, rgba(162, 198, 255, 0.1) 0%, transparent 65%); width: 700px; height: 700px; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+  ></div>
+
+  <div class="glass-card rounded-2xl p-8 w-full max-w-lg flex flex-col gap-5 relative">
 
     <!-- Header -->
     <div class="flex items-center justify-between">
-      <h1 class="text-3xl font-mono font-bold text-glow-blue">Create Group</h1>
+      <h1 class="text-2xl font-bold text-site-text">Create Group</h1>
       <button
         (click)="router.navigate(['/groups'])"
-        class="font-mono text-sm text-glow-blue-hover transition"
+        class="text-sm text-site-accent hover:text-site-text-secondary transition"
       >
         ← Back to Groups
       </button>
     </div>
 
     @if (error) {
-      <p class="font-mono font-bold text-warning">{{ error }}</p>
+      <p class="text-sm font-bold text-red-400">{{ error }}</p>
     }
 
     <!-- Name -->
@@ -21,7 +28,7 @@
       [(ngModel)]="group.name"
       type="text"
       placeholder="Group Name"
-      class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition font-mono"
+      class="glass-input"
     />
 
     <!-- Description -->
@@ -29,34 +36,34 @@
       [(ngModel)]="group.description"
       type="text"
       placeholder="Description"
-      class="w-full p-2 rounded text-light-300 bg-base-700 hover:bg-base-800 transition font-mono"
+      class="glass-input"
     />
 
     <!-- Colour -->
     <div class="flex items-center gap-4">
-      <span class="font-mono text-light-500 text-sm">Group Colour</span>
+      <span class="text-sm text-site-text-secondary">Group Colour</span>
       <input
         type="color"
         [(ngModel)]="group.color"
-        class="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0.5"
+        class="w-9 h-9 rounded-lg cursor-pointer bg-transparent border-0 p-0.5"
       />
-      <span class="font-mono text-sm text-light-600">{{ group.color }}</span>
+      <span class="text-sm text-site-text-dim font-mono">{{ group.color }}</span>
     </div>
 
     <!-- Toggles -->
-    <div class="border-t border-base-700 pt-4 flex flex-col gap-5">
+    <div class="border-t border-site-border/40 pt-4 flex flex-col gap-5">
       <div class="flex items-center justify-between">
         <div class="flex flex-col gap-0.5">
-          <span class="font-mono font-bold text-light-300">Public</span>
-          <span class="font-mono text-xs text-light-500">Anyone can find and view this group</span>
+          <span class="font-bold text-site-text text-sm">Public</span>
+          <span class="text-xs text-site-text-secondary">Anyone can find and view this group</span>
         </div>
         <p-toggleswitch [(ngModel)]="group.isPublic"/>
       </div>
 
       <div class="flex items-center justify-between">
         <div class="flex flex-col gap-0.5">
-          <span class="font-mono font-bold text-light-300">Request to Join</span>
-          <span class="font-mono text-xs text-light-500">New members must be approved by a coach</span>
+          <span class="font-bold text-site-text text-sm">Request to Join</span>
+          <span class="text-xs text-site-text-secondary">New members must be approved by a coach</span>
         </div>
         <p-toggleswitch [(ngModel)]="group.isRequestToJoin"/>
       </div>
@@ -65,7 +72,7 @@
     <!-- Submit -->
     <button
       (click)="create()"
-      class="w-full bg-base-600 text-glow-light-hover p-2 rounded font-mono font-bold hover:bg-base-200 transition"
+      class="w-full bg-site-accent text-site-text font-bold py-3 rounded-xl hover:brightness-110 transition text-sm"
     >
       Create Group
     </button>

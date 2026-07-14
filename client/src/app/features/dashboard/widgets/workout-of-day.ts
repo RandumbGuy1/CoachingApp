@@ -10,6 +10,7 @@ import { WorkoutOfDay } from '../../../core/api/models/workout-of-day.model';
 })
 export class WorkoutOfDayWidget implements OnInit {
   workout: WorkoutOfDay | null = null;
+  crescentIcon = 'assets/images/icons/crescent.svg';
 
   constructor(
     private dashboardService: DashboardService,

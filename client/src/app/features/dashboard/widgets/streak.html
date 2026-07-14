@@ -1,25 +1,31 @@
-<div class="bg-base-900 rounded-xl border-base-800 border-2 p-6 flex flex-col gap-4">
-  <h2 class="text-2xl font-mono font-bold text-light-300">Streak</h2>
+<div class="glass-card rounded-xl p-6 flex flex-col gap-4">
+  <h2 class="text-lg font-bold text-site-text">Streak</h2>
 
   @if (!streak) {
     <div class="flex items-center justify-center py-6">
-      <p class="font-mono text-light-500">Loading...</p>
+      <p class="text-site-text-dim text-sm font-mono">Loading...</p>
     </div>
   } @else {
     <div class="flex flex-col gap-5">
       <div class="flex flex-col items-center gap-1 py-2">
-        <span class="text-6xl font-mono font-bold text-warning">{{ streak.currentStreak }}</span>
-        <span class="font-mono text-light-500 text-sm">day streak 🔥</span>
+        <span class="text-5xl font-bold font-mono text-site-accent">{{ streak.currentStreak }}</span>
+        <span class="text-site-text-dim text-sm">day streak
+          <span
+            class="inline icon-mask w-4 h-4"
+            [style.maskImage]="'url(' + fireIcon + ')'"
+            [style.webkitMaskImage]="'url(' + fireIcon + ')'"
+          ></span>
+        </span>
       </div>
 
-      <div class="border-t border-base-700 pt-4 flex flex-col gap-3">
+      <div class="border-t border-site-border/40 pt-4 flex flex-col gap-3">
         <div class="flex justify-between">
-          <span class="font-mono text-light-500 text-sm">Total Workouts</span>
-          <span class="font-mono font-bold text-light-300">{{ streak.totalWorkouts }}</span>
+          <span class="text-sm text-site-text-secondary">Total Workouts</span>
+          <span class="font-bold text-site-text font-mono">{{ streak.totalWorkouts }}</span>
         </div>
         <div class="flex justify-between">
-          <span class="font-mono text-light-500 text-sm">Longest Streak</span>
-          <span class="font-mono font-bold text-light-300">{{ streak.longestStreak }}</span>
+          <span class="text-sm text-site-text-secondary">Longest Streak</span>
+          <span class="font-bold text-site-text font-mono">{{ streak.longestStreak }}</span>
         </div>
       </div>
     </div>

@@ -13,10 +13,11 @@ import { SaveUserRequest } from '../../core/api/requests/save-user.request';
 import { TIER_OPTIONS } from '../../core/enums/user-tier.enum';
 import { AuthService } from '../../core/auth/auth.service';
 import { ForgotPasswordModalService } from '../../core/services/forgot-password-modal.service';
+import { UserAvatarComponent } from '../../shared/components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, Select, ToggleSwitch],
+  imports: [FormsModule, Select, ToggleSwitch, UserAvatarComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })

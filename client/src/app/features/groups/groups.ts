@@ -24,6 +24,9 @@ export class GroupsPage implements OnInit {
   currentGroups: CoachingGroup[] = [];
   findGroups: CoachingGroup[] = [];
 
+  groups = 'assets/images/icons/navigation/groups.svg';
+  magnifyingGlass = 'assets/images/icons/search.svg';
+
   canCreateGroup$: Observable<boolean>;
 
   constructor(public router: Router, private groupService: GroupsService, private userStore: UserStore) {

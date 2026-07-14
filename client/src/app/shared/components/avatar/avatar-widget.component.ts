@@ -5,13 +5,14 @@ import { Observable } from 'rxjs/internal/Observable';
 import { UserStore } from '../../../core/store/user.store';
 import { AsyncPipe } from '@angular/common';
 import { User } from '../../../core/api/models/user.model';
+import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 
 @Component({
-  selector: 'app-avatar',
-  imports: [AsyncPipe],
-  templateUrl: './avatar.component.html',
+  selector: 'app-avatar-widget',
+  imports: [AsyncPipe, UserAvatarComponent],
+  templateUrl: './avatar-widget.component.html',
 })
-export class AvatarComponent {
+export class AvatarWidget {
   @Input() collapsed: boolean = false;
 
   profile$!: Observable<UserProfile | null>;

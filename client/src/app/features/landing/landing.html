@@ -5,17 +5,31 @@
 
   <div class="blob blob-center"></div>
   <div class="blob blob-hero"></div>
+  <div class="blob blob-who"></div>
 
   <!-- NAV -->
-  <nav class="sticky top-0 z-20 flex justify-between items-center px-6 md:px-10 py-4 border-b border-site-border/40"
-       style="background: rgba(8, 9, 24, 0.85); backdrop-filter: blur(12px);">
+  <nav
+    class="sticky top-0 z-20 flex justify-between items-center px-6 md:px-10 py-4 border-b border-site-border/40"
+    style="background: rgba(8, 9, 24, 0.85); backdrop-filter: blur(12px);"
+  >
     <img [src]="homeImgUrl" class="w-40 h-9 cursor-pointer" (click)="scrollTo('hero')">
     <div class="flex items-center gap-2">
-      <button (click)="cartOpen = true"
-              class="relative p-2 text-site-text-dim hover:text-site-text transition rounded-lg hover:bg-site-surface">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      <button
+        (click)="cartOpen = true"
+        class="relative p-2 text-site-text-dim hover:text-site-text transition rounded-lg hover:bg-site-surface"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+          />
         </svg>
         @if ((cart.count$ | async)! > 0) {
           <span class="absolute -top-0.5 -right-0.5 bg-site-accent text-site-text text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
@@ -23,47 +37,152 @@
           </span>
         }
       </button>
-      <button (click)="router.navigate(['/login'])"
-              class="text-sm text-site-text-secondary hover:text-site-text transition px-3 py-1.5">
-        Log in
-      </button>
-      <button (click)="router.navigate(['/register'])"
-              class="text-sm bg-site-accent text-site-text font-bold px-4 py-1.5 rounded-lg hover:brightness-110 transition">
-        Get Started
-      </button>
+
+      @if (userStore.user$ | async; as user) {
+        <!-- Profile avatar + dropdown -->
+        <div class="relative">
+          <button
+            (click)="profileOpen = !profileOpen"
+            class="rounded-full hover:opacity-80 transition"
+          >
+            <app-user-avatar
+              [username]="user.username"
+              [avatarUrl]="(userStore.profile$ | async)?.avatarUrl"
+              size="sm"
+            />
+          </button>
+
+          @if (profileOpen) {
+            <div class="profile-overlay" (click)="profileOpen = false"></div>
+            <div class="profile-dropdown glass-card">
+              <p class="text-xs text-site-text-dim px-3 pt-1 pb-2 border-b border-site-border/40 truncate">{{ user.username }}</p>
+
+              @if (user.tier !== UserTier.Free) {
+                <button
+                  (click)="router.navigate(['/dashboard']); profileOpen = false"
+                  class="profile-dropdown-item"
+                >
+                  <span
+                    class="icon-mask w-4 h-4"
+                    [style.maskImage]="'url(assets/images/icons/navigation/dashboard.svg)'"
+                    [style.webkitMaskImage]="'url(assets/images/icons/navigation/dashboard.svg)'"
+                  >
+                  </span>
+                  Dashboard
+                </button>
+              }
+
+              <button
+                (click)="logout()"
+                class="profile-dropdown-item warning"
+              >
+                <span
+                  class="icon-mask w-4 h-4"
+                  [style.maskImage]="'url(assets/images/icons/navigation/logout.svg)'"
+                  [style.webkitMaskImage]="'url(assets/images/icons/navigation/logout.svg)'"
+                >
+                </span>
+                Log out
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <button
+          (click)="router.navigate(['/login'])"
+          class="text-sm text-site-text-secondary hover:text-site-text transition px-3 py-1.5"
+        >
+          Log in
+        </button>
+        <button
+          (click)="router.navigate(['/register'])"
+          class="text-sm bg-site-accent text-site-text font-bold px-4 py-1.5 rounded-lg hover:brightness-110 transition"
+        >
+          Get Started
+        </button>
+      }
     </div>
   </nav>
 
   <!-- HERO -->
-  <section id="hero" class="flex flex-col items-center justify-center text-center min-h-[85vh] px-6 py-20 max-w-4xl mx-auto">
+  <section
+    id="hero"
+    class="flex flex-col items-center justify-center text-center min-h-[85vh] px-6 py-20 max-w-4xl mx-auto"
+  >
     <p class="text-xs font-bold tracking-widest text-site-accent uppercase mb-6">Randumb Fitness 1-1 Coaching</p>
-    <h1 class="text-4xl md:text-6xl lg:text-7xl font-light text-site-text leading-tight neon-text mb-6">
-      1-1 coaching for guys who are actually serious about this.
+    <h1 class="text-4xl md:text-6xl lg:text-7xl text-site-text leading-tight neon-text mb-6">
+      You serious about this?
     </h1>
-    <p class="text-base md:text-lg font-bold text-site-text-secondary leading-relaxed max-w-xl mb-10">
-      No transformation promises. No buzzwords. Just a real plan, real check-ins, and someone who actually answers your messages.
-    </p>
+    <div class="max-w-xl mb-10 flex flex-col gap-4">
+      <p class="text-base md:text-lg text-site-text-secondary leading-relaxed">
+        I'm not gonna waste your time. What I offer is a real plan, real check-ins, and someone who actually answers your messages.
+      </p>
+      <p class="text-base md:text-lg font-bold text-site-text-secondary leading-relaxed">
+        Want to get jacked? This is one guaranteed way to do it.
+      </p>
+    </div>
     <div class="flex flex-col items-center gap-3">
-      <button (click)="scrollTo('pricing')"
-              class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-110 transition text-sm">
+      <button
+        (click)="scrollTo('pricing')"
+        class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-110 transition text-sm"
+      >
         Apply for Coaching
       </button>
       <p class="text-xs text-site-text-dim">Limited spots. Month to month, cancel whenever.</p>
     </div>
+
+    @if (heroVideoUrl) {
+      <div class="hero-video">
+        <iframe
+          [src]="heroVideoUrl"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    }
   </section>
 
   <!-- WHO THIS IS FOR -->
   <section class="py-20 px-6 border-t border-site-border/30">
-    <div class="max-w-2xl mx-auto flex flex-col gap-5">
+    <div class="max-w-2xl mx-auto flex flex-col gap-5 glass-card rounded-2xl p-8">
       <h2 class="text-2xl md:text-3xl font-bold text-site-text">This might be for you.</h2>
       <p class="text-site-text-secondary leading-relaxed">
-        You're probably in your 20s or 30s. Something recently made you actually decide to do this — whether that's a photo, a number, someone's comment, or just a quiet realization that you've been putting it off long enough.
+        You're probably in your 20s or 30s, maybe even younger who knows.
       </p>
       <p class="text-site-text-secondary leading-relaxed">
-        Maybe you've tried on your own. Watched a bunch of videos, ran a program or two, made some progress but nothing that really stuck. Or maybe you haven't started at all and you're not sure where to begin.
+        Something's clicked recently... maybe a reel you saw of some jacked dude with music you like or the latest hot girl summer trend.
       </p>
       <p class="text-site-text-secondary leading-relaxed">
-        Either way, you're at the point where you want to stop guessing and just have someone tell you exactly what to do. That's what this is. If that sounds right, keep reading.
+        Maybe a break up? I've been there too my man...
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        Or maybe it was just the realization that <strong>you've been putting this shit off long enough.</strong>
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        So then you've tried on your own. Watched a bunch of videos, hop scotched between programs, made some progress but nothing that really stuck. Or maybe you haven't started at all and you're not sure how to.
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        I get it... you really don't want to <strong>waste your time and efforts</strong> on something that won't get you results.
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        <strong>Spend money?</strong> Couldn't I just keep watching videos, find the right one and do it for free?
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        <strong>Fitness is so much more than just information.</strong> Look, doing it on your own is 100% doable. I've done it,
+        but if youre sitting here reading this, clearly it hasn't worked out for you yet. And that's okay. I get it, I really do.
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        Now, you're at the point where you want to stop guessing and just have someone tell you exactly what to do. That's what this is.
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        <strong>Wasted money?</strong> It's cheaper than most coaching programs, while still giving you the same level of support and accountability. Plus full refunds if you don't like it.
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        <strong>Wasted time?</strong> Take a look at me and my clients. I know what works, and I know how to get you there. You won't be guessing anymore.
+      </p>
+      <p class="text-site-text-secondary leading-relaxed">
+        So if you want to go all in. <strong>Now's the time.</strong>
       </p>
     </div>
   </section>
@@ -82,8 +201,10 @@
         <p class="text-sm text-site-text-secondary">
           Want a plan built specifically around you? That's what 1-1 coaching is for.
         </p>
-        <button (click)="scrollTo('coaching')"
-                class="text-sm border border-site-border text-site-text-secondary hover:bg-site-surface hover:text-site-text transition px-4 py-1.5 rounded-lg whitespace-nowrap shrink-0">
+        <button
+          (click)="scrollTo('coaching')"
+          class="text-sm border border-site-border text-site-text-secondary hover:bg-site-surface hover:text-site-text transition px-4 py-1.5 rounded-lg whitespace-nowrap shrink-0"
+        >
           See Coaching
         </button>
       </div>
@@ -115,8 +236,10 @@
                 ✓ In Cart
               </button>
             } @else {
-              <button (click)="addToCart(featuredProduct)"
-                      class="px-5 py-2.5 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-110 transition">
+              <button
+                (click)="addToCart(featuredProduct)"
+                class="px-5 py-2.5 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-110 transition"
+              >
                 Add to Cart
               </button>
             }
@@ -132,21 +255,31 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           @for (product of pairProducts; track product.id) {
-            <div class="glass-card rounded-xl p-6 flex flex-col gap-4">
+            <div
+              class="glass-card rounded-xl p-6 flex flex-col gap-4"
+              [class.opacity-50]="product.comingSoon"
+              [class.grayscale]="product.comingSoon"
+            >
               <h4 class="font-bold text-site-text">{{ product.name }}</h4>
               <div class="flex flex-col gap-3 flex-1 text-sm text-site-text-secondary">
-                <p><span class="text-site-accent font-semibold">Guide — </span>{{ product.guide }}</p>
-                <p><span class="text-site-accent font-semibold">System — </span>{{ product.system }}</p>
+                <p><span class="text-site-accent font-semibold">Guide: </span>{{ product.guide }}</p>
+                <p><span class="text-site-accent font-semibold">System: </span>{{ product.system }}</p>
               </div>
               <div class="flex items-center justify-between pt-3 border-t border-site-border/50">
                 <span class="font-bold text-site-text font-mono">${{ product.price }}</span>
-                @if (cart.isInCart(product.id)) {
+                @if (product.comingSoon) {
+                  <span class="text-xs px-3 py-1.5 rounded-lg border border-site-border text-site-text-dim font-bold">
+                    Coming Soon
+                  </span>
+                } @else if (cart.isInCart(product.id)) {
                   <button class="text-xs px-3 py-1.5 rounded-lg border border-site-accent/40 bg-site-surface text-site-accent font-bold">
                     ✓ Added
                   </button>
                 } @else {
-                  <button (click)="addToCart(product)"
-                          class="text-xs px-3 py-1.5 rounded-lg bg-site-accent text-site-text font-bold hover:brightness-110 transition">
+                  <button
+                    (click)="addToCart(product)"
+                    class="text-xs px-3 py-1.5 rounded-lg bg-site-accent text-site-text font-bold hover:brightness-110 transition"
+                  >
                     Add to Cart
                   </button>
                 }
@@ -198,22 +331,67 @@
   <!-- ABOUT -->
   <section class="py-20 px-6 border-t border-site-border/30">
     <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-      <div class="glass-card rounded-2xl aspect-[3/4] flex items-center justify-center text-site-text-dim text-sm">
-        [Photo coming soon]
+      <div class="about-carousel">
+        <div
+          class="about-carousel-track"
+          [style.transform]="'translateX(-' + (aboutImageIndex * 100) + '%)'"
+        >
+          @for (item of aboutItems; track $index) {
+            <div class="about-carousel-slide" #slide>
+              @if (item.type === 'video') {
+                <video [src]="item.src" class="about-carousel-media" controls playsinline></video>
+              }
+              @else {
+                <img [src]="item.src" alt="Photo" class="about-carousel-media" />
+              }
+            </div>
+          }
+        </div>
+
+        @if (aboutItems.length > 1) {
+          <button (click)="prevImage()" class="about-carousel-btn left">‹</button>
+          <button (click)="nextImage()" class="about-carousel-btn right">›</button>
+
+          <div class="about-carousel-dots">
+            @for (item of aboutItems; track $index) {
+              <span
+                class="about-carousel-dot"
+                [class.active]="$index === aboutImageIndex"
+                (click)="goToSlide($index)"
+              ></span>
+            }
+          </div>
+        }
       </div>
-      <div class="flex flex-col gap-5">
-        <h2 class="text-2xl md:text-3xl font-bold text-site-text">A bit about me.</h2>
+      <div class="flex flex-col gap-5"> 
+        <h2 class="text-2xl md:text-3xl font-bold text-site-text">A bit about me and my clients.</h2>
         <p class="text-site-text-secondary leading-relaxed text-sm">
-          I started lifting at 14 coming out of a rough stretch. My uncle handed me some weights and that was it. Before that I was the short insecure kid doing dead hangs every morning trying to grow taller — I know exactly what it feels like to be in your head about this stuff.
+          I started lifting my freshman year of high school coming out of some hard times. My uncle was the first to show me the ropes of lifting. I remember him having me do 3 sets of 10 on barbell curls with a 1 minute break inbetween. Those were the days...
         </p>
         <p class="text-site-text-secondary leading-relaxed text-sm">
-          I'm not a certified trainer. I'm a CS student at WPI who got obsessed with figuring out how training actually works, coached enough people through it, and now does this on the side. My clients are regular guys with jobs, school, and lives — not athletes. That's who I know how to help.
+          I've spent years since then researching fitness, but most importantly dedicating myself to the craft because I grew to absolutely love it. This trait is huge among some of my most succesful clients.
         </p>
         <p class="text-site-text-secondary leading-relaxed text-sm">
-          I'm not going to pretend I'm the best coach on the internet. What I can tell you is that I actually respond, I actually adjust your plan, and I'm not going to put you on some generic program and call it coaching.
+          I'm not going to pretend I'm the best coach on the internet. I'm a college student who got obsessed with figuring out how training actually works, coached enough people through it, and now does this on the side.
         </p>
-        <a href="https://www.youtube.com/@RandumbFitness" target="_blank" rel="noopener"
-           class="text-site-accent hover:text-site-text-secondary transition text-sm">
+        <p class="text-site-text-secondary leading-relaxed text-sm">
+          My clients are regular guys with jobs, school, and lives. That's who I want to help.
+        </p>
+        <p class="text-site-text-secondary leading-relaxed text-sm">
+          If that sounds like you, I'm not going to put you on some generic program and call it coaching. 
+        </p>
+        <p class="text-site-text-secondary leading-relaxed text-sm">
+          I actually respond, I actually adjust your plan, and actually keep you accountable.
+        </p>
+        <p class="text-site-text-secondary leading-relaxed text-sm">
+          I'll let the rest of the slides do the talking...
+        </p>
+        <a
+          href="https://www.youtube.com/@RandumbFitness"
+          target="_blank"
+          rel="noopener"
+          class="text-site-accent hover:text-site-text-secondary transition text-sm"
+        >
           Watch my videos on YouTube →
         </a>
       </div>
@@ -226,15 +404,25 @@
       <h2 class="text-2xl md:text-3xl font-bold text-site-text text-center">Simple pricing.</h2>
       <div class="glass-card rounded-2xl p-8 w-full flex flex-col items-center gap-5 ring-1 ring-site-accent/20">
         <div class="flex items-end gap-1">
-          <span class="text-5xl font-bold text-site-text font-mono">$129</span>
+          <span class="text-5xl font-bold text-site-text font-mono">${{ coachingProduct.price }}</span>
           <span class="text-site-text-secondary text-base mb-1.5">/month</span>
         </div>
         <p class="text-site-text-secondary text-sm text-center leading-relaxed">
-          Month to month. No contracts. Cancel whenever you want.
+          {{ coachingProduct.description }}
         </p>
-        <button class="w-full bg-site-accent text-site-text font-bold py-3 rounded-xl hover:brightness-110 transition">
-          Apply for Coaching
-        </button>
+
+        @if (cart.isInCart(coachingProduct.id)) {
+          <button class="w-full py-3 rounded-xl border border-site-accent/40 bg-site-surface text-site-accent font-bold text-sm">
+            ✓ In Cart
+          </button>
+        } @else {
+          <button
+            (click)="addToCart(coachingProduct)"
+            class="w-full py-3 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-110 transition"
+          >
+            Apply for Coaching
+          </button>
+        }
         <button class="text-sm text-site-text-dim hover:text-site-text transition">
           Have a question? Send me a message first.
         </button>
@@ -258,8 +446,13 @@
           Drop your email and I'll send you a one-time use of one of the systems. One run, no commitment. Good way to see what these things actually output before deciding.
         </p>
         <div class="flex gap-2">
-          <input [(ngModel)]="trialEmail" name="trialEmail" type="email" placeholder="your@email.com"
-                 class="glass-input flex-1" />
+          <input
+            [(ngModel)]="trialEmail"
+            name="trialEmail"
+            type="email"
+            placeholder="your@email.com"
+            class="glass-input flex-1"
+          />
           <button class="bg-site-accent text-site-text text-sm font-bold px-4 py-2 rounded-lg hover:brightness-110 transition whitespace-nowrap">
             Send me the trial
           </button>
@@ -272,9 +465,9 @@
         <p class="text-sm text-site-text-secondary max-w-sm leading-relaxed">
           General space, some older resources, no direct access to me. It's a starting point.
         </p>
-        <button 
-          class="text-sm border border-site-border text-site-text-secondary hover:bg-site-surface hover:text-site-text transition px-5 py-2 rounded-lg"
+        <button
           (click)="navigateToFreeCommunity()"
+          class="text-sm border border-site-border text-site-text-secondary hover:bg-site-surface hover:text-site-text transition px-5 py-2 rounded-lg"
         >
           Join the Free Community
         </button>
@@ -295,9 +488,13 @@
               class="w-full flex justify-between items-center px-5 py-4 text-left hover:bg-site-surface/50 transition gap-4"
             >
               <span class="font-medium text-site-text text-sm">{{ faq.q }}</span>
-              <svg class="w-4 h-4 text-site-text-dim shrink-0 chevron"
-                   [class.chevron-open]="faqOpen === $index"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                class="w-4 h-4 text-site-text-dim shrink-0 chevron"
+                [class.chevron-open]="faqOpen === $index"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
@@ -319,8 +516,10 @@
         All of this runs on the same logic as coaching.<br>
         The difference is coaching is built specifically around you.
       </p>
-      <button (click)="scrollTo('coaching')"
-              class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-110 transition">
+      <button
+        (click)="scrollTo('coaching')"
+        class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-110 transition"
+      >
         Learn About 1-1 Coaching
       </button>
     </div>

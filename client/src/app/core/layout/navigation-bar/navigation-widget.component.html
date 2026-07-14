@@ -1,0 +1,63 @@
+<button class="nav-trigger" (click)="open = !open">
+  <app-user-avatar
+    [username]="(user$ | async)?.username ?? ''"
+    [avatarUrl]="(profile$ | async)?.avatarUrl"
+    size="sm"
+  />
+</button>
+
+@if (open) {
+  <div class="nav-overlay" (click)="open = false"></div>
+
+  <div class="nav-panel glass-card">
+
+    <button
+      class="nav-panel-header"
+      (click)="router.navigate(['/profile']); open = false"
+    >
+      <app-user-avatar
+        [username]="(user$ | async)?.username ?? ''"
+        [avatarUrl]="(profile$ | async)?.avatarUrl"
+        size="sm"
+      />
+      @if (user$ | async; as user) {
+        <div class="flex flex-col min-w-0 text-left">
+          <p class="nav-username">{{ user.username }}</p>
+          <p class="nav-tier">{{ user.tier }}</p>
+        </div>
+      }
+    </button>
+
+    <div class="nav-divider"></div>
+
+    @for (element of mainElements; track element.title) {
+      <button
+        class="nav-item"
+        [class.warning]="element.color === 'warning'"
+        [title]="element.tooltip"
+        (click)="navigate(element)"
+      >
+        <span
+          class="icon-mask w-4 h-4"
+          [style.maskImage]="'url(' + element.icon + ')'"
+          [style.webkitMaskImage]="'url(' + element.icon + ')'"
+        ></span>
+        {{ element.title }}
+      </button>
+    }
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-bottom">
+      @for (element of bottomElements; track element.title) {
+        <button class="nav-bottom-btn" [title]="element.tooltip" (click)="navigate(element)">
+          <img [src]="element.icon" class="w-4 h-4 opacity-60">
+          @if (element.notificationCount && element.notificationCount > 0) {
+            <span class="nav-badge">{{ element.notificationCount }}</span>
+          }
+        </button>
+      }
+    </div>
+
+  </div>
+}
