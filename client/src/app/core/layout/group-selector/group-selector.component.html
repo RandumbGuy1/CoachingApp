@@ -1,8 +1,9 @@
 <p-select
   class="absolute top-5 right-10"
-  [(ngModel)]="selectedMembership"
+  [(ngModel)]="selectedMembershipId"
   [options]="allMembershipOptions"
   optionLabel="label"
+  optionValue="value"
   [placeholder]="!allMemberships.length ? 'No Memberships' : 'Select Membership'"
   [disabled]="!allMemberships.length"
   (onChange)="onMembershipSelect($event)"

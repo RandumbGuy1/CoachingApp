@@ -12,8 +12,25 @@
     class="sticky top-0 z-20 flex justify-between items-center px-6 md:px-10 py-4 border-b border-site-border/40"
     style="background: rgba(8, 9, 24, 0.85); backdrop-filter: blur(12px);"
   >
-    <img [src]="homeImgUrl" class="w-40 h-9 cursor-pointer" (click)="scrollTo('hero')">
     <div class="flex items-center gap-2">
+      @if (userStore.user$ | async; as user) {
+        <app-navigation-widget variant="inline"></app-navigation-widget>
+      } 
+      @else {
+        <button
+          (click)="router.navigate(['/login'])"
+          class="text-sm text-site-text-secondary hover:text-site-text transition px-3 py-1.5"
+        >
+          Log in
+        </button>
+        <button
+          (click)="router.navigate(['/register'])"
+          class="text-sm bg-site-accent text-site-text font-bold px-4 py-1.5 rounded-lg hover:brightness-110 transition"
+        >
+          Get Started
+        </button>
+      }
+      
       <button
         (click)="cartOpen = true"
         class="relative p-2 text-site-text-dim hover:text-site-text transition rounded-lg hover:bg-site-surface"
@@ -37,71 +54,8 @@
           </span>
         }
       </button>
-
-      @if (userStore.user$ | async; as user) {
-        <!-- Profile avatar + dropdown -->
-        <div class="relative">
-          <button
-            (click)="profileOpen = !profileOpen"
-            class="rounded-full hover:opacity-80 transition"
-          >
-            <app-user-avatar
-              [username]="user.username"
-              [avatarUrl]="(userStore.profile$ | async)?.avatarUrl"
-              size="sm"
-            />
-          </button>
-
-          @if (profileOpen) {
-            <div class="profile-overlay" (click)="profileOpen = false"></div>
-            <div class="profile-dropdown glass-card">
-              <p class="text-xs text-site-text-dim px-3 pt-1 pb-2 border-b border-site-border/40 truncate">{{ user.username }}</p>
-
-              @if (user.tier !== UserTier.Free) {
-                <button
-                  (click)="router.navigate(['/dashboard']); profileOpen = false"
-                  class="profile-dropdown-item"
-                >
-                  <span
-                    class="icon-mask w-4 h-4"
-                    [style.maskImage]="'url(assets/images/icons/navigation/dashboard.svg)'"
-                    [style.webkitMaskImage]="'url(assets/images/icons/navigation/dashboard.svg)'"
-                  >
-                  </span>
-                  Dashboard
-                </button>
-              }
-
-              <button
-                (click)="logout()"
-                class="profile-dropdown-item warning"
-              >
-                <span
-                  class="icon-mask w-4 h-4"
-                  [style.maskImage]="'url(assets/images/icons/navigation/logout.svg)'"
-                  [style.webkitMaskImage]="'url(assets/images/icons/navigation/logout.svg)'"
-                >
-                </span>
-                Log out
-              </button>
-            </div>
-          }
-        </div>
-      } @else {
-        <button
-          (click)="router.navigate(['/login'])"
-          class="text-sm text-site-text-secondary hover:text-site-text transition px-3 py-1.5"
-        >
-          Log in
-        </button>
-        <button
-          (click)="router.navigate(['/register'])"
-          class="text-sm bg-site-accent text-site-text font-bold px-4 py-1.5 rounded-lg hover:brightness-110 transition"
-        >
-          Get Started
-        </button>
-      }
     </div>
+     <img [src]="homeImgUrl" class="w-40 h-9 cursor-pointer" (click)="scrollTo('hero')">
   </nav>
 
   <!-- HERO -->

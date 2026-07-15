@@ -1,16 +1,26 @@
 .p-dialog {
-  background: var(--color-base-900) !important;
-  border: 2px solid var(--color-base-800) !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(77, 103, 180, 0.08) 0%,
+    rgba(30, 32, 68, 0.04) 55%,
+    rgba(77, 103, 180, 0.07) 100%
+  ) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(77, 103, 180, 0.18) !important;
+  border-radius: 1rem !important;
+  box-shadow:
+    0 6px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  padding: 0 !important;
 }
 
 .p-dialog-content {
-  background: var(--color-base-900) !important;
+  background: transparent !important;
   padding: 0 !important;
-  border-radius: 0.75rem !important;
+  border-radius: 1rem !important;
 }
 
 .p-dialog-mask {
-  background: rgba(0, 0, 0, 0.65) !important;
+  background: rgba(0, 0, 0, 0.55) !important;
 }

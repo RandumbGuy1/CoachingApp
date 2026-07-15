@@ -7,6 +7,8 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/landing/landing').then(m => m.LandingPage) },
   { path: 'login', loadComponent: () => import('./features/login/login').then(m => m.LoginPage), canActivate: [requireLogin(false)] },
   { path: 'register', loadComponent: () => import('./features/registration/register').then(m => m.RegisterPage), canActivate: [requireLogin(false)] },
+  { path: 'settings', loadComponent: () => import('./features/settings/settings').then(m => m.SettingsPage), canActivate: [requireLogin(true)]},
+  { path: 'info', loadComponent: () => import('./features/info/info').then(m => m.InfoPage), canActivate: [requireLogin(true)]},
 
   {
     path: '',
@@ -18,8 +20,6 @@ export const routes: Routes = [
       { path: 'programs', loadComponent: () => import('./features/programs/programs').then(m => m.ProgramsPage) },
       { path: 'workout', loadComponent: () => import('./features/workout/workout').then(m => m.WorkoutPage) },
       { path: 'forms', loadComponent: () => import('./features/forms/forms').then(m => m.FormsPage) },
-      { path: 'settings', loadComponent: () => import('./features/settings/settings').then(m => m.SettingsPage) },
-      { path: 'info', loadComponent: () => import('./features/info/info').then(m => m.InfoPage) },
       { path: 'history', loadComponent: () => import('./features/history/history').then(m => m.HistoryPage) },
       { path: 'glossary', loadComponent: () => import('./features/glossary/glossary').then(m => m.GlossaryPage) },
       { path: 'profile', loadComponent: () => import('./features/profile/profile').then(m => m.ProfilePage) },

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { catchError, forkJoin, Observable, of, tap } from 'rxjs';
+import { catchError, forkJoin, Observable, of, shareReplay, tap, throwError, finalize } from 'rxjs';
 import { User } from '../api/models/user.model';
 import { ApiService } from '../services/api.service';
 import { RegisterRequest } from '../api/requests/register.request';
@@ -18,6 +18,7 @@ import { diff } from '../utils/diff.util';
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
+  private refreshInProgress$: Observable<AuthResponse> | null = null;
 
   constructor(
     private router: Router,
@@ -118,17 +119,23 @@ export class AuthService {
     return this.api.post<void>('auth/reset-password', { email, code, newPassword });
   }
 
-  refresh() {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) throw new Error('No refresh token available');
+  refresh(): Observable<AuthResponse> {
+    if (this.refreshInProgress$) return this.refreshInProgress$;
 
-    return this.api.post<AuthResponse>('auth/refresh', { refreshToken: refreshToken }).pipe(
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) return throwError(() => new Error('No refresh token available'));
+
+    this.refreshInProgress$ = this.api.post<AuthResponse>('auth/refresh', { refreshToken }).pipe(
       tap((res: AuthResponse) => {
         localStorage.setItem(this.TOKEN_KEY, res.accessToken);
         localStorage.setItem(this.REFRESH_TOKEN_KEY, res.refreshToken);
         this.userStore.setUser(this.getCurrentUser());
-      })
+      }),
+      finalize(() => this.refreshInProgress$ = null),
+      shareReplay(1)
     );
+
+    return this.refreshInProgress$;
   }
 
   private getCurrentUser(): User | null {

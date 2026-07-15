@@ -8,11 +8,11 @@ import { CartService } from '../../core/services/cart.service';
 import { CartComponent } from '../../shared/components/cart/cart.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { UserTier } from '../../core/enums/user-tier.enum';
-import { UserAvatarComponent } from '../../shared/components/user-avatar/user-avatar.component';
+import { NavigationWidget } from '../../core/layout/navigation-bar/navigation-widget.component';
 
 @Component({
   selector: 'app-landing',
-  imports: [AsyncPipe, FormsModule, CartComponent, UserAvatarComponent],
+  imports: [AsyncPipe, FormsModule, CartComponent, NavigationWidget],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })

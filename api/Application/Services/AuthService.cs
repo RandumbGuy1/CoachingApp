@@ -207,16 +207,12 @@ public class AuthService(IConfiguration _config, AppDbContext _db)
 
     public async Task RemoveOldTokensAsync(Guid userId)
     {
-        //Note: Do NOT filter on the db with computed properties
-        var oldTokens = await _db.RefreshTokens
+        await _db.RefreshTokens
             .Where(r =>
                 r.UserId == userId &&
                 (r.ExpiresAt <= DateTime.UtcNow || r.RevokedAt != null)
             )
-            .ToListAsync();
-
-        _db.RefreshTokens.RemoveRange(oldTokens);
-        await _db.SaveChangesAsync();
+            .ExecuteDeleteAsync();
     }
 
     public async Task RevokeAllUserTokensAsync(Guid userId)

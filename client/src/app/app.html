@@ -1,15 +1,15 @@
 <div class="flex h-screen w-screen overflow-hidden">
 
-  @if (showNavAndMemberships$ | async) {
+  @if (showNavigation$ | async) {
     <!-- <app-navigation-bar [collapsed]="collapsed"></app-navigation-bar> -->
-    <app-navigation-widget></app-navigation-widget>
+    <app-navigation-widget position="fixed"></app-navigation-widget>
   }
 
   <div class="flex-1 overflow-auto">
     <router-outlet></router-outlet>
   </div>
 
-  @if (showNavAndMemberships$ | async) {
+  @if (showMemberships$ | async) {
     <app-group-selector></app-group-selector>
 
     <!--

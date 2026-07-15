@@ -7,6 +7,7 @@ namespace CoachApi.Application.Services;
 
 public class MembershipService(AppDbContext _db)
 {
+    //TODO: Fix group selector dropdown
     public async Task<GroupMembershipDto?> GetSelectedMembershipAsync(Guid userId)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId) 
@@ -15,8 +16,8 @@ public class MembershipService(AppDbContext _db)
         if (user.SelectedMembershipId == null) return null;
 
         var membership = await _db.Memberships
-            .AsNoTracking()
             .Include(m => m.Group)
+                .ThenInclude(g => g.Members)
             .FirstOrDefaultAsync(m => m.Id == user.SelectedMembershipId && m.UserId == userId);
 
         if (membership == null) return null;
@@ -31,7 +32,9 @@ public class MembershipService(AppDbContext _db)
 
         // Validate membership belongs to the user
         var membership = await _db.Memberships
-            .FirstOrDefaultAsync(m => m.Id == membershipId && m.UserId == userId) 
+            .Include(m => m.Group)
+                .ThenInclude(g => g.Members)
+            .FirstOrDefaultAsync(m => m.Id == membershipId && m.UserId == userId)
             ?? throw new InvalidOperationException("Invalid membership selection");
 
         user.SelectedMembershipId = membership.Id;

@@ -12,8 +12,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class GroupSelectorComponent implements OnInit {
   selectedMembership: GroupMembership | null = null;
+  selectedMembershipId: string | null = null;
   allMemberships: GroupMembership[] = [];
-  allMembershipOptions: { label: string, value: GroupMembership }[] = [];
+  allMembershipOptions: { label: string; value: string }[] = [];
 
   constructor(
     public membershipService: MembershipService,
@@ -23,20 +24,21 @@ export class GroupSelectorComponent implements OnInit {
   ngOnInit() {
     this.membershipStore.allMemberships$.subscribe(memberships => {
       this.allMemberships = memberships;
-      this.allMembershipOptions = memberships.map(membership => ({
-        label: membership.coachingGroup.name,
-        value: membership
+      this.allMembershipOptions = memberships.map(m => ({
+        label: m.coachingGroup.name,
+        value: m.id
       }));
     });
 
     this.membershipStore.selectedMembership$.subscribe(membership => {
       this.selectedMembership = membership;
-      console.log(this.selectedMembership);
+      this.selectedMembershipId = membership?.id ?? null;
     });
   }
 
   onMembershipSelect(event: SelectChangeEvent) {
-    let membership = event.value;
-    this.membershipService.saveSelectedMembership(membership.id).subscribe();
+    const id: string = event.value;
+    this.selectedMembership = this.allMemberships.find(m => m.id === id) ?? null;
+    this.membershipService.saveSelectedMembership(id).subscribe();
   }
 }
