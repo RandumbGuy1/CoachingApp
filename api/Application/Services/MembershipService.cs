@@ -7,7 +7,6 @@ namespace CoachApi.Application.Services;
 
 public class MembershipService(AppDbContext _db)
 {
-    //TODO: Fix group selector dropdown
     public async Task<GroupMembershipDto?> GetSelectedMembershipAsync(Guid userId)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId) 
