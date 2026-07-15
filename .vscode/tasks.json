@@ -2,9 +2,25 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "docker-compose-up",
+      "type": "shell",
+      "command": "docker compose up -d",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "close": true
+      }
+    },
+    {
       "label": "start-client",
       "type": "shell",
       "command": "npm start",
+      "dependsOn": ["docker-compose-up"],
+      "dependsOrder": "sequence",
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
@@ -27,9 +43,25 @@
       },
     },
     {
+      "label": "docker-compose-down",
+      "type": "shell",
+      "command": "docker compose down",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "close": true
+      }
+    },
+    {
       "label": "stop-client",
       "type": "shell",
       "command": "npx kill-port 4200",
+      "dependsOn": ["docker-compose-down"],
+      "dependsOrder": "sequence",
       "problemMatcher": [],
       "presentation": {
         "reveal": "silent",
@@ -41,11 +73,17 @@
       "label": "build",
       "command": "dotnet",
       "type": "shell",
-      "args": [
-        "build",
-        "${workspaceFolder}/api/CoachApi.csproj"
-      ],
+      "args": ["build"],
+      "options": {
+        "cwd": "${workspaceFolder}/api"
+      },
       "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-and-start-client",
+      "dependsOn": ["build", "start-client"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
     },
     {
       "label": "publish",

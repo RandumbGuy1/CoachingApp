@@ -5,14 +5,10 @@
       "name": ".NET Core Launch (web)",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "start-client",
+      "preLaunchTask": "build-and-start-client",
       "postDebugTask": "stop-client",
-      "program": "dotnet",
-      "args": [
-        "run",
-        "--project",
-        "${workspaceFolder}/api/CoachApi.csproj"
-      ],
+      "program": "${workspaceFolder}/api/bin/Debug/net10.0/CoachApi.dll",
+      "args": [],
       "cwd": "${workspaceFolder}/api",
       "stopAtEntry": false,
       "env": {
