@@ -46,40 +46,39 @@ Open a new Terminal Window
   dotnet build
 ```
 
-8. Create a .env file from the following template
-```bash
-  cp .env.example .env
-```
-
-Make sure to set the following values:
-- SA_PASSWORD: Password used by SQL Server container (must match connection string)
-
 ## Go into the /api folder
 ```bash
   cd api
 ```
 
-11. Initialize User Secrets and Setup the connection string
-- User secrets are used to keep sensitive data (like database passwords) out of source control.
-- NOTE: Replace <YourPassword> with the SA_PASSWORD you wrote in .env
+8. Initialize User Secrets
+- User secrets are used to keep sensitive data out of source control.
+
 ```bash
   dotnet user-secrets init
-  dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=localhost,1433;Initial Catalog=CoachDb;User ID=SA;Password=<YourPassword>;Trust Server Certificate=True;MultipleActiveResultSets=True;'
 ```
 
-- Also make sure to create an atleast 32 character long jwt key
+9. Setup User Secrets
+- Copy it as-is, no need to generate or track your own password. The local SQL Server container's SA password is a fixed, non-secret dev-only value.
+```bash
+  dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=localhost,1433;Initial Catalog=CoachDb;User ID=SA;Password=R85ae0a06!;Trust Server Certificate=True;MultipleActiveResultSets=True;'
+```
+
+- Also make sure to create an atleast 32 character long JWT key
 ```bash
   dotnet user-secrets set "Jwt:Key" "<YourJwtKey>"
 ```
 
-- Set the Auth0 client secret (get this from the Auth0 dashboard under Applications → your app)
+- Set the WorkOS API key (get this from the WorkOS Dashboard)
 ```bash
-  dotnet user-secrets set "Auth0:ClientSecret" "<YourAuth0ClientSecret>"
+  dotnet user-secrets set "WorkOS:ApiKey" "<YourWorkOSApiKey>"
 ```
+
+NOTE: The WorkOS Client ID is not a secret (it's public, like an OAuth client ID) and is already committed in `client/src/environments/environment.ts` / `environment.development.ts` / `environment.production.ts`, and in `api/appsettings.json` under `WorkOS:ClientId`. No setup step needed for it.
 
 ## Daily Development
 
-12. Run the app
+10. Run the app
 
 Make sure Docker Desktop is open and running before hitting F5.
 

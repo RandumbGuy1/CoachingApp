@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, type User as WorkOSUser } from '@workos-inc/authkit-js';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 
 type WorkOSClient = Awaited<ReturnType<typeof createClient>>;
 

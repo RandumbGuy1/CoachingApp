@@ -4,7 +4,9 @@ services:
     container_name: coaching_app_server_container
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=${SA_PASSWORD}
+      # Local dev only. Not a real secret since the container only binds to localhost.
+      # Prod uses its own credentials via docker-compose.override.yml
+      - SA_PASSWORD=R85ae0a06!
     ports:
       - "1433:1433"
     volumes:
