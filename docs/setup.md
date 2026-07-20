@@ -46,9 +46,9 @@ Open a new Terminal Window
   dotnet build
 ```
 
-## Go into the /api folder
+## Go into the /backend folder
 ```bash
-  cd api
+  cd backend
 ```
 
 8. Initialize User Secrets
@@ -74,7 +74,7 @@ Open a new Terminal Window
   dotnet user-secrets set "WorkOS:ApiKey" "<YourWorkOSApiKey>"
 ```
 
-NOTE: The WorkOS Client ID is not a secret (it's public, like an OAuth client ID) and is already committed in `client/src/environments/environment.ts` / `environment.development.ts` / `environment.production.ts`, and in `api/appsettings.json` under `WorkOS:ClientId`. No setup step needed for it.
+NOTE: The WorkOS Client ID is not a secret (it's public, like an OAuth client ID) and is already committed in `client/src/environments/environment.ts` / `environment.development.ts` / `environment.production.ts`, and in `backend/appsettings.json` under `WorkOS:ClientId`. No setup step needed for it.
 
 ## Daily Development
 

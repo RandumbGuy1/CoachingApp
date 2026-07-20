@@ -7,9 +7,9 @@
       "request": "launch",
       "preLaunchTask": "build-and-start-client",
       "postDebugTask": "stop-client",
-      "program": "${workspaceFolder}/api/bin/Debug/net10.0/CoachApi.dll",
+      "program": "${workspaceFolder}/backend/bin/Debug/net10.0/CoachApi.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/api",
+      "cwd": "${workspaceFolder}/backend",
       "stopAtEntry": false,
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"

@@ -75,7 +75,7 @@
       "type": "shell",
       "args": ["build"],
       "options": {
-        "cwd": "${workspaceFolder}/api"
+        "cwd": "${workspaceFolder}/backend"
       },
       "problemMatcher": "$msCompile"
     },
@@ -91,7 +91,7 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/api/CoachApi.csproj"
+        "${workspaceFolder}/backend/CoachApi.csproj"
       ],
       "problemMatcher": "$msCompile"
     }
