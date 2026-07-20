@@ -1,7 +1,6 @@
 # Setting up Local Development
 
-NOTE: If a command is not recognized after installation, ensure it is added to your system PATH.
-Then restart your terminal or VS Code.
+NOTE: If a command is not recognized after installation, ensure it is added to your system PATH. Then restart your terminal or VS Code.
 
 ## One Time Setup
 
@@ -70,24 +69,19 @@ Make sure to set the following values:
 
 - Also make sure to create an atleast 32 character long jwt key
 ```bash
-  dotnet user-secrets set "Jwt:Key" "<YourPassword>"
+  dotnet user-secrets set "Jwt:Key" "<YourJwtKey>"
+```
+
+- Set the Auth0 client secret (get this from the Auth0 dashboard under Applications → your app)
+```bash
+  dotnet user-secrets set "Auth0:ClientSecret" "<YourAuth0ClientSecret>"
 ```
 
 ## Daily Development
 
 12. Run the app
 
-This should be run to ensure the container is running
-- NOTE: Don't run this every time you rerun the app
-```bash
-  docker compose up -d
-```
-
-- If you get:
-```bash
-  unable to get image 'mcr.microsoft.com/mssql/server:2025-latest': failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
-```
-- Make sure Docker Desktop is running.
+Make sure Docker Desktop is open and running before hitting F5.
 
 - Hit "F5" and go to http://localhost:4200/
 

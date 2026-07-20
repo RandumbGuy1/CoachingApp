@@ -7,9 +7,16 @@
     <UserSecretsId>de94331e-d1bc-410b-b201-4ed68af62909</UserSecretsId>
   </PropertyGroup>
 
+  <!-- GHSA-v5pm-xwqc-g5wc: Microsoft.OpenApi 2.x is vulnerable, but 3.x has breaking API changes
+       that break Microsoft.AspNetCore.OpenApi's source generator. OpenAPI is dev-only (MapOpenApi
+       is gated to IsDevelopment), so this suppressed until MSFT ships a compatible update. -->
+  <ItemGroup>
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-v5pm-xwqc-g5wc" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
