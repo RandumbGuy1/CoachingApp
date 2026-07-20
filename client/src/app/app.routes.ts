@@ -7,6 +7,7 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/landing/landing').then(m => m.LandingPage) },
   { path: 'login', loadComponent: () => import('./features/login/login').then(m => m.LoginPage), canActivate: [requireLogin(false)] },
   { path: 'register', loadComponent: () => import('./features/registration/register').then(m => m.RegisterPage), canActivate: [requireLogin(false)] },
+  { path: 'callback', loadComponent: () => import('./features/callback/callback').then(m => m.CallbackPage) },
   { path: 'settings', loadComponent: () => import('./features/settings/settings').then(m => m.SettingsPage), canActivate: [requireLogin(true)]},
   { path: 'info', loadComponent: () => import('./features/info/info').then(m => m.InfoPage), canActivate: [requireLogin(true)]},
 
