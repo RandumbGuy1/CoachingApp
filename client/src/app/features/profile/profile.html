@@ -18,25 +18,25 @@
         <div class="relative shrink-0">
           <app-user-avatar
             [username]="userStore.getUser()?.username ?? ''"
-            [avatarUrl]="previewUrl || request.avatarUrl"
+            [avatarUrl]="previewUrl || profileRequest.avatarUrl"
             size="lg"
           />
           <label
             for="avatar"
-            class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-site-accent flex items-center justify-center cursor-pointer hover:brightness-110 transition text-site-text text-base leading-none font-bold"
+            class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-site-accent flex items-center justify-center cursor-pointer hover:brightness-90 transition text-site-text text-base leading-none font-bold"
           >+</label>
           <input id="avatar" type="file" class="hidden" (change)="onFileSelected($event)" />
         </div>
         <div class="flex flex-col gap-2 flex-1">
           <input
-            [(ngModel)]="request.firstName"
+            [(ngModel)]="profileRequest.firstName"
             name="firstName"
             type="text"
             placeholder="First Name"
             class="glass-input"
           />
           <input
-            [(ngModel)]="request.lastName"
+            [(ngModel)]="profileRequest.lastName"
             name="lastName"
             type="text"
             placeholder="Last Name"
@@ -49,7 +49,7 @@
       <div class="flex flex-col gap-1.5">
         <label class="text-xs text-site-text-secondary">Bio</label>
         <textarea
-          [(ngModel)]="request.bio"
+          [(ngModel)]="profileRequest.bio"
           name="bio"
           rows="4"
           placeholder="Tell us about yourself..."
@@ -61,7 +61,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <p-select
           class="w-full"
-          [(ngModel)]="request.gender"
+          [(ngModel)]="profileRequest.gender"
           name="gender"
           [options]="genderOptions"
           optionLabel="label"
@@ -70,7 +70,7 @@
         />
         <p-select
           class="w-full"
-          [(ngModel)]="request.region"
+          [(ngModel)]="profileRequest.region"
           name="region"
           [options]="regionOptions"
           optionLabel="label"
@@ -79,7 +79,7 @@
         />
         <p-select
           class="w-full"
-          [(ngModel)]="request.theme"
+          [(ngModel)]="profileRequest.theme"
           name="theme"
           [options]="themeOptions"
           optionLabel="label"
@@ -94,7 +94,7 @@
           <span class="text-sm text-site-text">Email Notifications</span>
           <span class="text-xs text-site-text-dim">Receive updates and alerts by email</span>
         </div>
-        <p-toggleswitch [(ngModel)]="request.receiveEmailNotifications" name="notifications" />
+        <p-toggleswitch [(ngModel)]="profileRequest.receiveEmailNotifications" name="notifications" />
       </div>
 
       @if (error) {
@@ -103,7 +103,7 @@
 
       <button
         (click)="saveProfile()"
-        class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-110 transition text-sm"
+        class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-90 transition text-sm"
       >
         Save Profile
       </button>
@@ -116,22 +116,15 @@
       <h2 class="text-xs font-bold text-site-accent uppercase tracking-widest">Account</h2>
 
       <input
-        [(ngModel)]="requestUser.username"
+        [(ngModel)]="userRequest.username"
         name="username"
         type="text"
         placeholder="Username"
         class="glass-input"
       />
-      <input
-        [(ngModel)]="requestUser.email"
-        name="email"
-        type="email"
-        placeholder="Email"
-        class="glass-input"
-      />
       <p-select
         class="w-full"
-        [(ngModel)]="requestUser.tier"
+        [(ngModel)]="userRequest.tier"
         name="tier"
         [options]="tierOptions"
         optionLabel="label"
@@ -139,37 +132,13 @@
         placeholder="Tier"
       />
 
-      <div class="flex flex-col gap-3 pt-3 border-t border-site-border/50">
-        <p class="text-xs font-bold text-site-accent uppercase tracking-widest">Change Password</p>
-        <input
-          [(ngModel)]="newPassword"
-          name="newPassword"
-          type="password"
-          placeholder="New Password"
-          class="glass-input"
-        />
-        <input
-          [(ngModel)]="requestUser.currentPassword"
-          name="currentPassword"
-          type="password"
-          placeholder="Current Password"
-          class="glass-input"
-        />
-        <button
-          (click)="onChangePasswordModalOpen()"
-          class="text-xs text-site-text-dim hover:text-site-text-secondary transition text-left"
-        >
-          ← Forgot password?
-        </button>
-      </div>
-
       @if (errorUser) {
         <p class="text-sm text-warning">{{ errorUser }}</p>
       }
 
       <button
         (click)="saveUser()"
-        class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-110 transition text-sm mt-auto"
+        class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-90 transition text-sm mt-auto"
       >
         Save Account
       </button>

@@ -9,31 +9,36 @@
 
   <!-- NAV -->
   <nav
-    class="sticky top-0 z-20 flex justify-between items-center px-6 md:px-10 py-4 border-b border-site-border/40"
+    class="sticky top-0 z-20 flex justify-between items-center px-6 py-4 border-b border-site-border/40"
     style="background: rgba(8, 9, 24, 0.85); backdrop-filter: blur(12px);"
   >
     <div class="flex items-center gap-2">
-      @if (userStore.user$ | async; as user) {
-        <app-navigation-widget variant="inline"></app-navigation-widget>
-      } 
-      @else {
+      @if (!(userStore.user$ | async)) {
         <button
-          (click)="router.navigate(['/login'])"
+          (click)="signInWithWorkOS()"
+          [disabled]="isWorkOSLoading"
           class="text-sm text-site-text-secondary hover:text-site-text transition px-3 py-1.5"
         >
           Log in
+
+          @if (isWorkOSLoading) {
+            <span class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+          }
         </button>
         <button
-          (click)="router.navigate(['/register'])"
-          class="text-sm bg-site-accent text-site-text font-bold px-4 py-1.5 rounded-lg hover:brightness-110 transition"
+          (click)="signUpWithWorkOS()"
+          [disabled]="isWorkOSLoading"
+          class="text-sm bg-site-accent text-site-text font-bold px-4 py-1.5 rounded-lg hover:brightness-90 transition"
         >
           Get Started
         </button>
       }
-      
+
+      <!-- Shopping Cart Button (Margin when logged in) -->
       <button
         (click)="cartOpen = true"
         class="relative p-2 text-site-text-dim hover:text-site-text transition rounded-lg hover:bg-site-surface"
+        [class.ml-10]="userStore.user$ | async"
       >
         <svg
           class="w-5 h-5"
@@ -78,7 +83,7 @@
     <div class="flex flex-col items-center gap-3">
       <button
         (click)="scrollTo('pricing')"
-        class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-110 transition text-sm"
+        class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-90 transition text-sm"
       >
         Apply for Coaching
       </button>
@@ -192,7 +197,7 @@
             } @else {
               <button
                 (click)="addToCart(featuredProduct)"
-                class="px-5 py-2.5 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-110 transition"
+                class="px-5 py-2.5 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-90 transition"
               >
                 Add to Cart
               </button>
@@ -232,7 +237,7 @@
                 } @else {
                   <button
                     (click)="addToCart(product)"
-                    class="text-xs px-3 py-1.5 rounded-lg bg-site-accent text-site-text font-bold hover:brightness-110 transition"
+                    class="text-xs px-3 py-1.5 rounded-lg bg-site-accent text-site-text font-bold hover:brightness-90 transition"
                   >
                     Add to Cart
                   </button>
@@ -372,7 +377,7 @@
         } @else {
           <button
             (click)="addToCart(coachingProduct)"
-            class="w-full py-3 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-110 transition"
+            class="w-full py-3 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-90 transition"
           >
             Apply for Coaching
           </button>
@@ -407,7 +412,7 @@
             placeholder="your@email.com"
             class="glass-input flex-1"
           />
-          <button class="bg-site-accent text-site-text text-sm font-bold px-4 py-2 rounded-lg hover:brightness-110 transition whitespace-nowrap">
+          <button class="bg-site-accent text-site-text text-sm font-bold px-4 py-2 rounded-lg hover:brightness-90 transition whitespace-nowrap">
             Send me the trial
           </button>
         </div>
@@ -472,7 +477,7 @@
       </p>
       <button
         (click)="scrollTo('coaching')"
-        class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-110 transition"
+        class="bg-site-accent text-site-text font-bold px-8 py-3 rounded-xl hover:brightness-90 transition"
       >
         Learn About 1-1 Coaching
       </button>

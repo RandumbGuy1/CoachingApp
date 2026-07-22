@@ -64,11 +64,6 @@ Open a new Terminal Window
   dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=localhost,1433;Initial Catalog=CoachDb;User ID=SA;Password=R85ae0a06!;Trust Server Certificate=True;MultipleActiveResultSets=True;'
 ```
 
-- Also make sure to create an atleast 32 character long JWT key
-```bash
-  dotnet user-secrets set "Jwt:Key" "<YourJwtKey>"
-```
-
 - Set the WorkOS API key (get this from the WorkOS Dashboard)
 ```bash
   dotnet user-secrets set "WorkOS:ApiKey" "<YourWorkOSApiKey>"

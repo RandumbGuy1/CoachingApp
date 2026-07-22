@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WorkOSService } from '../../core/auth/workos.service';
+import { UserService } from '../../core/services/user.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-callback',
@@ -12,26 +14,26 @@ import { WorkOSService } from '../../core/auth/workos.service';
       </div>
     </div>
   `,
-  standalone: true,
 })
 export class CallbackPage implements OnInit {
   constructor(
     private workosService: WorkOSService,
+    private userService: UserService,
     private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
     try {
-      // Handle the OAuth callback
       const user = await this.workosService.handleCallback();
-
-      if (user) {
-        // Successfully authenticated - redirect to dashboard
-        this.router.navigate(['/dashboard']);
-      } else {
-        // No user found - redirect to login
+      if (!user) {
         this.router.navigate(['/login']);
+        return;
       }
+
+      await firstValueFrom(this.userService.getCurrentUser());
+      await firstValueFrom(this.userService.getUserProfile());
+
+      this.router.navigate(['/dashboard']);
     } catch (error) {
       console.error('Callback handling failed:', error);
       this.router.navigate(['/login']);

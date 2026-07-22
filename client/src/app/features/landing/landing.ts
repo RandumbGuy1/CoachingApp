@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, ViewChildren, QueryList, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,11 +8,11 @@ import { CartService } from '../../core/services/cart.service';
 import { CartComponent } from '../../shared/components/cart/cart.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { UserTier } from '../../core/enums/user-tier.enum';
-import { NavigationWidget } from '../../core/layout/navigation-bar/navigation-widget.component';
+import { WorkOSService } from '../../core/auth/workos.service';
 
 @Component({
   selector: 'app-landing',
-  imports: [AsyncPipe, FormsModule, CartComponent, NavigationWidget],
+  imports: [AsyncPipe, FormsModule, CartComponent],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
@@ -211,13 +211,51 @@ export class LandingPage {
   // - Add a "My Account" page where users can view their current subscription, change their password, and update their profile info
   // - Use entitlement data as an extra authentication layer to prevent users from accessing programs they haven't purchased
 
+  isWorkOSLoading = false;
+
   constructor(
     public router: Router,
     public userStore: UserStore,
     public cart: CartService,
     private authService: AuthService,
     private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef,
+    private workosService: WorkOSService,
   ) {}
+
+  async signInWithWorkOS() {
+    this.isWorkOSLoading = true;
+    this.cdr.detectChanges();
+
+    try {
+      await this.workosService.signIn();
+
+      const user = this.workosService.getUser();
+      if (user) this.router.navigate(['/dashboard']);
+    } catch (err: any) {
+      this.cdr.detectChanges();
+    } finally {
+      this.isWorkOSLoading = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async signUpWithWorkOS() {
+    this.isWorkOSLoading = true;
+    this.cdr.detectChanges();
+
+    try {
+      await this.workosService.signUp();
+
+      const user = this.workosService.getUser();
+      if (user) this.router.navigate(['/dashboard']);
+    } catch (err: any) {
+      this.cdr.detectChanges();
+    } finally {
+      this.isWorkOSLoading = false;
+      this.cdr.detectChanges();
+    }
+  }
 
   logout(): void {
     this.authService.logout();

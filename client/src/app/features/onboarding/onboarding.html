@@ -1,0 +1,61 @@
+<div class="noise-layer"></div>
+
+<div class="relative flex items-center justify-center min-h-full w-full overflow-hidden">
+  <div class="blob blob-login"></div>
+
+  <div class="relative z-10 flex flex-col items-center gap-5 w-full max-w-sm px-4">
+    <div class="glass-card rounded-2xl p-8 w-full flex flex-col gap-4">
+      <div class="flex flex-col gap-1 text-center mb-1">
+        <h1 class="text-2xl font-bold text-site-text">Welcome!</h1>
+        <p class="text-sm text-site-text-secondary">Let's finish setting up your account</p>
+      </div>
+
+      @if (error) {
+        <p class="text-warning text-sm font-mono text-center -mt-1">{{ error }}</p>
+      }
+
+      <input
+        [(ngModel)]="userRequest.username"
+        name="username"
+        type="text"
+        placeholder="Username"
+        class="glass-input"
+      />
+      <p-select
+        class="w-full"
+        [(ngModel)]="profileRequest.gender"
+        name="gender"
+        [options]="genderOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Gender"
+      />
+      <p-select
+        class="w-full"
+        [(ngModel)]="profileRequest.region"
+        name="region"
+        [options]="regionOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Region"
+      />
+      <p-select
+        class="w-full"
+        [(ngModel)]="userRequest.tier"
+        name="tier"
+        [options]="tierOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Tier"
+      />
+
+      <button
+        type="button"
+        (click)="complete()"
+        class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-90 transition mt-1"
+      >
+        Complete Setup
+      </button>
+    </div>
+  </div>
+</div>

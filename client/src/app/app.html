@@ -1,7 +1,6 @@
 <div class="flex h-screen w-screen overflow-hidden">
 
   @if (showNavigation$ | async) {
-    <!-- <app-navigation-bar [collapsed]="collapsed"></app-navigation-bar> -->
     <app-navigation-widget position="fixed"></app-navigation-widget>
   }
 
@@ -11,19 +10,6 @@
 
   @if (showMemberships$ | async) {
     <app-group-selector></app-group-selector>
-
-    <!--
-    <button
-      class="absolute bottom-4 transition-all duration-300 bg-base-700 text-white p-3 rounded-full shadow-lg hover:bg-gray-700"
-      [class.left-25]="collapsed"
-      [class.left-70]="!collapsed"
-      (click)="collapsed = !collapsed"
-    >
-      <img [src]="collapsed ? openIconUrl : closedIconUrl" class="w-[20px] h-[20px]">
-    </button>
-    -->
   }
 
 </div>
-
-<app-forgot-password-modal></app-forgot-password-modal>

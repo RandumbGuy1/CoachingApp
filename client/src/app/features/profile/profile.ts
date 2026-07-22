@@ -12,7 +12,6 @@ import { UserStore } from '../../core/store/user.store';
 import { SaveUserRequest } from '../../core/api/requests/save-user.request';
 import { TIER_OPTIONS } from '../../core/enums/user-tier.enum';
 import { AuthService } from '../../core/auth/auth.service';
-import { ForgotPasswordModalService } from '../../core/services/forgot-password-modal.service';
 import { UserAvatarComponent } from '../../shared/components/user-avatar/user-avatar.component';
 
 @Component({
@@ -22,15 +21,14 @@ import { UserAvatarComponent } from '../../shared/components/user-avatar/user-av
   styleUrl: './profile.scss',
 })
 export class ProfilePage {
-  request: SaveProfileRequest = {};
+  profileRequest: SaveProfileRequest = {};
   selectedImage: File | null = null;
   previewUrl: string | null = null;
 
   error: string = '';
   errorUser: string = '';
 
-  requestUser: SaveUserRequest = { currentPassword: '' };
-  newPassword: string = '';
+  userRequest: SaveUserRequest = { };
 
   genderOptions = GENDER_OPTIONS;
   regionOptions = REGION_OPTIONS;
@@ -42,12 +40,11 @@ export class ProfilePage {
     private authService: AuthService,
     public userStore: UserStore,
     private cdr: ChangeDetectorRef,
-    private forgotPasswordModal: ForgotPasswordModalService,
   ) {}
 
   ngOnInit() {
     this.userStore.profile$.subscribe(profile => {
-      this.request = {
+      this.profileRequest = {
         avatarUrl: profile?.avatarUrl,
         firstName: profile?.firstName,
         lastName: profile?.lastName,
@@ -60,10 +57,8 @@ export class ProfilePage {
     });
 
     this.userStore.user$.subscribe(user => {
-      this.requestUser = {
-        currentPassword: '',
+      this.userRequest = {
         username: user?.username,
-        email: user?.email,
         tier: user?.tier,
       };
     });
@@ -71,7 +66,7 @@ export class ProfilePage {
 
   saveProfile() {
     this.error = '';
-    this.userService.saveProfileAndAvatar(this.request, this.selectedImage).subscribe({
+    this.userService.saveProfileAndAvatar(this.profileRequest, this.selectedImage).subscribe({
       next: () => this.selectedImage = null,
       error: (err: HttpErrorResponse) => {
         this.error = err.error || err.message || 'Failed to save profile.';
@@ -82,21 +77,13 @@ export class ProfilePage {
 
   saveUser() {
     this.errorUser = '';
-    this.requestUser.newPassword = this.newPassword;
-    this.authService.saveUser(this.requestUser).subscribe({
-      next: () => {
-        this.requestUser.currentPassword = '',
-        this.newPassword = '';
-      },
+    this.authService.saveUser(this.userRequest).subscribe({
+      next: () => { },
       error: (err: HttpErrorResponse) => {
         this.errorUser = err.error || err.message || 'Failed to save user.';
         this.cdr.detectChanges();
       },
     });
-  }
-
-  onChangePasswordModalOpen() {
-    this.forgotPasswordModal.open();
   }
 
   onFileSelected(event: Event) {
@@ -108,7 +95,7 @@ export class ProfilePage {
     }
 
     this.selectedImage = input.files[0];
-    this.request.avatarUrl = this.selectedImage.name;
+    this.profileRequest.avatarUrl = this.selectedImage.name;
     this.previewUrl = URL.createObjectURL(this.selectedImage);
   }
 }

@@ -61,7 +61,7 @@ out/
 *.sln.docstates
 
 # Ignore user-uploaded content
-api/wwwroot/avatars/
+backend/wwwroot/avatars/
 
 # Visual Studio cache
 .vs/

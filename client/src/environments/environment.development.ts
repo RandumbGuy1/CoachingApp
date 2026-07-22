@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:5268/api',
-  workosClientId: 'client_01KY0QZXYSYC8Z2PA9MZR3HMDK',
+  workosClientId: 'client_01KY03BHZ7B0HBK9JBFFXDYW5K',
   workosRedirectUri: 'http://localhost:4200/callback'
 };

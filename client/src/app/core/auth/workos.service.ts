@@ -73,6 +73,26 @@ export class WorkOSService {
   }
 
   /**
+   * Trigger sign up via WorkOS AuthKit, landing directly on the sign-up screen
+   * Must be called from a user gesture (click handler)
+   */
+  async signUp(): Promise<void> {
+    if (!this.client) {
+      console.error('WorkOS client not initialized');
+      return;
+    }
+
+    try {
+      await this.client.signUp();
+      const user = this.client.getUser();
+      this.workosUser$.next(user);
+    } catch (error) {
+      console.error('WorkOS sign up failed:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Sign out from WorkOS
    */
   async signOut(): Promise<void> {

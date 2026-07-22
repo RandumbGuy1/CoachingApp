@@ -19,71 +19,17 @@
         <p class="text-warning text-sm font-mono text-center -mt-1">{{ error }}</p>
       }
 
-      <form (ngSubmit)="login()" class="flex flex-col gap-3">
-        <input
-          [(ngModel)]="identifier"
-          name="identifier"
-          type="text"
-          placeholder="Username or Email"
-          autocomplete="username"
-          class="glass-input"
-          id="identifier"
-        />
-
-        <input
-          [(ngModel)]="password"
-          name="password"
-          type="password"
-          placeholder="Password"
-          autocomplete="current-password"
-          class="glass-input"
-          id="password"
-        />
-
-        <button
-          type="submit"
-          class="w-full bg-site-accent text-site-text font-bold py-2.5 rounded-lg hover:brightness-110 transition mt-1"
-        >
-          Sign In
-        </button>
-
-        <button
-          type="button"
-          (click)="forgotPasswordModal.open()"
-          class="text-sm text-site-text-dim hover:text-site-text-secondary transition text-center w-full"
-        >
-          Forgot your password?
-        </button>
-      </form>
-
-      <div class="flex items-center gap-3 my-2">
-        <div class="flex-1 border-t border-site-border"></div>
-        <span class="text-sm text-site-text-dim">or</span>
-        <div class="flex-1 border-t border-site-border"></div>
-      </div>
-
       <button
         type="button"
         (click)="signInWithWorkOS()"
         [disabled]="isWorkOSLoading"
-        class="w-full bg-[#6363f1] text-white font-bold py-2.5 rounded-lg hover:brightness-110 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full bg-[#6363f1] text-white font-bold py-2.5 rounded-lg hover:brightness-90 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         @if (isWorkOSLoading) {
           <span class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
         }
         Sign in with WorkOS
       </button>
-
-      <div class="border-t border-site-border pt-4 text-center">
-        <span class="text-sm text-site-text-secondary">Don't have an account? </span>
-        <button
-          (click)="router.navigate(['/register'])"
-          class="text-sm font-bold text-site-accent hover:text-site-text-secondary transition"
-        >
-          Register
-        </button>
-      </div>
-
     </div>
 
     <button
