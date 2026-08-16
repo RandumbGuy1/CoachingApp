@@ -15,6 +15,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<WorkoutSet> WorkoutSets => Set<WorkoutSet>();
     public DbSet<GroupMembership> Memberships => Set<GroupMembership>();
     public DbSet<JoinRequest> PendingMemberships => Set<JoinRequest>();
+    public DbSet<UserEntitlement> UserEntitlements => Set<UserEntitlement>();
+    public DbSet<ProcessedStripeEvent> ProcessedStripeEvents => Set<ProcessedStripeEvent>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +30,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.ApplyConfiguration(new ProfileConfiguration());
         modelBuilder.ApplyConfiguration(new MembershipConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new ProcessedStripeEventConfiguration());
     }
 }
 

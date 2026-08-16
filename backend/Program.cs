@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using WorkOS;
+
+using CheckoutService = CoachApi.Application.Services.CheckoutService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +24,22 @@ var workOsClientId = builder.Configuration["WorkOS:ClientId"]
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Database connection string not configured");
 
+var stripeApiKey = builder.Configuration["Stripe:ApiKey"]
+    ?? throw new InvalidOperationException("Stripe API key not configured");
+
+var stripeWebhookSecret = builder.Configuration["Stripe:WebhookSecret"]
+    ?? throw new InvalidOperationException("Stripe webhook secret not configured");
+
 // WorkOS SDK client, used both for JIT user provisioning and available for any future WorkOS API calls
 builder.Services.AddSingleton(new WorkOSClient(new WorkOSOptions
 {
     ApiKey = workOsApiKey,
     ClientId = workOsClientId
 }));
+
+// Stripe SDK client, used for checkout sessions, webhook event lookups, and catalog price resolution
+builder.Services.AddSingleton(new StripeClient(stripeApiKey));
+builder.Services.AddSingleton<StripeCatalogService>();
 
 // Authentication & Authorization
 var jwksConfigManager = new ConfigurationManager<JsonWebKeySet>(
@@ -75,6 +88,9 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<GroupService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<MembershipService>();
+builder.Services.AddScoped<CheckoutService>();
+builder.Services.AddScoped<EntitlementService>();
+builder.Services.AddScoped<StripeWebhookService>();
 
 // Controllers
 builder.Services.AddControllers()

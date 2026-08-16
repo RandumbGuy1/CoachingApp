@@ -69,6 +69,12 @@ Open a new Terminal Window
   dotnet user-secrets set "WorkOS:ApiKey" "<YourWorkOSApiKey>"
 ```
 
+- Set the Stripe API key and Webhook Secret (get this from the Stripe Dashboard)
+```bash
+  dotnet user-secrets set "Stripe:ApiKey" "<YourStripeApiKey>"
+  dotnet user-secrets set "Stripe:WebhookSecret" "<YourStripeWebhookSecret>"
+```
+
 NOTE: The WorkOS Client ID is not a secret (it's public, like an OAuth client ID) and is already committed in `client/src/environments/environment.ts` / `environment.development.ts` / `environment.production.ts`, and in `backend/appsettings.json` under `WorkOS:ClientId`. No setup step needed for it.
 
 ## Daily Development

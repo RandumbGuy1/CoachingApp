@@ -8,6 +8,7 @@ public class User
     public required string Username { get; set; }
     public required string Email { get; set; }
     public required string WorkOSUserId { get; set; }
+    public string? StripeCustomerId { get; set; }
 
     //Permissions
     public required UserTier Tier { get; set; }
