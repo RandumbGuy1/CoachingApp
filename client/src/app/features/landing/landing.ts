@@ -25,13 +25,12 @@ export class LandingPage {
   faqOpen: number | null = null;
   trialEmail = '';
 
-  // Set a YouTube video ID here to show the embed on the hero (leave empty to hide)
-  heroVideoId = 'XVSdHPxObt8';
-
   get heroVideoUrl(): SafeResourceUrl | null {
-    if (!this.heroVideoId) return null;
+    const heroVideoId = 'XVSdHPxObt8'; // Set a YouTube video ID here to show the embed on the hero (leave empty to hide)
+    if (!heroVideoId) return null;
+
     return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://www.youtube.com/embed/${this.heroVideoId}?rel=0&modestbranding=1`
+      `https://www.youtube.com/embed/${heroVideoId}?rel=0&modestbranding=1`
     );
   }
 
@@ -60,12 +59,12 @@ export class LandingPage {
 
   prevImage(): void {
     this.pauseCurrentVideo();
-    this.aboutImageIndex = (this.aboutImageIndex - 1 + this.aboutItems.length) % this.aboutItems.length; 
+    this.aboutImageIndex = (this.aboutImageIndex - 1 + this.aboutItems.length) % this.aboutItems.length;
   }
 
   nextImage(): void {
     this.pauseCurrentVideo();
-    this.aboutImageIndex = (this.aboutImageIndex + 1) % this.aboutItems.length; 
+    this.aboutImageIndex = (this.aboutImageIndex + 1) % this.aboutItems.length;
   }
 
   goToSlide(i: number): void {
@@ -77,139 +76,127 @@ export class LandingPage {
     id: 'coaching',
     name: "Randumb's 1-1 Coaching",
     badge: 'Most Return',
-    price: 99,
-    description: 'Month to month. Cancel whenever you want.',
+    price: 199,
+    description: '3 Months of Coaching. Cancel whenever you want.',
+    includes: [
+      'Jump Start serves as the initial setup',
+      'Weekly 30 minute checkup calls and protocol updates based on progress',
+      'Progress in all metrics tracked extensively',
+      '24/7 text support and form checks',
+    ],
+    bonuses: [
+      'Free access to my Programming and Hydration E-books.',
+      'I MAKE videos based on your questions',
+      'Exclusive video and early video access',
+    ]
   }
 
-  featuredProduct: Product = {
+  secondaryProduct: Product = {
     id: 'jump-start',
-    name: "Randumb's Jump Start",
+    name: "Jump Start",
     badge: 'Most Value',
-    price: 68.99,
+    price: 29.99,
     description:
-      'All five tools in one package plus a 20-minute setup call. We go through your info together, get everything configured for your situation, and you leave knowing exactly how to use each system.',
+      'A 30 minute consultation call following every step I onboard my clients with to set you up to win.' +
+      'Additionally, this sets you up perfectly to also work 1-1 with me if you like what you see.',
     includes: [
-      "Get Ready System: Generates a warmup plan built around what you're training that day.",
-      'Power Program System: Generates a full lifting program based on your info and goals.',
-      'Progression Engine: Tells you exactly what to do next for each exercise.',
-      'Macro Maker System: Generates meal plans around your goals. (coming soon)',
-      'Body Restoration System: Generates a recovery and rehab plan based on your body. (coming soon)',
-      '20-min 1-1 setup call with John (within 48 hrs of purchase)',
+      '30-min 1-1 setup call with me (within 48 hrs of purchase)',
+      'Full rewrite/revision of your workout program',
+      'Structured diet approach and actionable steps for improving sleep',
+      'Any other Q/A required',
+      'Use of premium tooling to create as detailed of iterations as possible',
+      'Discount of $30 off my 1-1 coching package'
     ],
+    bonuses: [
+      'Free access to my Programming and Hydration E-books.'
+    ]
   };
-
-  pairProducts: Product[] = [
-    {
-      id: 'build-program',
-      name: 'Build Your Program',
-      price: 34.99,
-      guide: 'The Program Manual: How to build a lifting program from scratch. Progressive overload, exercise selection, rep ranges, intensity, and long-term planning.',
-      system: 'Power Program: Input your goals, schedule, and equipment. The system builds the program.',
-    },
-    {
-      id: 'nail-nutrition',
-      name: 'Nail Your Nutrition',
-      price: 34.99,
-      comingSoon: true,
-      guide: 'The Hydration x Supplement Manual: What to take, what to skip, how much water actually matters.',
-      system: 'Macro Maker: Generates a meal plan around your goals and current eating habits. (coming soon)',
-    },
-    {
-      id: 'fix-recovery',
-      name: 'Fix Your Recovery',
-      price: 19.99,
-      comingSoon: true,
-      guide: "The Sleep Manual: How to fix a broken sleep schedule, what's worth trying, and what's bullshit.",
-      system: 'Body Restoration: Generates a recovery and rehab plan based on what your body needs. (coming soon)',
-    },
-  ];
 
   features = [
     {
-      title: '24/7 Text Access',
-      description:
-        'Message me whenever something comes up. Form question, schedule issue, something feels off. I respond same day, usually faster.',
+      title: 'Jump Start',
+      description: "Jump Start serves as the initial setup to get you ready ASAP.",
+    },
+    {
+      title: '24/7 Text Access + Form Checks',
+      description: "Message me whenever something comes up. Form question, schedule issue, something feels off. I respond same day, usually faster.",
     },
     {
       title: 'Weekly 30-Min Call',
-      description:
-        'One call per week to go over your numbers and adjust whatever needs adjusting. Scheduled around your week.',
+      description: "We meet up and discuss data. The plan changes when your data says it should. That's the whole point.",
     },
     {
       title: 'Training Plan Built for You',
-      description:
-        "Built around your equipment, schedule, and starting point. Not a template with your name on it.",
+      description: "Built around your equipment, schedule, and starting point. Not just a copy and pasted template.",
     },
     {
-      title: 'Diet and Sleep Action Steps',
-      description:
-        "Not a meal plan, those don't stick. Simple, practical changes based on where you're actually at right now.",
-    },
-    {
-      title: 'Weekly Adjustments',
-      description: "The plan changes when your data says it should. That's the whole point.",
+      title: 'Actionable Steps for Diet and Sleep',
+      description: "Simple, practical changes based on where you're actually at right now.",
     },
     {
       title: 'No Guesswork',
-      description:
-        "You know what you're doing, why you're doing it, and what to change if it stops working.",
+      description: "You know what you're doing, why you're doing it, and what to change if it stops working.",
     },
   ];
 
   steps = [
     {
       title: 'Apply',
-      description: 'Short questionaire, tells me your schedule, equipment, goals, and history. Takes 5 minutes.',
+      description: 'Purchase either the program or Jump start and you will then need to fill out an intake form so I can get to know you better.',
     },
     {
-      title: 'Get your plan',
-      description:
-        "I send you your training plan and action steps for diet and sleep. We start from where you are, not where you wish you were.",
+      title: 'Schedule',
+      description: 'Schedule your 30 minute onboarding call online whenever is convenient for you.',
+    },
+    {
+      title: 'Setup',
+      description: "We lock in your training plan, diet, and sleep strategy, nothing left behind. You can access the bonus E-books afterward.",
     },
     {
       title: 'Track, check in, adjust',
-      description:
-        "You log your workouts, we talk weekly, and the plan gets updated based on what the data shows. Not vibes. Not random changes.",
+      description: "You log your workouts and record sets, we talk weekly, and the plan gets updated as needed to keep you progressing. No guesswork.",
     },
   ];
 
   faqs = [
     {
-      q: 'Do I need to already be going to the gym?',
-      a: 'No. We figure out what you have access to and go from there.',
+      q: "Are there refunds?",
+      a: "For 1-1 coaching, if you cancel within the first 30 days, you get a full refund. Following that period there are NO refunds. You can cancel anytime.",
+    },
+    {
+      q: "What about jump start?",
+      a: "If you cancel atleast a day before our call then you will be fully refunded.",
+    },
+    {
+      q: "How can I cancel?",
+      a: "It's very easy, just complete the anonymous cancellation form provided to you and you will receive the cancellation link once that's completed.",
+    },
+    {
+      q: "Are there any trial runs?",
+      a: "The Jump Start program is the closest thing to a trial run. It gives you a taste of what working with me is like and sets you up for success if you choose to continue.",
+    },
+    {
+      q: "What if I have a question or something comes up?",
+      a: "You can message me anytime and I will respond same day, usually faster.",
+    },
+    {
+      q: "What if I don't have a gym or equipment?",
+      a: "I can build a plan around whatever you have access to. No gym? No problem. No equipment? No problem.",
     },
     {
       q: 'How much time does this actually take per week?',
-      a: "Workouts run 45–75 minutes depending on where you're at. Beyond that it's a few minutes logging your sessions and the weekly call. That's it.",
+      a: "However much time we need. I've used as little as 10 minute sessions 3x a week." +
+      "Beyond that it's a few minutes logging your sessions and the weekly call. That's it.",
     },
     {
-      q: 'Why no meal plan?',
-      a: "Because meal plans almost never stick. You get realistic action steps based on your current habits, and we build from there over time.",
-    },
-    {
-      q: 'What if my schedule is unpredictable or I travel a lot?',
+      q: 'What if my schedule is unpredictable as hell?',
       a: "That's the kind of thing we handle upfront. The plan is built around your actual life.",
     },
     {
       q: "How do I know if I'm a good fit?",
       a: "If you're willing to track your workouts, follow the plan, and actually tell me when something isn't working, you'll do fine. If you want someone to just validate whatever you're already doing, this isn't the right fit.",
     },
-    {
-      q: "Are there refunds?",
-      a: "If you cancel within the first 30 days, you get a full refund. After that, no refunds. You can cancel anytime.",
-    },
-    {
-      q: "How can I cancel?",
-      a: "Just complete the annonymous form that will be provided. Basically lets me know why you want to cancel and what I can do better, then you get the cancel link.",
-    },
   ];
-
-  //TODO:
-  // - Hook up the shopping cart to the user backend so that it persists across sessions and devices
-  // - Create first draft of buying programs with a checkout page and Stripe integration
-  // - Hook up user entitelements to the backend so that users can only access the programs they have purchased
-  // - Add a "My Account" page where users can view their current subscription, change their password, and update their profile info
-  // - Use entitlement data as an extra authentication layer to prevent users from accessing programs they haven't purchased
 
   isWorkOSLoading = false;
 

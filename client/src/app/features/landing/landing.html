@@ -87,7 +87,7 @@
       >
         Apply for Coaching
       </button>
-      <p class="text-xs text-site-text-dim">Limited spots. Month to month, cancel whenever.</p>
+      <p class="text-xs text-site-text-dim">Limited spots. Cancel whenever you want.</p>
     </div>
 
     @if (heroVideoUrl) {
@@ -146,19 +146,19 @@
     </div>
   </section>
 
-  <!-- PRODUCTS / STORE -->
+  <!-- JUMP START -->
   <section id="products" class="py-20 px-6 border-t border-site-border/30">
     <div class="max-w-5xl mx-auto flex flex-col gap-12">
 
       <div class="flex flex-col items-center text-center gap-2">
-        <h2 class="text-2xl md:text-3xl font-bold text-site-text">Tools and resources from Randumb Fitness.</h2>
-        <p class="text-site-text-secondary text-sm">Built on the same methods I use with coaching clients.</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-site-text">Not ready for full coaching? Start here.</h2>
+        <p class="text-site-text-secondary text-sm">The exact setup I run every coaching client through, as a one-off.</p>
       </div>
 
       <!-- Coaching callout strip -->
       <div class="glass-card rounded-xl px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
         <p class="text-sm text-site-text-secondary">
-          Want a plan built specifically around you? That's what 1-1 coaching is for.
+          Want me in your corner every week? That's what 1-1 coaching is for.
         </p>
         <button
           (click)="scrollTo('coaching')"
@@ -168,83 +168,54 @@
         </button>
       </div>
 
-      <!-- Featured: Jump Start -->
+      <!-- Jump Start -->
       <div class="glass-card rounded-2xl p-7 md:p-8 ring-1 ring-site-accent/30">
         <div class="flex flex-col lg:flex-row gap-8">
           <div class="flex-1">
             <div class="flex flex-wrap items-center gap-3 mb-3">
-              <h3 class="text-xl font-bold text-site-text">{{ featuredProduct.name }}</h3>
+              <h3 class="text-xl font-bold text-site-text">{{ secondaryProduct.name }}</h3>
               <span class="text-xs bg-site-accent/20 text-site-accent border border-site-accent/30 px-2.5 py-0.5 rounded-full font-bold">
-                {{ featuredProduct.badge }}
+                {{ secondaryProduct.badge }}
               </span>
             </div>
-            <p class="text-sm text-site-text-secondary leading-relaxed mb-5">{{ featuredProduct.description }}</p>
+            <p class="text-sm text-site-text-secondary leading-relaxed mb-5">{{ secondaryProduct.description }}</p>
             <ul class="flex flex-col gap-2">
-              @for (item of featuredProduct.includes!; track $index) {
+              @for (item of secondaryProduct.includes!; track $index) {
                 <li class="flex gap-2 text-sm text-site-text-secondary">
                   <span class="text-site-accent mt-0.5 shrink-0">✓</span>
                   <span>{{ item }}</span>
                 </li>
               }
             </ul>
+            @if (secondaryProduct.bonuses?.length) {
+              <div class="mt-5 pt-5 border-t border-site-border/50">
+                <p class="text-xs font-bold tracking-widest text-site-accent uppercase mb-3">Bonuses</p>
+                <ul class="flex flex-col gap-2">
+                  @for (bonus of secondaryProduct.bonuses!; track $index) {
+                    <li class="flex gap-2 text-sm text-site-text-secondary">
+                      <span class="text-site-accent mt-0.5 shrink-0">★</span>
+                      <span>{{ bonus }}</span>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
           </div>
           <div class="flex flex-col items-start lg:items-end justify-between gap-5 lg:min-w-[9rem]">
-            <div class="text-4xl font-bold text-site-text font-mono">${{ featuredProduct.price }}</div>
-            @if (cart.isInCart(featuredProduct.id)) {
+            <div class="text-4xl font-bold text-site-text font-mono">${{ secondaryProduct.price }}</div>
+            @if (cart.isInCart(secondaryProduct.id)) {
               <button class="px-5 py-2.5 rounded-xl border border-site-accent/40 bg-site-surface text-site-accent font-bold text-sm">
                 ✓ In Cart
               </button>
             } @else {
               <button
-                (click)="addToCart(featuredProduct)"
+                (click)="addToCart(secondaryProduct)"
                 class="px-5 py-2.5 rounded-xl bg-site-accent text-site-text font-bold text-sm hover:brightness-90 transition"
               >
                 Add to Cart
               </button>
             }
           </div>
-        </div>
-      </div>
-
-      <!-- Guide + System Pairs -->
-      <div class="flex flex-col gap-5">
-        <div class="flex flex-col items-center text-center gap-1">
-          <h3 class="text-lg font-bold text-site-text">Guides + paired tools.</h3>
-          <p class="text-sm text-site-text-secondary">Each guide is paired with the system that matches it.</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          @for (product of pairProducts; track product.id) {
-            <div
-              class="glass-card rounded-xl p-6 flex flex-col gap-4"
-              [class.opacity-50]="product.comingSoon"
-              [class.grayscale]="product.comingSoon"
-            >
-              <h4 class="font-bold text-site-text">{{ product.name }}</h4>
-              <div class="flex flex-col gap-3 flex-1 text-sm text-site-text-secondary">
-                <p><span class="text-site-accent font-semibold">Guide: </span>{{ product.guide }}</p>
-                <p><span class="text-site-accent font-semibold">System: </span>{{ product.system }}</p>
-              </div>
-              <div class="flex items-center justify-between pt-3 border-t border-site-border/50">
-                <span class="font-bold text-site-text font-mono">${{ product.price }}</span>
-                @if (product.comingSoon) {
-                  <span class="text-xs px-3 py-1.5 rounded-lg border border-site-border text-site-text-dim font-bold">
-                    Coming Soon
-                  </span>
-                } @else if (cart.isInCart(product.id)) {
-                  <button class="text-xs px-3 py-1.5 rounded-lg border border-site-accent/40 bg-site-surface text-site-accent font-bold">
-                    ✓ Added
-                  </button>
-                } @else {
-                  <button
-                    (click)="addToCart(product)"
-                    class="text-xs px-3 py-1.5 rounded-lg bg-site-accent text-site-text font-bold hover:brightness-90 transition"
-                  >
-                    Add to Cart
-                  </button>
-                }
-              </div>
-            </div>
-          }
         </div>
       </div>
 
@@ -270,7 +241,7 @@
   <section class="py-20 px-6 border-t border-site-border/30">
     <div class="max-w-4xl mx-auto flex flex-col gap-12">
       <h2 class="text-2xl md:text-3xl font-bold text-site-text text-center">How it actually works.</h2>
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-0 items-start">
+      <div class="grid grid-cols-1 md:grid-cols-7 gap-4 md:gap-0 items-start">
         @for (step of steps; track $index) {
           <div class="flex flex-col items-center text-center gap-4 col-span-1">
             <div class="w-12 h-12 rounded-full border-2 border-site-accent/50 flex items-center justify-center text-xl font-bold text-site-accent shrink-0">
@@ -359,16 +330,41 @@
 
   <!-- PRICING -->
   <section id="pricing" class="py-20 px-6 border-t border-site-border/30">
-    <div class="max-w-md mx-auto flex flex-col items-center gap-8">
+    <div class="max-w-lg mx-auto flex flex-col items-center gap-8">
       <h2 class="text-2xl md:text-3xl font-bold text-site-text text-center">Simple pricing.</h2>
       <div class="glass-card rounded-2xl p-8 w-full flex flex-col items-center gap-5 ring-1 ring-site-accent/20">
-        <div class="flex items-end gap-1">
+        <div class="flex flex-wrap items-center justify-center gap-3">
           <span class="text-5xl font-bold text-site-text font-mono">${{ coachingProduct.price }}</span>
-          <span class="text-site-text-secondary text-base mb-1.5">/month</span>
+          <span class="text-xs bg-site-accent/20 text-site-accent border border-site-accent/30 px-2.5 py-0.5 rounded-full font-bold">
+            {{ coachingProduct.badge }}
+          </span>
         </div>
         <p class="text-site-text-secondary text-sm text-center leading-relaxed">
           {{ coachingProduct.description }}
         </p>
+
+        <ul class="w-full flex flex-col gap-2">
+          @for (item of coachingProduct.includes!; track $index) {
+            <li class="flex gap-2 text-sm text-site-text-secondary">
+              <span class="text-site-accent mt-0.5 shrink-0">✓</span>
+              <span>{{ item }}</span>
+            </li>
+          }
+        </ul>
+
+        @if (coachingProduct.bonuses?.length) {
+          <div class="w-full pt-5 border-t border-site-border/50">
+            <p class="text-xs font-bold tracking-widest text-site-accent uppercase mb-3">Bonuses</p>
+            <ul class="flex flex-col gap-2">
+              @for (bonus of coachingProduct.bonuses!; track $index) {
+                <li class="flex gap-2 text-sm text-site-text-secondary">
+                  <span class="text-site-accent mt-0.5 shrink-0">★</span>
+                  <span>{{ bonus }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        }
 
         @if (cart.isInCart(coachingProduct.id)) {
           <button class="w-full py-3 rounded-xl border border-site-accent/40 bg-site-surface text-site-accent font-bold text-sm">
@@ -400,9 +396,9 @@
       </div>
 
       <div class="glass-card rounded-xl p-6 w-full flex flex-col gap-4">
-        <h3 class="font-bold text-site-text">Try a system for free.</h3>
+        <h3 class="font-bold text-site-text">Grab an E-book for free.</h3>
         <p class="text-sm text-site-text-secondary leading-relaxed">
-          Drop your email and I'll send you a one-time use of one of the systems. One run, no commitment. Good way to see what these things actually output before deciding.
+          Drop your email and I'll send you one of my E-books. No commitment. Good way to see how I actually think about training before deciding.
         </p>
         <div class="flex gap-2">
           <input
@@ -413,10 +409,10 @@
             class="glass-input flex-1"
           />
           <button class="bg-site-accent text-site-text text-sm font-bold px-4 py-2 rounded-lg hover:brightness-90 transition whitespace-nowrap">
-            Send me the trial
+            Send it over
           </button>
         </div>
-        <p class="text-xs text-site-text-dim">One free use, no spam, unsubscribe whenever.</p>
+        <p class="text-xs text-site-text-dim">No spam, unsubscribe whenever.</p>
       </div>
 
       <div class="flex flex-col items-center gap-3 text-center">
@@ -472,8 +468,8 @@
   <section class="py-16 px-6 border-t border-site-border/30">
     <div class="max-w-lg mx-auto flex flex-col items-center gap-5 text-center">
       <p class="text-site-text-secondary leading-relaxed">
-        All of this runs on the same logic as coaching.<br>
-        The difference is coaching is built specifically around you.
+        Jump Start runs on the same logic as coaching.<br>
+        The difference is coaching keeps adjusting with you every week.
       </p>
       <button
         (click)="scrollTo('coaching')"

@@ -41,8 +41,8 @@ Open a new Terminal Window
 
 7. Install EF Core Tools & run initial build
 ```bash
-  dotnet tool install --global dotnet-ef
   dotnet ef --version
+  dotnet tool install --global dotnet-ef
   dotnet build
 ```
 
@@ -59,7 +59,8 @@ Open a new Terminal Window
 ```
 
 9. Setup User Secrets
-- Copy it as-is, no need to generate or track your own password. The local SQL Server container's SA password is a fixed, non-secret dev-only value.
+- Yes the local password is commited because this is literally only used for securing local devs DB's only
+
 ```bash
   dotnet user-secrets set "ConnectionStrings:DefaultConnection" 'Server=localhost,1433;Initial Catalog=CoachDb;User ID=SA;Password=R85ae0a06!;Trust Server Certificate=True;MultipleActiveResultSets=True;'
 ```
@@ -74,8 +75,6 @@ Open a new Terminal Window
   dotnet user-secrets set "Stripe:ApiKey" "<YourStripeApiKey>"
   dotnet user-secrets set "Stripe:WebhookSecret" "<YourStripeWebhookSecret>"
 ```
-
-NOTE: The WorkOS Client ID is not a secret (it's public, like an OAuth client ID) and is already committed in `client/src/environments/environment.ts` / `environment.development.ts` / `environment.production.ts`, and in `backend/appsettings.json` under `WorkOS:ClientId`. No setup step needed for it.
 
 ## Daily Development
 

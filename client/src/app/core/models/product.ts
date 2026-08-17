@@ -5,6 +5,7 @@ interface Product {
   frequency?: string;
   badge?: string;
   description?: string;
+  bonuses?: string[];
   includes?: string[];
   guide?: string;
   system?: string;
